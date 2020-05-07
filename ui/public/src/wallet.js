@@ -50,7 +50,7 @@ const cmp = (a, b) => (a < b ? -1 : a === b ? 0 : 1);
 const updateOptions = (key, existing, currents, names, selects) => {
   for (const name of names) {
     const children = selects[name].children;
-    for (let i = 0; i < children.length; i ++) {
+    for (let i = 0; i < children.length; i++) {
       if (children[i].getAttribute('value') === 'remove()') {
         children[i].remove();
       }
@@ -74,7 +74,7 @@ const updateOptions = (key, existing, currents, names, selects) => {
         case 'pursePetname':
           newText = `${current[key]} (${current.extent} ${current.issuerPetname})`
           break;
-        default: 
+        default:
           newText = `${current[key]}`;
       }
       if (c < 0) {
@@ -112,7 +112,7 @@ const updateOptions = (key, existing, currents, names, selects) => {
  * @param {Purse[]} purses
  * @param {Object.<string, HTMLSelectElement>} selects
  */
-export function walletUpdatePurses(purses, selects) {
+export function walletUpdatePurses (purses, selects) {
   allPurses = purses.filter(
     ({ brandRegKey }) => !allowedBrandRegKeys || allowedBrandRegKeys.includes(brandRegKey)
   ).sort(({ pursePetname: a }, { pursePetname: b }) => cmp(a, b));
@@ -129,7 +129,7 @@ export function walletUpdatePurses(purses, selects) {
 /**
  * @param {Object.<string, HTMLSelectElement>} selects
  */
-export function flipSelectedBrands(selects) {
+export function flipSelectedBrands (selects) {
   let i = 0;
   while (i < tipPurses.length) {
     const purse = tipPurses[i];

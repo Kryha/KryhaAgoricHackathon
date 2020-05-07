@@ -16,4 +16,4 @@ const purse = plasticUnitsBundle.issuer.makeEmptyPurse();
 purse.deposit(payment);
 
 // Payment to the producer
-const paymentForProducer = purse.withdraw(plasticUnits(1000));
+// const paymentForProducer = purse.withdraw(plasticUnits(1000));

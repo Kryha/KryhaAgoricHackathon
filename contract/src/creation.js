@@ -11,13 +11,13 @@ who request them. No offer safety is being enforced here.
 // zcf is the Zoe Contract Facet, i.e. the contract-facing API of Zoe
 export const makeContract = harden(zcf => {
   // Create the internal token mint for a fungible digital asset
-  const { issuer, mint, amountMath } = produceIssuer('tokens');
+  const { issuer, mint, amountMath } = produceIssuer('TypeA');
 
   const zoeHelpers = makeZoeHelpers(zcf);
 
   // We need to tell Zoe about this issuer and add a keyword for the
   // issuer. Let's call this the 'Token' issuer.
-  return zcf.addNewIssuer(issuer, 'Token').then(() => {
+  return zcf.addNewIssuer(issuer, 'TypeA').then(() => {
     // We need to wait for the promise to resolve (meaning that Zoe
     // has done the work of adding a new issuer).
     const offerHook = offerHandle => {
@@ -32,7 +32,7 @@ export const makeContract = harden(zcf => {
         .escrowAndAllocateTo({
           amount: tokens1000,
           payment,
-          keyword: 'Token',
+          keyword: 'TypeA',
           recipientHandle: offerHandle,
         })
         .then(() => {

@@ -2,7 +2,7 @@
 // Agoric Dapp api deployment script
 
 import fs from 'fs';
-import installationConstants from '../ui/public/conf/installationConstants.js';
+import installationConstants from '../../ui/public/conf/installationConstants.js';
 import { E } from '@agoric/eventual-send';
 import harden from '@agoric/harden';
 import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
@@ -12,8 +12,7 @@ import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 // script ends, connections to any of its objects are severed.
 
 // The deployer's wallet's petname for the tip issuer.
-// const TIP_ISSUER_PETNAME = process.env.TIP_ISSUER_PETNAME || 'moola';
-const TIP_ISSUER_PETNAME = 'TypeA'
+const TIP_ISSUER_PETNAME = process.env.TIP_ISSUER_PETNAME || 'moola';
 
 /**
  * @typedef {Object} DeployPowers The special powers that `agoric deploy` gives us
@@ -102,9 +101,9 @@ export default async function deployApi (referencesPromise, { bundleSource, path
   // serialize maps. We can immediately create a map using the array,
   // though. https://github.com/Agoric/agoric-sdk/issues/838
   const issuersArray = await E(wallet).getIssuers();
-  console.log(issuersArray)
   const issuers = new Map(issuersArray);
   const tipIssuer = issuers.get(TIP_ISSUER_PETNAME);
+
 
   if (tipIssuer === undefined) {
     console.error('Cannot find TIP_ISSUER_PETNAME', TIP_ISSUER_PETNAME, 'in home.wallet');
