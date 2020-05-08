@@ -17,7 +17,7 @@ import { E } from '@agoric/eventual-send';
  * @param {*} referencesPromise
  * @param {DeployPowers} powers
  */
-export default async function deployContract(
+export default async function deployContract (
   referencesPromise,
   { bundleSource, pathResolve },
 ) {
@@ -44,16 +44,6 @@ export default async function deployContract(
     registry,
   } = references;
 
-<<<<<<< HEAD
-  // First, we must bundle up our contract code (./src/contract.js)
-  // and install it on Zoe. This returns an installationHandle, an
-  // opaque, unforgeable identifier for our contract code that we can
-  // reuse again and again to create new, live contract instances.
-  const { source, moduleFormat } = await bundleSource(
-    pathResolve(`./src/plasticA.js`),
-  );
-  const installationHandle = await E(zoe).install(source, moduleFormat);
-=======
   const contracts = [
     {
       name: 'tokenCreation',
@@ -63,6 +53,10 @@ export default async function deployContract(
       name: 'encouragement',
       path: `./src/encouragement.js`,
     },
+    {
+      name: 'plasticA',
+      path: `./src/plasticA.js`,
+    },
   ];
 
   const installedContracts = await Promise.all(
@@ -71,7 +65,6 @@ export default async function deployContract(
         pathResolve(contract.path),
       );
       const installationHandle = await E(zoe).install(source, moduleFormat);
->>>>>>> fdc210fb301578d622fd6614d1729b334fd66c6f
 
       const INSTALLATION_REG_KEY = await E(registry).register(
         `${contract.name}installation`,
@@ -83,20 +76,8 @@ export default async function deployContract(
         `-- InstallationHandle Register Key: ${INSTALLATION_REG_KEY}`,
       );
 
-<<<<<<< HEAD
-  // To share the installationHandle, we're going to put it in the
-  // registry. The registry is a shared, on-chain object that maps
-  // strings to objects. We will need to provide a starting name when
-  // we register our installationHandle, and the registry will add a
-  // suffix creating a guaranteed unique name.
-  const CONTRACT_NAME = 'plasticA';
-  const INSTALLATION_REG_KEY = await E(registry).register(
-    `${CONTRACT_NAME}installation`,
-    installationHandle,
-=======
       return { ...contract, INSTALLATION_REG_KEY };
     }),
->>>>>>> fdc210fb301578d622fd6614d1729b334fd66c6f
   );
 
   // Save the constants somewhere where the UI and api can find it.

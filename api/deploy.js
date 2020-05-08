@@ -15,18 +15,18 @@ import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 // The deployer's wallet's petname for the tip issuer.
 const TIP_ISSUER_PETNAME = process.env.TIP_ISSUER_PETNAME || 'typeA';
 
-async function deployToken(references) {
-  const { 
-    wallet, 
-    zoe, 
+async function deployToken (references) {
+  const {
+    wallet,
+    zoe,
     registry,
-  }  = references;
+  } = references;
 
-  const { 
+  const {
     contracts
   } = installationConstants;
 
-  const { INSTALLATION_REG_KEY: tokenCreationRegKey} = contracts.find(({name}) => name === 'tokenCreation');
+  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === 'tokenCreation');
   const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
 
   const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle);
@@ -55,6 +55,40 @@ async function deployToken(references) {
   // console.log(await outcome);
 }
 
+async function deployNFT (references) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  const { contracts } = installationConstants
+
+  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === 'plasticA');
+  const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
+
+  const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle);
+  console.log('- SUCCESS! contract instance is running on Zoe');
+
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  const issuer = await E(publicAPI).getTokenIssuer();
+
+  const issuerName = 'Plastic'
+  const brandRegKey = await E(registry).register(
+    issuerName,
+    await E(issuer).getBrand()
+  )
+
+  await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
+
+  const pursePetname = `${issuerName} purse`;
+  await E(wallet).makeEmptyPurse(issuerName, pursePetname);
+}
+
 /**
  * @typedef {Object} DeployPowers The special powers that `agoric deploy` gives us
  * @property {(path: string) => { moduleFormat: string, source: string }} bundleSource
@@ -66,23 +100,23 @@ async function deployToken(references) {
  * available from REPL home
  * @param {DeployPowers} powers
  */
-export default async function deployApi(referencesPromise, { bundleSource, pathResolve }) {
+export default async function deployApi (referencesPromise, { bundleSource, pathResolve }) {
 
   // Let's wait for the promise to resolve.
   const references = await referencesPromise;
 
   // Unpack the references.
-  const { 
+  const {
 
     // *** LOCAL REFERENCES ***
     // This wallet only exists on this machine, and only you have
     // access to it. The wallet stores purses and handles transactions.
-    wallet, 
+    wallet,
 
     // Scratch is a map only on this machine, and can be used for
     // communication in objects between processes/scripts on this
     // machine.
-    uploads: scratch,  
+    uploads: scratch,
 
     // The spawner persistently runs scripts within ag-solo, off-chain.
     spawner,
@@ -92,7 +126,7 @@ export default async function deployApi(referencesPromise, { bundleSource, pathR
     // Zoe lives on-chain and is shared by everyone who has access to
     // the chain. In this demo, that's just you, but on our testnet,
     // everyone has access to the same Zoe.
-    zoe, 
+    zoe,
 
     // The registry also lives on-chain, and is used to make private
     // objects public to everyone else on-chain. These objects get
@@ -105,13 +139,14 @@ export default async function deployApi(referencesPromise, { bundleSource, pathR
     http,
 
 
-  }  = references;
+  } = references;
 
-  const { 
+  const {
     contracts
   } = installationConstants;
 
   await deployToken(references);
+  await deployNFT(references);
 
 
   const issuersArray = await E(wallet).getIssuers();
@@ -125,11 +160,11 @@ export default async function deployApi(referencesPromise, { bundleSource, pathR
     process.exit(1);
   }
 
-  
+
   const TIP_BRAND_REGKEY = await E.G(E(wallet).getIssuerNames(tipIssuer)).brandRegKey;
 
   const CONTRACT_NAME = 'encouragement';
-  const { INSTALLATION_REG_KEY: encouragementRegKey} = contracts.find(({name}) => name === CONTRACT_NAME);
+  const { INSTALLATION_REG_KEY: encouragementRegKey } = contracts.find(({ name }) => name === CONTRACT_NAME);
   const encouragementContractInstallationHandle = await E(registry).get(encouragementRegKey);
 
   const issuerKeywordRecord = harden({ Tip: tipIssuer });
