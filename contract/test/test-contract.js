@@ -7,49 +7,50 @@ import { E } from '@agoric/eventual-send';
 import harden from '@agoric/harden';
 
 import { makeZoe } from '@agoric/zoe';
-import produceIssuer from '@agoric/ertp';
 import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 
-const contractPath = `${__dirname}/../src/plasticA`;
+const mintPaymentsRoot = `${__dirname}/../src/plasticA`;
 
-test('contract with valid offers', async t => {
+test('zoe - mint payments', async t => {
+  t.plan(2);
   try {
-    t.plan(3);
-    // Set up
     const zoe = makeZoe({ require });
+    // Pack the contract.
+    const { source, moduleFormat } = await bundleSource(mintPaymentsRoot);
+    const installationHandle = await E(zoe).install(source, moduleFormat);
     const inviteIssuer = await E(zoe).getInviteIssuer();
     const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
-    const { source, moduleFormat } = await bundleSource(contractPath);
-    const installationHandle = await E(zoe).install(source, moduleFormat);
-    const code = await E(zoe).getInstallation(installationHandle);
 
-    // test that everything is ok till now
-    t.ok(
-      code.includes(`This contract mints a NFT.`),
-      `the code installed passes a quick check of what we intended to install`,
-    );
-
+    // Alice creates a contract instance
     const adminInvite = await E(zoe).makeInstance(installationHandle);
-
-    t.ok(
-      await E(inviteIssuer).isLive(adminInvite),
-      `a valid invite (an ERTP payment) was created`,
-    );
-
     const instanceHandle = await getInstanceHandle(adminInvite);
 
-    const {
-      payout: adminPayoutP,
-      outcome: adminOutcomeP,
-      cancelObj: { cancel: cancelAdmin },
-    } = await E(zoe).offer(adminInvite);
+    // Bob wants to get 1000 tokens so he gets an invite and makes an
+    // offer
+    const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+    const invite = await E(publicAPI).makeInvite();
+    t.ok(await E(inviteIssuer).isLive(invite), `valid invite`);
+    const { payout: payoutP } = await E(zoe).offer(invite);
 
-    t.equals(
-      await adminOutcomeP,
-      `admin invite redeemed`,
-      `admin outcome is correct`,
-    );
+    // Bob's payout promise resolves
+    const bobPayout = await payoutP;
+    const bobTokenPayout = await bobPayout.Token;
+
+    // Let's get the tokenIssuer from the contract so we can evaluate
+    // what we get as our payout
+    const tokenIssuer = await E(publicAPI).getTokenIssuer();
+    const amountMath = await E(tokenIssuer).getAmountMath();
+
+    const tokens1000 = await E(amountMath).make(harden([{ type: 'typeA' }]));
+    const tokensBrand = tokens1000.brand;
+    const tokenPayoutAmount = await E(tokenIssuer).getBrand();
+
+    console.log(tokenPayoutAmount);
+    console.log(tokens1000);
+
+    t.deepEquals(tokenPayoutAmount, tokensBrand);
   } catch (e) {
-    t.isNot(e, e, 'unexpected exception');
+    t.assert(false, e);
+    console.log(e);
   }
 });
