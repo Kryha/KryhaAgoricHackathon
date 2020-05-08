@@ -32,7 +32,7 @@ export const makeContract = harden(zcf => {
         .escrowAndAllocateTo({
           amount: tokens1000,
           payment,
-          keyword: 'typeA',
+          keyword: 'TypeA',
           recipientHandle: offerHandle,
         })
         .then(() => {
