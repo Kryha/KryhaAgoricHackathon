@@ -14,6 +14,7 @@ const contractPath = `${__dirname}/../src/plasticA`;
 
 test('contract with valid offers', async t => {
   try {
+    t.plan(2);
     // Set up
     const zoe = makeZoe({ require });
     const inviteIssuer = await E(zoe).getInviteIssuer();
@@ -28,25 +29,14 @@ test('contract with valid offers', async t => {
       `the code installed passes a quick check of what we intended to install`,
     );
 
-    // make some mints/issuers for the test
-    // const {
-    //   issuer: plasticIssuer,
-    //   mint: plasticMint,
-    //   amountMath: plasticAmountMath,
-    // } = produceIssuer('plastics', 'strSet');
+    const adminInvite = await E(zoe).makeInstance(installationHandle);
 
-    // const plastic5 = plasticAmountMath.make(5);
-    // const plasticPayment = plasticMint.mintPayment(plastic5);
+    t.ok(
+      await E(inviteIssuer).isLive(adminInvite),
+      `a valid invite (an ERTP payment) was created`,
+    );
 
-    const invite = await E(zoe).makeInstance(installationHandle, {
-      Plastic: 'plastics',
-    });
-    console.log(`%%%%%%%%%%%%%%%%%%%%%%${invite}`);
-
-    // t.ok(
-    //   await E(inviteIssuer).isLive(adminInvite),
-    //   `a valid invite (an ERTP payment) was created`,
-    // );
+    const instanceHandle = await getInstanceHandle(adminInvite);
   } catch (e) {
     t.isNot(e, e, 'unexpected exception');
   }
