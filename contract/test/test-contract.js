@@ -34,7 +34,8 @@ test('zoe - mint payments', async t => {
 
     // Bob's payout promise resolves
     const bobPayout = await payoutP;
-    const bobTokenPayout = await bobPayout.Token;
+    const bobTokenPayout = await bobPayout.Plastic;
+    const bobTokenBrand = bobTokenPayout.getAllegedBrand().getAllegedName();
 
     // Let's get the tokenIssuer from the contract so we can evaluate
     // what we get as our payout
@@ -42,13 +43,9 @@ test('zoe - mint payments', async t => {
     const amountMath = await E(tokenIssuer).getAmountMath();
 
     const tokens1000 = await E(amountMath).make(harden([{ type: 'typeA' }]));
-    const tokensBrand = tokens1000.brand;
-    const tokenPayoutAmount = await E(tokenIssuer).getBrand();
+    const tokensBrand = tokens1000.brand.getAllegedName();
 
-    console.log(tokenPayoutAmount);
-    console.log(tokens1000);
-
-    t.deepEquals(tokenPayoutAmount, tokensBrand);
+    t.deepEquals(bobTokenBrand, tokensBrand);
   } catch (e) {
     t.assert(false, e);
     console.log(e);
