@@ -35,7 +35,6 @@ export const makeContract = harden(zcf => {
     const makeInvite = () => zcf.makeInvitation(offerHook, 'Plastic');
 
     return harden({
-      // invite: makeInvite(),
       invite: makeInvite(),
       publicAPI: {
         makeInvite,
