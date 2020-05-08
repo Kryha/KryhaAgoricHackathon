@@ -26,20 +26,22 @@ async function deployToken (references) {
     contracts
   } = installationConstants;
 
+  console.log('deployToken');
+
   const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === 'tokenCreation');
   const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
-
-  const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle);
-  console.log('- SUCCESS! contract instance is running on Zoe');
-
   const inviteIssuer = await E(zoe).getInviteIssuer();
   const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+
+  const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle);
   const instanceHandle = await getInstanceHandle(adminInvite);
 
   const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  const invite = await E(publicAPI).makeInvite();
+
   const issuer = await E(publicAPI).getTokenIssuer();
 
-  const issuerName = 'TypeA'
+  const issuerName = 'typeA'
   const brandRegKey = await E(registry).register(
     issuerName,
     await E(issuer).getBrand()
@@ -51,8 +53,21 @@ async function deployToken (references) {
   await E(wallet).makeEmptyPurse(issuerName, pursePetname);
 
   // TODO: remove | Temporarily contains a one time deposit
-  // const { outcome, payout } = await E(zoe).offer(adminInvite);
-  // console.log(await outcome);
+  const { payout: payoutP } = await E(zoe).offer(invite);
+  console.log(await payoutP);
+
+  const typeAPurse = await E(wallet).getPurse(pursePetname);
+
+  payoutP.then(async payout => {
+    const typeAPayment = await payout.TypeA;
+    console.log('tip payment in typeA received. Depositing now.');
+    try {
+      await E(typeAPurse).deposit(typeAPayment);
+      console.log('deposit successful.');
+    } catch (e) {
+      console.error(e);
+    }
+  });
 }
 
 async function deployNFT (references) {
