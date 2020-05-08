@@ -4,6 +4,7 @@
 import fs from 'fs';
 import installationConstants from '../ui/public/conf/installationConstants.js';
 import { E } from '@agoric/eventual-send';
+import produceIssuer from '@agoric/ertp';
 import harden from '@agoric/harden';
 import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 
@@ -12,8 +13,47 @@ import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 // script ends, connections to any of its objects are severed.
 
 // The deployer's wallet's petname for the tip issuer.
-// const TIP_ISSUER_PETNAME = process.env.TIP_ISSUER_PETNAME || 'moola';
-const TIP_ISSUER_PETNAME = 'TypeA'
+const TIP_ISSUER_PETNAME = process.env.TIP_ISSUER_PETNAME || 'typeA';
+
+async function deployToken(references) {
+  const { 
+    wallet, 
+    zoe, 
+    registry,
+  }  = references;
+
+  const { 
+    contracts
+  } = installationConstants;
+
+  const { INSTALLATION_REG_KEY: tokenCreationRegKey} = contracts.find(({name}) => name === 'tokenCreation');
+  const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
+
+  const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle);
+  console.log('- SUCCESS! contract instance is running on Zoe');
+
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  const issuer = await E(publicAPI).getTokenIssuer();
+
+  const issuerName = 'TypeA'
+  const brandRegKey = await E(registry).register(
+    issuerName,
+    await E(issuer).getBrand()
+  )
+
+  await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
+
+  const pursePetname = `${issuerName} purse`;
+  await E(wallet).makeEmptyPurse(issuerName, pursePetname);
+
+  // TODO: remove | Temporarily contains a one time deposit
+  // const { outcome, payout } = await E(zoe).offer(adminInvite);
+  // console.log(await outcome);
+}
 
 /**
  * @typedef {Object} DeployPowers The special powers that `agoric deploy` gives us
@@ -26,24 +66,23 @@ const TIP_ISSUER_PETNAME = 'TypeA'
  * available from REPL home
  * @param {DeployPowers} powers
  */
-export default async function deployApi (referencesPromise, { bundleSource, pathResolve }) {
+export default async function deployApi(referencesPromise, { bundleSource, pathResolve }) {
 
   // Let's wait for the promise to resolve.
   const references = await referencesPromise;
 
   // Unpack the references.
-  const {
+  const { 
 
     // *** LOCAL REFERENCES ***
-
     // This wallet only exists on this machine, and only you have
     // access to it. The wallet stores purses and handles transactions.
-    wallet,
+    wallet, 
 
     // Scratch is a map only on this machine, and can be used for
     // communication in objects between processes/scripts on this
     // machine.
-    uploads: scratch,
+    uploads: scratch,  
 
     // The spawner persistently runs scripts within ag-solo, off-chain.
     spawner,
@@ -53,7 +92,7 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     // Zoe lives on-chain and is shared by everyone who has access to
     // the chain. In this demo, that's just you, but on our testnet,
     // everyone has access to the same Zoe.
-    zoe,
+    zoe, 
 
     // The registry also lives on-chain, and is used to make private
     // objects public to everyone else on-chain. These objects get
@@ -66,43 +105,17 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     http,
 
 
-  } = references;
+  }  = references;
 
-
-  // To get the backend of our dapp up and running, first we need to
-  // grab the installationHandle that our contract deploy script put
-  // in the public registry.
-  const {
-    INSTALLATION_REG_KEY,
-    CONTRACT_NAME,
+  const { 
+    contracts
   } = installationConstants;
-  const encouragementContractInstallationHandle = await E(registry).get(INSTALLATION_REG_KEY);
 
-  // Second, we can use the installationHandle to create a new
-  // instance of our contract code on Zoe. A contract instance is a running
-  // program that can take offers through Zoe. Creating a contract
-  // instance gives you an invite to the contract. In this case, it is
-  // an admin invite with special authority - whoever redeems this
-  // admin invite will get all of the tips from the encouragement
-  // contract instance.
+  await deployToken(references);
 
-  // At the time that we make the contract instance, we need to tell
-  // Zoe what kind of token to accept as tip money. In this instance,
-  // we will only accept moola. (If we wanted to accept other kinds of
-  // tips, we could create other instances or edit the contract code
-  // and redeploy.) We need to put this information in the form of a
-  // keyword (a string that the contract determines, in this case,
-  // 'Tip') plus an issuer for the token kind, the moolaIssuer.
 
-  // In our example, moola is a widely used token. Someone has already
-  // registered the moolaIssuer in the registry. We could also get it
-  // from our wallet.
-
-  // getIssuers returns an array, because we currently cannot
-  // serialize maps. We can immediately create a map using the array,
-  // though. https://github.com/Agoric/agoric-sdk/issues/838
   const issuersArray = await E(wallet).getIssuers();
-  console.log(issuersArray)
+  console.log(issuersArray);
   const issuers = new Map(issuersArray);
   const tipIssuer = issuers.get(TIP_ISSUER_PETNAME);
 
@@ -112,9 +125,12 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     process.exit(1);
   }
 
-  // Find its brand registry key so we can communicate the issuer to other wallets.
-  // Equivalent to: await wallet~.getIssuerNames(tipIssuer)~.brandRegKey
+  
   const TIP_BRAND_REGKEY = await E.G(E(wallet).getIssuerNames(tipIssuer)).brandRegKey;
+
+  const CONTRACT_NAME = 'encouragement';
+  const { INSTALLATION_REG_KEY: encouragementRegKey} = contracts.find(({name}) => name === CONTRACT_NAME);
+  const encouragementContractInstallationHandle = await E(registry).get(encouragementRegKey);
 
   const issuerKeywordRecord = harden({ Tip: tipIssuer });
   const adminInvite = await E(zoe).makeInstance(encouragementContractInstallationHandle, issuerKeywordRecord);
