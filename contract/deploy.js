@@ -17,7 +17,7 @@ import { E } from '@agoric/eventual-send';
  * @param {*} referencesPromise
  * @param {DeployPowers} powers
  */
-export default async function deployContract (
+export default async function deployContract(
   referencesPromise,
   { bundleSource, pathResolve },
 ) {
@@ -44,39 +44,41 @@ export default async function deployContract (
     registry,
   } = references;
 
-  // First, we must bundle up our contract code (./src/contract.js)
-  // and install it on Zoe. This returns an installationHandle, an
-  // opaque, unforgeable identifier for our contract code that we can
-  // reuse again and again to create new, live contract instances.
-  const { source, moduleFormat } = await bundleSource(
-    pathResolve(`./src/creation.js`),
-  );
-  const installationHandle = await E(zoe).install(source, moduleFormat);
+  const contracts = [
+    {
+      name: 'tokenCreation',
+      path: `./src/tokenCreation.js`,
+    },
+    {
+      name: 'encouragement',
+      path: `./src/encouragement.js`,
+    },
+  ];
 
-  // Let's share this installationHandle with other people, so that
-  // they can run our encouragement contract code by making a contract
-  // instance (see the api deploy script in this repo to see an
-  // example of how to use the installationHandle to make a new contract
-  // instance.)
+  const installedContracts = await Promise.all(
+    contracts.map(async contract => {
+      const { source, moduleFormat } = await bundleSource(
+        pathResolve(contract.path),
+      );
+      const installationHandle = await E(zoe).install(source, moduleFormat);
 
-  // To share the installationHandle, we're going to put it in the
-  // registry. The registry is a shared, on-chain object that maps
-  // strings to objects. We will need to provide a starting name when
-  // we register our installationHandle, and the registry will add a
-  // suffix creating a guaranteed unique name.
-  const CONTRACT_NAME = 'creation';
-  const INSTALLATION_REG_KEY = await E(registry).register(
-    `${CONTRACT_NAME}installation`,
-    installationHandle,
+      const INSTALLATION_REG_KEY = await E(registry).register(
+        `${contract.name}installation`,
+        installationHandle,
+      );
+      console.log('- SUCCESS! contract code installed on Zoe');
+      console.log(`-- Contract Name: ${contract.name}`);
+      console.log(
+        `-- InstallationHandle Register Key: ${INSTALLATION_REG_KEY}`,
+      );
+
+      return { ...contract, INSTALLATION_REG_KEY };
+    }),
   );
-  console.log('- SUCCESS! contract code installed on Zoe');
-  console.log(`-- Contract Name: ${CONTRACT_NAME}`);
-  console.log(`-- InstallationHandle Register Key: ${INSTALLATION_REG_KEY}`);
 
   // Save the constants somewhere where the UI and api can find it.
   const dappConstants = {
-    CONTRACT_NAME,
-    INSTALLATION_REG_KEY,
+    contracts: installedContracts,
   };
   const defaultsFile = pathResolve(
     `../ui/public/conf/installationConstants.js`,
