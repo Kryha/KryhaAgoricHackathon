@@ -90,9 +90,11 @@ async function deployNFT (references) {
   const instanceHandle = await getInstanceHandle(adminInvite);
 
   const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  const invite = await E(publicAPI).makeInvite();
+
   const issuer = await E(publicAPI).getTokenIssuer();
 
-  const issuerName = 'Plastic'
+  const issuerName = 'plastic'
   const brandRegKey = await E(registry).register(
     issuerName,
     await E(issuer).getBrand()
@@ -102,6 +104,24 @@ async function deployNFT (references) {
 
   const pursePetname = `${issuerName} purse`;
   await E(wallet).makeEmptyPurse(issuerName, pursePetname);
+
+
+  // TODO: remove | Temporarily contains a one time deposit
+  const { payout: payoutNFT } = await E(zoe).offer(invite);
+  console.log(await payoutNFT);
+
+  const nftPurse = await E(wallet).getPurse(pursePetname);
+
+  payoutNFT.then(async payout => {
+    const nftPayment = await payout.Plastic;
+    console.log('tip payment in plastic received. Depositing now.');
+    try {
+      await E(nftPurse).deposit(nftPayment);
+      console.log('deposit successful.');
+    } catch (e) {
+      console.error(e);
+    }
+  });
 }
 
 /**

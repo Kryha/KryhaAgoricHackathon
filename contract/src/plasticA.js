@@ -8,29 +8,20 @@ import { makeZoeHelpers } from '@agoric/zoe/src/contractSupport/zoeHelpers';
  */
 export const makeContract = harden(zcf => {
   // Internal token mint for NFT
-  const { issuer, mint, amountMath } = produceIssuer('plastics', 'strSet');
-
-  const { inviteAnOffer, rejectOffer } = makeZoeHelpers(zcf);
+  const { issuer, mint, amountMath } = produceIssuer('plastic', 'set');
 
   // make the zoe helpers
   const zoeHelpers = makeZoeHelpers(zcf);
 
-  let adminOfferHandle;
-  const adminHook = offerHandle => {
-    adminOfferHandle = offerHandle;
-    return `admin invite redeemed`;
-  };
-
   return zcf.addNewIssuer(issuer, 'Plastic').then(() => {
     const offerHook = offerHandle => {
-      const paymentTypeA = mint.mintPayment(
-        amountMath.make([{ type: 'typeA' }]),
-      );
+      const typeAnft = amountMath.make(harden([{ type: 'typeA' }]));
+      const paymentNftTypeA = mint.mintPayment(typeAnft);
 
       return zoeHelpers
         .escrowAndAllocateTo({
-          amount: 10,
-          paymentTypeA,
+          amount: typeAnft,
+          payment: paymentNftTypeA,
           keyword: 'Plastic',
           recipientHandle: offerHandle,
         })
@@ -41,22 +32,11 @@ export const makeContract = harden(zcf => {
     };
 
     // const makeInvite = () => zcf.makeInvitation(offerHook, 'mint a payment');
-    const makeInvite = () =>
-      inviteAnOffer(
-        harden({
-          offerHook,
-          customProperties: { inviteDesc: 'Plastic' },
-        }),
-      );
+    const makeInvite = () => zcf.makeInvitation(offerHook, 'Plastic');
 
     return harden({
       // invite: makeInvite(),
-      invite: inviteAnOffer(
-        harden({
-          offerHook: adminHook,
-          customProperties: { inviteDesc: 'admin' },
-        }),
-      ),
+      invite: makeInvite(),
       publicAPI: {
         makeInvite,
         getTokenIssuer: () => issuer,
