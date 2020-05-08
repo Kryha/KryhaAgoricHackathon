@@ -14,7 +14,7 @@ const contractPath = `${__dirname}/../src/plasticA`;
 
 test('contract with valid offers', async t => {
   try {
-    t.plan(2);
+    t.plan(3);
     // Set up
     const zoe = makeZoe({ require });
     const inviteIssuer = await E(zoe).getInviteIssuer();
@@ -37,6 +37,18 @@ test('contract with valid offers', async t => {
     );
 
     const instanceHandle = await getInstanceHandle(adminInvite);
+
+    const {
+      payout: adminPayoutP,
+      outcome: adminOutcomeP,
+      cancelObj: { cancel: cancelAdmin },
+    } = await E(zoe).offer(adminInvite);
+
+    t.equals(
+      await adminOutcomeP,
+      `admin invite redeemed`,
+      `admin outcome is correct`,
+    );
   } catch (e) {
     t.isNot(e, e, 'unexpected exception');
   }
