@@ -17,7 +17,7 @@ import { E } from '@agoric/eventual-send';
  * @param {*} referencesPromise
  * @param {DeployPowers} powers
  */
-export default async function deployContract (
+export default async function deployContract(
   referencesPromise,
   { bundleSource, pathResolve },
 ) {
@@ -56,6 +56,10 @@ export default async function deployContract (
     {
       name: 'plasticA',
       path: `./src/plasticA.js`,
+    },
+    {
+      name: 'atomicSwap',
+      path: `./src/atomicSwap.js`,
     },
   ];
 

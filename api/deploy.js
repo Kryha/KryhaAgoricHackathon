@@ -15,6 +15,18 @@ import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 // The deployer's wallet's petname for the tip issuer.
 const TIP_ISSUER_PETNAME = process.env.TIP_ISSUER_PETNAME || 'typeA';
 
+const TOKEN_A = {
+  contract: 'tokenCreation',
+  issuerName: 'typeA',
+  purseName: 'typeA purse'
+}
+
+const PLASTIC_A = {
+  contract: 'plasticA',
+  issuerName: 'plastic',
+  purseName: 'plastic purse'
+}
+
 async function deployToken (references) {
   const {
     wallet,
@@ -28,7 +40,7 @@ async function deployToken (references) {
 
   console.log('deployToken');
 
-  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === 'tokenCreation');
+  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === TOKEN_A.contract);
   const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
   const inviteIssuer = await E(zoe).getInviteIssuer();
   const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
@@ -41,7 +53,7 @@ async function deployToken (references) {
 
   const issuer = await E(publicAPI).getTokenIssuer();
 
-  const issuerName = 'typeA'
+  const issuerName = TOKEN_A.issuerName;
   const brandRegKey = await E(registry).register(
     issuerName,
     await E(issuer).getBrand()
@@ -49,7 +61,7 @@ async function deployToken (references) {
 
   await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
 
-  const pursePetname = `${issuerName} purse`;
+  const pursePetname = TOKEN_A.purseName;
   await E(wallet).makeEmptyPurse(issuerName, pursePetname);
 
   // TODO: remove | Temporarily contains a one time deposit
@@ -68,6 +80,8 @@ async function deployToken (references) {
       console.error(e);
     }
   });
+
+  return issuer;
 }
 
 async function deployNFT (references) {
@@ -79,7 +93,7 @@ async function deployNFT (references) {
 
   const { contracts } = installationConstants
 
-  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === 'plasticA');
+  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === PLASTIC_A.contract);
   const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
 
   const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle);
@@ -94,7 +108,7 @@ async function deployNFT (references) {
 
   const issuer = await E(publicAPI).getTokenIssuer();
 
-  const issuerName = 'plastic'
+  const issuerName = PLASTIC_A.issuerName;
   const brandRegKey = await E(registry).register(
     issuerName,
     await E(issuer).getBrand()
@@ -102,7 +116,7 @@ async function deployNFT (references) {
 
   await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
 
-  const pursePetname = `${issuerName} purse`;
+  const pursePetname = PLASTIC_A.purseName;
   await E(wallet).makeEmptyPurse(issuerName, pursePetname);
 
 
@@ -122,6 +136,105 @@ async function deployNFT (references) {
       console.error(e);
     }
   });
+
+  return issuer;
+}
+
+
+async function swapTokenNft (references, tokenIssuer, nftIssuer) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  const { contracts } = installationConstants;
+
+  const { INSTALLATION_REG_KEY: swapRegKey } = contracts.find(({ name }) => name === 'atomicSwap');
+  const swapContractInstallationHandle = await E(registry).get(swapRegKey);
+
+  
+  const tokenPurse = await E(wallet).getPurse(TOKEN_A.purseName);
+  const nftPurse = await E(wallet).getPurse(PLASTIC_A.purseName);
+  
+  console.log('purseAmount:', await E(nftPurse).getCurrentAmount());
+
+  const issuerKeywordRecord = harden({
+    Asset: nftIssuer,
+    Price: tokenIssuer,
+  });
+  const aliceInvite = await E(zoe).makeInstance(swapContractInstallationHandle, issuerKeywordRecord);
+  console.log('- SUCCESS! contract instance is running on Zoe');
+
+  // const inviteIssuer = await E(zoe).getInviteIssuer();
+  // const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+  // const instanceHandle = await getInstanceHandle(adminInvite);
+
+  // const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  // const aliceInvite = await E(publicAPI).makeInvite();
+
+  const currentAmount = await E(nftPurse).getCurrentAmount()
+
+  const tokenAmountMath = await E(tokenIssuer).getAmountMath();
+  const nftAmountMath = await E(nftIssuer).getAmountMath();
+  
+  
+  const aliceProposal = harden({
+    give: { Asset: currentAmount},
+    want: { Price: await E(tokenAmountMath).make(3) },
+    exit: { onDemand: null },
+  });
+
+  const alicePayment = await E(nftPurse).withdraw(currentAmount)
+  const alicePayments = { Asset: alicePayment };
+  
+
+  // 3: Alice makes the first offer in the swap.
+  const { payout: alicePayoutP, outcome: bobInviteP } = await E(zoe).offer(
+    aliceInvite,
+    aliceProposal,
+    alicePayments,
+  );
+
+  console.log('>>> Alice Done');
+
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const bobExclusiveInvite = await E(inviteIssuer).claim(await bobInviteP);
+  const {
+    extent: [bobInviteExtent],
+  } = await E(inviteIssuer).getAmountOf(bobExclusiveInvite);
+
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+  const instanceHandle = await getInstanceHandle(bobExclusiveInvite);
+  console.log('isntancerecord 0')
+
+  const {
+    installationHandle: bobInstallationId,
+    issuerKeywordRecord: bobIssuers,
+  } = await E(zoe).getInstanceRecord(instanceHandle);
+
+  console.log('isntancerecord')
+
+  const bobProposal = harden({
+    give: { Price: await E(tokenAmountMath).make(3)},
+    want: { Asset: currentAmount },
+    exit: { onDemand: null },
+  });
+
+  console.log('extend proposal')
+
+  const bobPayment = await E(tokenPurse).withdraw(await E(tokenAmountMath).make(3))
+  const bobPayments = { Price: bobPayment };
+
+  // 5: Bob makes an offer
+  const { payout: bobPayoutP, outcome: bobOutcomeP } = await E(zoe).offer(
+    bobExclusiveInvite,
+    bobProposal,
+    bobPayments,
+  );
+
+  console.log('>>> Bob Done');
+  console.log(await bobPayoutP, await alicePayoutP)
 }
 
 /**
@@ -180,13 +293,13 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     contracts
   } = installationConstants;
 
-  await deployToken(references);
-  await deployNFT(references);
-
+  const tokenIssuer = await deployToken(references);
+  const nftIssuer = await deployNFT(references);
+  await swapTokenNft(references, tokenIssuer, nftIssuer)
 
   const issuersArray = await E(wallet).getIssuers();
-  console.log(issuersArray);
   const issuers = new Map(issuersArray);
+
   const tipIssuer = issuers.get(TIP_ISSUER_PETNAME);
 
   if (tipIssuer === undefined) {
