@@ -65,7 +65,7 @@ function createSocket({ onConnect, onDisconnect, onMessage }, endpoint = '/priva
   ifr.addEventListener('load', flushQueue);
 
   // FIXME: Don't assume our location.
-  ifr.src = 'lib/agoric-wallet.html';
+  ifr.src = 'lib/agoric-wallet.html?port=8000';
   if (onMessage) {
     messageSubscriptions.add(onMessage);
   }

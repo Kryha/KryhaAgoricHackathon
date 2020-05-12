@@ -7,13 +7,16 @@
     <p>Internal to this dApp.  No user-servicable parts.</p>
     <iframe id="ifr"></iframe>
     <script type="text/javascript">
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const port = urlParams.get('port')
+
       const localAgoricURL = 'https://local.agoric.com/?append=/wallet';
       const localAgoricOrigin = new URL(localAgoricURL).origin;
       const walletQueue = [];
       let bridgeOrigin;
       let bridgeURL;
       function fromFrame(ev) {
-        // console.log('have from frame', ev.origin, localAgoricOrigin, bridgeOrigin);
         if (ev.origin === localAgoricOrigin) {
           if (typeof ev.data !== 'string') {
             return;
@@ -25,8 +28,8 @@
             return;
           }
 
-          const walletURL = ev.data;
-          console.log('found Agoric wallet', walletURL);
+          const walletURL = port ? `http://localhost:${port}/wallet` : ev.data;
+          console.log('found Agoric wallet', walletURL); 
           if (window.parent !== window) {
             window.parent.postMessage({ type: 'walletURL', walletURL }, '*');
           }
