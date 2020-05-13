@@ -17,7 +17,6 @@ export const makeContract = harden(zcf => {
 
   return zcf.addNewIssuer(issuer, 'Plastic').then(() => {
     const mintHook = offerHandle => {
-      // const typeAnft = amountMath.make(harden([{ type: 'typeA' }]));
 
       const requestOffer = zcf.getOffer(offerHandle);
       const typeRequestExtent = requestOffer.proposal.want.Plastic.extent;

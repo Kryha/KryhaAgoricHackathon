@@ -14,8 +14,8 @@ import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 
 // The deployer's wallet's petname for the tip issuer.
 const TIP_ISSUER_PETNAME = process.env.TIP_ISSUER_PETNAME || 'typeA';
-let INSTANCE_REG_KEY_MINT;
-let INSTANCE_REG_KEY_TOKEN;
+let INSTANCE_REG_KEY_NFT;
+let INSTANCE_REG_KEY_FUNGIBLE;
 
 const TOKEN_A = {
   contract: 'tokenCreation',
@@ -67,7 +67,7 @@ async function deployToken (references) {
   await E(wallet).makeEmptyPurse(issuerName, pursePetname);
 
   let CONTRACT_NAME = TOKEN_A.contract;
-  INSTANCE_REG_KEY_TOKEN = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+  INSTANCE_REG_KEY_FUNGIBLE = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
 
   return issuer;
 }
@@ -109,26 +109,8 @@ async function deployNFT (references) {
   const pursePetname = PLASTIC_A.purseName;
   await E(wallet).makeEmptyPurse(issuerName, pursePetname);
 
-
-  // TODO: remove | Temporarily contains a one time deposit
-  // const { payout: payoutNFT } = await E(zoe).offer(invite);
-  // console.log(await payoutNFT);
-
-  // const nftPurse = await E(wallet).getPurse(pursePetname);
-
-  // payoutNFT.then(async payout => {
-  //   const nftPayment = await payout.Plastic;
-  //   console.log('tip payment in plastic received. Depositing now.');
-  //   try {
-  //     await E(nftPurse).deposit(nftPayment);
-  //     console.log('deposit successful.');
-  //   } catch (e) {
-  //     console.error(e);
-  //   }
-  // });
-
   let CONTRACT_NAME = PLASTIC_A.contract;
-  INSTANCE_REG_KEY_MINT = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+  INSTANCE_REG_KEY_NFT = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
 
   return issuer;
 }
@@ -374,8 +356,8 @@ export default async function deployApi (referencesPromise, { bundleSource, path
 
   // Re-save the constants somewhere where the UI and api can find it.
   const dappConstants = {
-    INSTANCE_REG_KEY_TOKEN,
-    INSTANCE_REG_KEY_MINT,
+    INSTANCE_REG_KEY_FUNGIBLE,
+    INSTANCE_REG_KEY_NFT,
     INSTANCE_REG_KEY,
     // BRIDGE_URL: 'agoric-lookup:https://local.agoric.com?append=/bridge',
     brandRegKeys: { Tip: TIP_BRAND_REGKEY },

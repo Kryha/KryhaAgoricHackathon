@@ -89,8 +89,8 @@ export default async function main () {
           // Contract-specific metadata.
           // Uncomment the contract that you want to use
           // instanceRegKey: INSTANCE_REG_KEY,
-          // instanceRegKey: defaults.INSTANCE_REG_KEY_TOKEN,
-          instanceRegKey: defaults.INSTANCE_REG_KEY_MINT,
+          // instanceRegKey: defaults.INSTANCE_REG_KEY_FUNGIBLE,
+          instanceRegKey: defaults.INSTANCE_REG_KEY_NFT,
 
           // Format is:
           //   hooks[targetName][hookName] = [hookMethod, ...hookArgs].
@@ -104,19 +104,17 @@ export default async function main () {
 
           proposalTemplate: {
             // That's how we mint fungible dynamic - works
-            //   want: {
-            //     TypeA: {
-            //       pursePetname: selects.$tipPurse.value,
-            //       extent: Number($inputAmount.value)
-            //     },
+            // want: {
+            //   TypeA: {
+            //     pursePetname: selects.$tipPurse.value,
+            //     extent: Number($inputAmount.value)
             //   },
-            //   exit: { onDemand: null },
             // },
             // That's how we mint NFT dynamic - problematic
             want: {
               Plastic: {
                 pursePetname: 'plastic purse',
-                // Instead of id generate a random id
+                // Replace id to generate a random id
                 extent: [{
                   type: 'TypeA',
                   id: Number($inputAmount.value)
