@@ -4,8 +4,6 @@ import { connect } from './connect.js';
 import { walletUpdatePurses, flipSelectedBrands } from './wallet.js';
 import defaults from '../conf/defaults';
 
-const { INSTANCE_REG_KEY } = dappConstants;
-
 /**
  * @type {Object.<string, HTMLSelectElement>}
  */
@@ -74,7 +72,6 @@ export default async function main () {
 
     $encourageMe.removeAttribute('disabled');
     $encourageMe.addEventListener('click', () => {
-      console.log(defaults.INSTANCE_REG_KEY_TOKEN)
       if ($forFree.checked) {
         $encourageForm.target = '';
         apiSend({
@@ -90,9 +87,10 @@ export default async function main () {
           id: now,
 
           // Contract-specific metadata.
+          // Uncomment the contract that you want to use
           // instanceRegKey: INSTANCE_REG_KEY,
-          instanceRegKey: defaults.INSTANCE_REG_KEY_TOKEN,
-          // instanceRegKey: defaults.INSTANCE_REG_KEY_MINT,
+          // instanceRegKey: defaults.INSTANCE_REG_KEY_TOKEN,
+          instanceRegKey: defaults.INSTANCE_REG_KEY_MINT,
 
           // Format is:
           //   hooks[targetName][hookName] = [hookMethod, ...hookArgs].
@@ -105,11 +103,24 @@ export default async function main () {
           },
 
           proposalTemplate: {
+            // That's how we mint fungible dynamic - works
+            //   want: {
+            //     TypeA: {
+            //       pursePetname: selects.$tipPurse.value,
+            //       extent: Number($inputAmount.value)
+            //     },
+            //   },
+            //   exit: { onDemand: null },
+            // },
+            // That's how we mint NFT dynamic - problematic
             want: {
-              TypeA: {
-                // The pursePetname identifies which purse we want to use
-                pursePetname: selects.$tipPurse.value,
-                extent: Number($inputAmount.value)
+              Plastic: {
+                pursePetname: 'plastic purse',
+                // Instead of id generate a random id
+                extent: [{
+                  type: 'TypeA',
+                  id: Number($inputAmount.value)
+                }],
               },
             },
             exit: { onDemand: null },

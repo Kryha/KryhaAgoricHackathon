@@ -79,7 +79,9 @@ async function deployNFT (references) {
     registry,
   } = references;
 
-  const { contracts } = installationConstants
+  const { contracts } = installationConstants;
+
+  console.log('deployNFT');
 
   const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === PLASTIC_A.contract);
   const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
@@ -109,21 +111,21 @@ async function deployNFT (references) {
 
 
   // TODO: remove | Temporarily contains a one time deposit
-  const { payout: payoutNFT } = await E(zoe).offer(invite);
-  console.log(await payoutNFT);
+  // const { payout: payoutNFT } = await E(zoe).offer(invite);
+  // console.log(await payoutNFT);
 
-  const nftPurse = await E(wallet).getPurse(pursePetname);
+  // const nftPurse = await E(wallet).getPurse(pursePetname);
 
-  payoutNFT.then(async payout => {
-    const nftPayment = await payout.Plastic;
-    console.log('tip payment in plastic received. Depositing now.');
-    try {
-      await E(nftPurse).deposit(nftPayment);
-      console.log('deposit successful.');
-    } catch (e) {
-      console.error(e);
-    }
-  });
+  // payoutNFT.then(async payout => {
+  //   const nftPayment = await payout.Plastic;
+  //   console.log('tip payment in plastic received. Depositing now.');
+  //   try {
+  //     await E(nftPurse).deposit(nftPayment);
+  //     console.log('deposit successful.');
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // });
 
   let CONTRACT_NAME = PLASTIC_A.contract;
   INSTANCE_REG_KEY_MINT = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);

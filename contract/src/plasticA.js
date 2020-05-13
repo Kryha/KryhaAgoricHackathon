@@ -17,7 +17,12 @@ export const makeContract = harden(zcf => {
 
   return zcf.addNewIssuer(issuer, 'Plastic').then(() => {
     const mintHook = offerHandle => {
-      const typeAnft = amountMath.make(harden([{ type: 'typeA' }]));
+      // const typeAnft = amountMath.make(harden([{ type: 'typeA' }]));
+
+      const requestOffer = zcf.getOffer(offerHandle);
+      const typeRequestExtent = requestOffer.proposal.want.Plastic.extent;
+
+      const typeAnft = amountMath.make(harden(typeRequestExtent));
       const paymentNftTypeA = mint.mintPayment(typeAnft);
 
       return zoeHelpers
@@ -33,8 +38,6 @@ export const makeContract = harden(zcf => {
         });
     };
 
-    // const makeInvite = () => zcf.makeInvitation(offerHook, 'mint a payment');
-    // const makeInvite = () => zcf.makeInvitation(offerHook, 'Plastic');
     const makeInvite = () =>
       inviteAnOffer(
         harden({
