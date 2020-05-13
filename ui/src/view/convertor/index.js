@@ -4,7 +4,7 @@ import { Flexdiv, Text, Button, Input, Select } from '../shared/styled'
 
 import { Store } from '../../store'
 
-const Creator = props => {
+const Convertor = props => {
   const { state, dispatch } = useContext(Store)
   const [amount, setAmount] = useState(0)
   state.assets = [{type: 'test'}, {type: 'test2'}]
@@ -119,4 +119,4 @@ const Creator = props => {
   )
 }
 
-export default Creator
+export default Convertor

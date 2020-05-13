@@ -40,15 +40,16 @@
     "watcherGlob": "**/*.html"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "dotenv-flow": "^3.1.0",
     "esm": "^3.2.25",
     "nodemon": "^2.0.3",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.3.1",
-    "dotenv": "^8.2.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-icons": "^3.8.0",
+    "react-iframe": "^1.8.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
     "react-select": "^3.0.8",
