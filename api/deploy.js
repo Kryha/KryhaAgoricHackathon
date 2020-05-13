@@ -66,23 +66,6 @@ async function deployToken (references) {
   const pursePetname = TOKEN_A.purseName;
   await E(wallet).makeEmptyPurse(issuerName, pursePetname);
 
-  // TODO: remove | Temporarily contains a one time deposit
-  const { payout: payoutP } = await E(zoe).offer(invite);
-  console.log(await payoutP);
-
-  const typeAPurse = await E(wallet).getPurse(pursePetname);
-
-  payoutP.then(async payout => {
-    const typeAPayment = await payout.TypeA;
-    console.log('tip payment in typeA received. Depositing now.');
-    try {
-      await E(typeAPurse).deposit(typeAPayment);
-      console.log('deposit successful.');
-    } catch (e) {
-      console.error(e);
-    }
-  });
-
   let CONTRACT_NAME = TOKEN_A.contract;
   INSTANCE_REG_KEY_TOKEN = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
 
@@ -303,7 +286,7 @@ export default async function deployApi (referencesPromise, { bundleSource, path
 
   const tokenIssuer = await deployToken(references);
   const nftIssuer = await deployNFT(references);
-  await swapTokenNft(references, tokenIssuer, nftIssuer)
+  // await swapTokenNft(references, tokenIssuer, nftIssuer)
 
   const issuersArray = await E(wallet).getIssuers();
   const issuers = new Map(issuersArray);

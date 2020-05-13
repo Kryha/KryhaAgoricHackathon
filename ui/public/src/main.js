@@ -105,20 +105,11 @@ export default async function main () {
           },
 
           proposalTemplate: {
-            // give: {
-            //   Tip: {
-            //     // The pursePetname identifies which purse we want to use
-            //     pursePetname: selects.$tipPurse.value,
-            //     extent: Number($inputAmount.value),
-            //   },
-            // },
             want: {
               TypeA: {
                 // The pursePetname identifies which purse we want to use
                 pursePetname: selects.$tipPurse.value,
-                // extent: Number(5),
-                extend: Number($inputAmount.value)
-                // extent: 5,
+                extent: Number($inputAmount.value)
               },
             },
             exit: { onDemand: null },
