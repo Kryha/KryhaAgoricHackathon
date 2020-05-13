@@ -3,6 +3,7 @@ import dappConstants from '../lib/constants.js';
 import { connect } from './connect.js';
 import { walletUpdatePurses, flipSelectedBrands } from './wallet.js';
 import defaults from '../conf/defaults';
+import { v1 as uuidv1 } from 'uuid';
 
 /**
  * @type {Object.<string, HTMLSelectElement>}
@@ -114,10 +115,9 @@ export default async function main () {
             want: {
               Plastic: {
                 pursePetname: 'plastic purse',
-                // Replace id to generate a random id
                 extent: [{
                   type: 'TypeA',
-                  id: Number($inputAmount.value)
+                  id: uuidv1(),
                 }],
               },
             },
