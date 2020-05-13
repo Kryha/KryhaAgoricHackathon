@@ -113,15 +113,18 @@ export default async function main () {
             //   },
             // },
             want: {
-              Tip: {
+              TypeA: {
                 // The pursePetname identifies which purse we want to use
                 pursePetname: selects.$tipPurse.value,
-                extent: Number(5),
+                // extent: Number(5),
+                extend: Number($inputAmount.value)
+                // extent: 5,
               },
             },
             exit: { onDemand: null },
           },
         };
+        console.log(offer.proposalTemplate);
         walletSend({
           type: 'walletAddOffer',
           data: offer

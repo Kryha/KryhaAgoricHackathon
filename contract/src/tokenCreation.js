@@ -13,6 +13,8 @@ export const makeContract = harden(zcf => {
   // Create the internal token mint for a fungible digital asset
   const { issuer, mint, amountMath } = produceIssuer('typeA');
 
+  const { inviteAnOffer } = makeZoeHelpers(zcf);
+
   const zoeHelpers = makeZoeHelpers(zcf);
 
   // We need to tell Zoe about this issuer and add a keyword for the
@@ -20,7 +22,7 @@ export const makeContract = harden(zcf => {
   return zcf.addNewIssuer(issuer, 'TypeA').then(() => {
     // We need to wait for the promise to resolve (meaning that Zoe
     // has done the work of adding a new issuer).
-    const offerHook = offerHandle => {
+    const mintHook = offerHandle => {
       // We will send everyone who makes an offer 1000 tokens
 
       const tokens1000 = amountMath.make(5);
@@ -46,12 +48,25 @@ export const makeContract = harden(zcf => {
     };
 
     // A function for making invites to this contract
-    const makeInvite = () => zcf.makeInvitation(offerHook, 'mint a payment');
+    // const makeInvite = () => zcf.makeInvitation(mintHook, 'mint a payment');
+    const makeInvite = () =>
+      inviteAnOffer(
+        harden({
+          offerHook: mintHook,
+          customProperties: { inviteDesc: 'mint' },
+        }),
+      );
 
     return harden({
       // return an invite to the creator of the contract instance
       // through Zoe
-      invite: makeInvite(),
+      invite: inviteAnOffer(
+        harden({
+          offerHook: mintHook,
+          customProperties: { inviteDesc: 'mint' },
+        })
+      ),
+      // invite: makeInvite(),
       publicAPI: {
         // provide a way for anyone who knows the instanceHandle of
         // the contract to make their own invite.
