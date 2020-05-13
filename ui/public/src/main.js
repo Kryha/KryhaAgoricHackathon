@@ -2,6 +2,7 @@
 import dappConstants from '../lib/constants.js';
 import { connect } from './connect.js';
 import { walletUpdatePurses, flipSelectedBrands } from './wallet.js';
+import defaults from '../conf/defaults';
 
 const { INSTANCE_REG_KEY } = dappConstants;
 
@@ -17,11 +18,11 @@ const $forFree = /** @type {HTMLInputElement} */ (document.getElementById('forFr
 const $forTip = /** @type {HTMLInputElement} */ (document.getElementById('forTip'));
 const $encourageForm = /** @type {HTMLFormElement} */ (document.getElementById('encourageForm'));
 
-export default async function main() {
+export default async function main () {
   selects.$brands.addEventListener('change', () => {
     flipSelectedBrands(selects);
   });
-  
+
   /**
    * @param {{ type: string; data: any; walletURL: string }} obj
    */
@@ -35,9 +36,9 @@ export default async function main() {
         break;
       }
       case 'walletURL': {
-       // Change the form action to URL.
-       $encourageForm.action = `${obj.walletURL}`;
-       break;
+        // Change the form action to URL.
+        $encourageForm.action = `${obj.walletURL}`;
+        break;
       }
     }
   };
@@ -60,9 +61,9 @@ export default async function main() {
   };
 
   const $encourageMe = /** @type {HTMLInputElement} */ (document.getElementById('encourageMe'));
-  
+
   const walletSend = await connect('wallet', walletRecv).then(walletSend => {
-    walletSend({ type: 'walletGetPurses'});
+    walletSend({ type: 'walletGetPurses' });
     return walletSend;
   });
 
@@ -73,6 +74,7 @@ export default async function main() {
 
     $encourageMe.removeAttribute('disabled');
     $encourageMe.addEventListener('click', () => {
+      console.log(defaults.INSTANCE_REG_KEY_TOKEN)
       if ($forFree.checked) {
         $encourageForm.target = '';
         apiSend({
@@ -82,13 +84,16 @@ export default async function main() {
       if ($forTip.checked) {
         $encourageForm.target = '_blank';
         const now = Date.now();
+
         const offer = {
           // JSONable ID for this offer.  This is scoped to the origin.
           id: now,
-      
+
           // Contract-specific metadata.
-          instanceRegKey: INSTANCE_REG_KEY,
-      
+          // instanceRegKey: INSTANCE_REG_KEY,
+          instanceRegKey: defaults.INSTANCE_REG_KEY_TOKEN,
+          // instanceRegKey: defaults.INSTANCE_REG_KEY_MINT,
+
           // Format is:
           //   hooks[targetName][hookName] = [hookMethod, ...hookArgs].
           // Then is called within the wallet as:
@@ -98,13 +103,20 @@ export default async function main() {
               getInvite: ['makeInvite'], // E(publicAPI).makeInvite()
             },
           },
-      
+
           proposalTemplate: {
-            give: {
+            // give: {
+            //   Tip: {
+            //     // The pursePetname identifies which purse we want to use
+            //     pursePetname: selects.$tipPurse.value,
+            //     extent: Number($inputAmount.value),
+            //   },
+            // },
+            want: {
               Tip: {
                 // The pursePetname identifies which purse we want to use
                 pursePetname: selects.$tipPurse.value,
-                extent: Number($inputAmount.value),
+                extent: Number(5),
               },
             },
             exit: { onDemand: null },
@@ -117,7 +129,7 @@ export default async function main() {
         alert('Please approve your tip, then close the wallet.')
       }
     });
-    
+
     return apiSend;
   });
 }

@@ -14,6 +14,8 @@ import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 
 // The deployer's wallet's petname for the tip issuer.
 const TIP_ISSUER_PETNAME = process.env.TIP_ISSUER_PETNAME || 'typeA';
+let INSTANCE_REG_KEY_MINT;
+let INSTANCE_REG_KEY_TOKEN;
 
 const TOKEN_A = {
   contract: 'tokenCreation',
@@ -81,6 +83,9 @@ async function deployToken (references) {
     }
   });
 
+  let CONTRACT_NAME = TOKEN_A.contract;
+  INSTANCE_REG_KEY_TOKEN = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+
   return issuer;
 }
 
@@ -137,6 +142,9 @@ async function deployNFT (references) {
     }
   });
 
+  let CONTRACT_NAME = PLASTIC_A.contract;
+  INSTANCE_REG_KEY_MINT = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+
   return issuer;
 }
 
@@ -153,10 +161,10 @@ async function swapTokenNft (references, tokenIssuer, nftIssuer) {
   const { INSTALLATION_REG_KEY: swapRegKey } = contracts.find(({ name }) => name === 'atomicSwap');
   const swapContractInstallationHandle = await E(registry).get(swapRegKey);
 
-  
+
   const tokenPurse = await E(wallet).getPurse(TOKEN_A.purseName);
   const nftPurse = await E(wallet).getPurse(PLASTIC_A.purseName);
-  
+
   console.log('purseAmount:', await E(nftPurse).getCurrentAmount());
 
   const issuerKeywordRecord = harden({
@@ -177,17 +185,17 @@ async function swapTokenNft (references, tokenIssuer, nftIssuer) {
 
   const tokenAmountMath = await E(tokenIssuer).getAmountMath();
   const nftAmountMath = await E(nftIssuer).getAmountMath();
-  
-  
+
+
   const aliceProposal = harden({
-    give: { Asset: currentAmount},
+    give: { Asset: currentAmount },
     want: { Price: await E(tokenAmountMath).make(3) },
     exit: { onDemand: null },
   });
 
   const alicePayment = await E(nftPurse).withdraw(currentAmount)
   const alicePayments = { Asset: alicePayment };
-  
+
 
   // 3: Alice makes the first offer in the swap.
   const { payout: alicePayoutP, outcome: bobInviteP } = await E(zoe).offer(
@@ -216,7 +224,7 @@ async function swapTokenNft (references, tokenIssuer, nftIssuer) {
   console.log('isntancerecord')
 
   const bobProposal = harden({
-    give: { Price: await E(tokenAmountMath).make(3)},
+    give: { Price: await E(tokenAmountMath).make(3) },
     want: { Asset: currentAmount },
     exit: { onDemand: null },
   });
@@ -356,6 +364,7 @@ export default async function deployApi (referencesPromise, { bundleSource, path
   // instanceHandle by adding it to the registry. Any users of our
   // contract will use this instanceHandle to get invites to the
   // contract in order to make an offer.
+
   const INSTANCE_REG_KEY = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
 
   console.log(`-- Contract Name: ${CONTRACT_NAME}`);
@@ -378,9 +387,10 @@ export default async function deployApi (referencesPromise, { bundleSource, path
   const handler = E(handlerInstall).spawn({ publicAPI, http });
   await E(http).registerAPIHandler(handler);
 
-
   // Re-save the constants somewhere where the UI and api can find it.
   const dappConstants = {
+    INSTANCE_REG_KEY_TOKEN,
+    INSTANCE_REG_KEY_MINT,
     INSTANCE_REG_KEY,
     // BRIDGE_URL: 'agoric-lookup:https://local.agoric.com?append=/bridge',
     brandRegKeys: { Tip: TIP_BRAND_REGKEY },
@@ -395,3 +405,4 @@ export default async function deployApi (referencesPromise, { bundleSource, path
   `;
   await fs.promises.writeFile(defaultsFile, defaultsContents);
 }
+

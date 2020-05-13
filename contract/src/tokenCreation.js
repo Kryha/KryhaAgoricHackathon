@@ -23,7 +23,7 @@ export const makeContract = harden(zcf => {
     const offerHook = offerHandle => {
       // We will send everyone who makes an offer 1000 tokens
 
-      const tokens1000 = amountMath.make(1000);
+      const tokens1000 = amountMath.make(5);
       const payment = mint.mintPayment(tokens1000);
 
       // Let's use a helper function which escrows the payment with

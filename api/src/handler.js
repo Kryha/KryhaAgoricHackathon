@@ -42,34 +42,36 @@ export default harden(({ publicAPI, http }, _inviteMaker) => {
     .then(doOneNotification, fail);
 
   return harden({
-    getCommandHandler() {
+    getCommandHandler () {
       const handler = {
-        onError(obj, _meta) {
+        onError (obj, _meta) {
           console.error('Have error', obj);
         },
 
         // The following is to manage the subscribers map.
-        onOpen(_obj, { channelHandle }) {
+        onOpen (_obj, { channelHandle }) {
           subChannelHandles.add(channelHandle);
         },
-        onClose(_obj, { channelHandle }) {
+        onClose (_obj, { channelHandle }) {
           subChannelHandles.delete(channelHandle);
         },
 
-        async onMessage(obj, { channelHandle }) {
+        async onMessage (obj, { channelHandle }) {
           // These are messages we receive from either POST or WebSocket.
           switch (obj.type) {
             case 'encouragement/getEncouragement': {
-              
+
               return harden({
                 type: 'encouragement/getEncouragementResponse',
+                // instanceRegKey: undefined,
                 instanceRegKey: undefined,
                 data: await E(publicAPI).getFreeEncouragement(),
+                // data: await E(publicAPI).getTokenIssuer(),
               });
             }
 
             case 'encouragement/subscribeNotifications': {
-              
+
               return harden({
                 type: 'encouragement/subscribeNotificationsResponse',
                 data: true,

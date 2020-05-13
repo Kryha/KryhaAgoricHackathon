@@ -10,11 +10,13 @@ export const makeContract = harden(zcf => {
   // Internal token mint for NFT
   const { issuer, mint, amountMath } = produceIssuer('plastic', 'set');
 
+  const { inviteAnOffer } = makeZoeHelpers(zcf);
+
   // make the zoe helpers
   const zoeHelpers = makeZoeHelpers(zcf);
 
   return zcf.addNewIssuer(issuer, 'Plastic').then(() => {
-    const offerHook = offerHandle => {
+    const mintHook = offerHandle => {
       const typeAnft = amountMath.make(harden([{ type: 'typeA' }]));
       const paymentNftTypeA = mint.mintPayment(typeAnft);
 
@@ -32,10 +34,23 @@ export const makeContract = harden(zcf => {
     };
 
     // const makeInvite = () => zcf.makeInvitation(offerHook, 'mint a payment');
-    const makeInvite = () => zcf.makeInvitation(offerHook, 'Plastic');
+    // const makeInvite = () => zcf.makeInvitation(offerHook, 'Plastic');
+    const makeInvite = () =>
+      inviteAnOffer(
+        harden({
+          offerHook: mintHook,
+          customProperties: { inviteDesc: 'mint' },
+        }),
+      );
+
 
     return harden({
-      invite: makeInvite(),
+      invite: inviteAnOffer(
+        harden({
+          offerHook: mintHook,
+          customProperties: { inviteDesc: 'mint' },
+        })
+      ),
       publicAPI: {
         makeInvite,
         getTokenIssuer: () => issuer,
