@@ -1,5 +1,6 @@
 import { doFetch } from '../utils/fetch-websocket';
 import defaults from '../../conf/defaults';
+import { v1 as uuidv1 } from 'uuid';
 
 export const updatePurses = (purses, dispatch) => {
   return dispatch({
@@ -88,7 +89,34 @@ export const retrieveConversions = (dispatch) => {
 
 export const convert = (input, output, amount, dispatch) => {
   // input is gonna be a list of objects i think that i will destructure
-
+  const offer = {
+    id: Date.now(),
+    instanceRegKey: defaults.INSTANCE_REG_KEY_NFT,
+    hooks: {
+      publicAPI: {
+        getInvite: ['makeInvite']
+      }
+    },
+    proposalTemplate: {
+      want: {
+        Plastic: {
+          pursePetname: 'plastic purse',
+          extent: [{
+            type: 'TypeA',
+            id: uuidv1()
+          }]
+        }
+      },
+      exit: { onDemand: null }
+    }
+  }
+  console.log(offer.proposalTemplate);
+  doFetch(
+    {
+      type: 'walletAddOffer',
+      data: offer,
+    },
+  )
   return dispatch({
     type: 'CONVERT',
     payload: true
