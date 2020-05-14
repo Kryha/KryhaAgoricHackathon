@@ -184,9 +184,9 @@ const Converter = props => {
               value={selectedConversion}
               onChange={(e) => setSelectedConversion(e.target.value)}
             >
-              {state.assets.map((asset, index)=>{
+              {state.conversions.map((conversions, index)=>{
                 return(
-                  <option key={index} value={index}>{asset.type}</option>
+                  <option key={index} value={index}>{conversions.output}</option>
                 )
               })}
             </Select>
@@ -195,7 +195,11 @@ const Converter = props => {
             flex='row'
             w = '45%'
           >
-            <Text c='#FFF' margin='0'>{state.conversions[selectedConversion].output}</Text>
+            <Text c='#FFF' margin='0'>
+              {state.conversions[selectedConversion].input.map((asset)=>{
+                return `${asset.type} (${asset.amount})`
+              }).join(', ')}
+            </Text>
           </Flexdiv>
           <Flexdiv
             flex='row'

@@ -25,7 +25,7 @@ export const retrieveConversions = (dispatch) => {
 
   return dispatch({
     type: 'RETRIEVECONVERSIONS',
-    payload: [{input:[{type:'asset 1'}], output:'type b'}]
+    payload: [{input:[{type:'asset 1', amount:10}, {type:'asset 2', amount: 5}], output:'type b'}]
   }) 
 }
 
