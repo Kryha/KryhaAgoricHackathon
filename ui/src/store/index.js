@@ -13,9 +13,9 @@ function reducer (state, action) {
     case 'RETRIEVEASSETS':
       return { ...state, assets: action.payload }
     case 'MINTASSETS':
-      return { ...state, assets: action.payload }
+      return { ...state, success: action.payload }
     case 'CREATEPURCHASEORDER':
-      return { ...state, assets: action.payload }
+      return { ...state, success: action.payload }
     case 'RETRIEVECONVERSIONS':
       return { ...state, conversions: action.payload }
     case 'CONVERT':
