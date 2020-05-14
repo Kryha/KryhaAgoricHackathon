@@ -59,18 +59,22 @@ const Converter = props => {
         flex='column'
         w='95%'
         marginl='5%'
-        h='30%'
+        h='25%'
       >
         <Flexdiv
           flex='row'
           w='100%'
+          h='20%'
         >
           <Text c='#A161A1' >Current Owned Assets</Text>
         </Flexdiv>
         
         <Flexdiv
           flex='row'
-          w='100%'
+          w='80%'
+          h='80%'
+          alignItems='center'
+          justify='center'
         >
           {state.assets.map((asset, index)=>{
             return(
@@ -90,22 +94,27 @@ const Converter = props => {
         flex='column'
         w='95%'
         marginl='5%'
-        margint='5%'
         h='30%'
       >
         <Flexdiv
           flex='row'
           w = '100%'
+          h = '20%'
         >
           <Text c='#A161A1'>Create Purchase Order</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
           w = '100%'
+          h='80%'
+          alignItems='center'
+          justify='center'
         >
           <Flexdiv
             flex='row'
             w = '25%'
+            h='50%'
+            alignItems='center'
           >
             <Select
               w='75%'
@@ -121,22 +130,31 @@ const Converter = props => {
           </Flexdiv>
           <Flexdiv
             flex='row'
-            w = '45%'
+            w = '35%'
+            h='50%'
+            alignItems='center'
           >
             <Text c='#FFF' margin='0'>{state.assets[selectedAsset].seller}</Text>
           </Flexdiv>
           <Flexdiv
             flex='row'
-            w = '25%'
+            w = '30%'
+            h='50%'
+            alignItems='center'
           >
             <Flexdiv
               flex='row'
-              w = '47.5%'
+              w = '35%'
+              h='50%'
             >
               <Input
                 placeholder='Amount'
                 type='number'
                 w='100%'
+                border='none'
+                size='14px'
+                background='#3E3E3E'
+                c='#fff'
                 value={amountToBuy === 0 ? '': amountToBuy}
                 onChange={(event)=> {
                   setAmountToBuy(event.target.value)}
@@ -145,8 +163,10 @@ const Converter = props => {
             </Flexdiv>
             <Flexdiv
               flex='row'
-              w = '47.5%'
-              marginl='5%'
+              w = '65%'
+              marginl='10%'
+              h='100%'
+              justify='center'
             >
               <Button
                 c='#A161A1'
@@ -177,16 +197,22 @@ const Converter = props => {
         <Flexdiv
           flex='row'
           w = '100%'
+          h='20%'
         >
           <Text c='#A161A1'>Create Conversion</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
           w = '100%'
+          h='80%'
+          alignItems='center'
+          justify='center'
         >
           <Flexdiv
             flex='row'
             w = '25%'
+            h='50%'
+            alignItems='center'
           >
             <Select
               w='75%'
@@ -202,7 +228,7 @@ const Converter = props => {
           </Flexdiv>
           <Flexdiv
             flex='row'
-            w = '45%'
+            w = '35%'
           >
             <Text c='#FFF' margin='0'>
               {state.conversions[selectedConversion].input.map((asset)=>{
@@ -216,16 +242,24 @@ const Converter = props => {
           </Flexdiv>
           <Flexdiv
             flex='row'
-            w = '25%'
+            w = '30%'
+            h='50%'
+            alignItems='center'
           >
             <Flexdiv
               flex='row'
-              w = '47.5%'
+              w = '35%'
+              h='50'
+              alignItems='center'
             >
               <Input
                 placeholder='Amount'
                 type='number'
                 w='100%'
+                border='none'
+                size='14px'
+                background='#3E3E3E'
+                c='#fff'
                 value={amount === 0 ? '': amount}
                 onChange={(event)=> {
                   setAmount(event.target.value)}
@@ -234,8 +268,10 @@ const Converter = props => {
             </Flexdiv>
             <Flexdiv
               flex='row'
-              w = '47.5%'
-              marginl='5%'
+              w = '65%'
+              marginl='10%'
+              h='100%'
+              justify='center'
             >
               <Button
                 c='#A161A1'

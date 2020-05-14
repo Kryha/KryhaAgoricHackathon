@@ -35,6 +35,7 @@ const Main = props => {
       h='100%'
       marginl='10%'
       background='#3E3E3E'
+      radius='3px'
     >
       <Flexdiv
         flex='row'
@@ -55,7 +56,7 @@ const Main = props => {
           h='5%'
         >
           <Text
-            c='#FFF'
+            c='#A161A1'
             margin ='0'
             marginl='5%'
           >Approve/reject purchase orders</Text>

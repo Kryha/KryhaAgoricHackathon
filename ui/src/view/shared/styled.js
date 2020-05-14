@@ -123,6 +123,9 @@ const Input = styled.input`
   border: ${props => props.border};
   border-radius: ${props => props.radius};
   text-align: ${props => props.align};
+  :focus {
+    outline: none;
+  }
 `
 const InputArea = styled.textarea`
   font-size: ${props => props.size};

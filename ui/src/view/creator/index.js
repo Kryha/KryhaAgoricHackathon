@@ -79,13 +79,14 @@ const Creator = props => {
         <Flexdiv
           flex='row'
           w = '100%'
+          h = '20%'
         >
           <Text c='#A161A1'>Create Tokens for Mined Material</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
           w = '100%'
-          h='100%'
+          h='80%'
           alignItems='center'
         >
           <Flexdiv
@@ -129,6 +130,10 @@ const Creator = props => {
                 placeholder='Amount'
                 type='number'
                 w='100%'
+                border='none'
+                size='14px'
+                background='#3E3E3E'
+                c='#fff'
                 value={amount === 0 ? '': amount}
                 onChange={(event)=> {
                   setAmount(event.target.value)}
