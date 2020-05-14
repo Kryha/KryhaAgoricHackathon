@@ -73,6 +73,35 @@ export const createPurchaseOrder = (type, purse, amount, dispatch) => {
   console.log('Action:mint', type, purse, amount)
   // TODO: Mint a new paid_invoice NFT
   // TODO: Exchange paid_invoice NFT for amount of type tokens
+  const offer = {
+    id: Date.now(),
+    instanceRegKey: defaults.INSTANCE_REG_KEY_NFT,
+    hooks: {
+      publicAPI: {
+        getInvite: ['makeInvite']
+      }
+    },
+    proposalTemplate: {
+      want: {
+        Plastic: {
+          pursePetname: 'plastic purse',
+          extent: [{
+            type: type,
+            id: uuidv1(),
+            amount: Number(amount)
+          }]
+        }
+      },
+      exit: { onDemand: null }
+    }
+  }
+  console.log(offer.proposalTemplate);
+  doFetch(
+    {
+      type: 'walletAddOffer',
+      data: offer,
+    },
+  )
   return dispatch({
     type: 'CREATEPURCHASEORDER',
     payload: true
@@ -89,34 +118,7 @@ export const retrieveConversions = (dispatch) => {
 
 export const convert = (input, output, amount, dispatch) => {
   // input is gonna be a list of objects i think that i will destructure
-  const offer = {
-    id: Date.now(),
-    instanceRegKey: defaults.INSTANCE_REG_KEY_NFT,
-    hooks: {
-      publicAPI: {
-        getInvite: ['makeInvite']
-      }
-    },
-    proposalTemplate: {
-      want: {
-        Plastic: {
-          pursePetname: 'plastic purse',
-          extent: [{
-            type: 'TypeA',
-            id: uuidv1()
-          }]
-        }
-      },
-      exit: { onDemand: null }
-    }
-  }
-  console.log(offer.proposalTemplate);
-  doFetch(
-    {
-      type: 'walletAddOffer',
-      data: offer,
-    },
-  )
+
   return dispatch({
     type: 'CONVERT',
     payload: true
