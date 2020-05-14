@@ -42,7 +42,7 @@ export const retrieveDecompositions = (dispatch) => {
 
   return dispatch({
     type: 'RETRIEVEDECOMPOSITIONS',
-    payload: [{give:'type b', want:'3 type a'}]
+    payload: [{output:[{type:'asset 1', amount:10}, {type:'asset 2', amount: 5}], input:'type b'}]
   })  
 }
 

@@ -2,12 +2,20 @@ import React, { useState, useEffect } from 'react'
 import { Flexdiv, Text, Button, Input, Select } from '../shared/styled'
 
 import { useApplicationContext } from '../../store/storeContext'
-import {retrieveAssets, mintAssets} from '../../services/actions/actions'
+import {retrieveAssets, createPurchaseOrder, decompose, retrieveDecompositions} from '../../services/actions/actions'
 
 const Decomposer = props => {
   const { state, dispatch } = useApplicationContext()
   const [amount, setAmount] = useState(0)
+  const [amountToBuy, setAmountToBuy] = useState(0)
   const [selectedAsset, setSelectedAsset] = useState(0)
+  const [selectedDecomposition, setSelectedDecomposition] = useState(0)
+
+  useEffect(() =>{
+    if(state.decompositions.length === 0){
+      retrieveDecompositions(dispatch)
+    }
+  },[state.decompositions])
 
   useEffect(() =>{
     if(state.assets.length === 0){
@@ -15,14 +23,21 @@ const Decomposer = props => {
     }
   },[state.assets])
 
-
-  const mintNewAssets = () => {
-    if(amount > 0){
-      mintAssets(state.assets[selectedAsset].type, amount, dispatch)
+  const createNewPurchaseOrder = () => {
+    if(amountToBuy > 0){
+      let asset = state.assets[selectedAsset]
+      createPurchaseOrder(asset.type, amount, asset.seller,dispatch)
     }
   }
 
-  if (state.assets.length === 0) {
+  const createNewDecomposition = () => {
+    if(amount > 0){
+      let decomp = state.decompositions[selectedDecomposition]
+      decompose(decomp.input, decomp.amount, dispatch)
+    }
+  }
+
+  if (state.assets.length === 0 || state.decompositions.length === 0) {
     return (
       <Flexdiv
         flex='column'
@@ -33,12 +48,12 @@ const Decomposer = props => {
       </Flexdiv>
     )
   }
-
+  console.log(state.decompositions)
   return (
     <Flexdiv
-      flex='column'
-      w='100%'
-      h='100%'
+    flex='column'
+    w='100%'
+    h='100%'
     >
       <Flexdiv
         flex='column'
@@ -50,7 +65,7 @@ const Decomposer = props => {
           flex='row'
           w='100%'
         >
-          <Text c='#FFF' >Current Asset Types</Text>
+          <Text c='#FFF' >Current Owned Assets</Text>
         </Flexdiv>
         
         <Flexdiv
@@ -82,7 +97,7 @@ const Decomposer = props => {
           flex='row'
           w = '100%'
         >
-          <Text c='#FFF'>Current Assets</Text>
+          <Text c='#FFF'>Create Purchase Order</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
@@ -108,7 +123,87 @@ const Decomposer = props => {
             flex='row'
             w = '45%'
           >
-            <Text c='#FFF' margin='0'>{state.assets[selectedAsset].description}</Text>
+            <Text c='#FFF' margin='0'>{state.assets[selectedAsset].seller}</Text>
+          </Flexdiv>
+          <Flexdiv
+            flex='row'
+            w = '25%'
+          >
+            <Flexdiv
+              flex='row'
+              w = '47.5%'
+            >
+              <Input
+                placeholder='Amount'
+                type='number'
+                w='100%'
+                value={amountToBuy === 0 ? '': amountToBuy}
+                onChange={(event)=> {
+                  setAmountToBuy(event.target.value)}
+                }
+              />
+            </Flexdiv>
+            <Flexdiv
+              flex='row'
+              w = '47.5%'
+              marginl='5%'
+            >
+              <Button
+                onClick={createNewPurchaseOrder}
+              >
+                Purchase
+              </Button>
+            </Flexdiv>
+          </Flexdiv>
+        </Flexdiv>
+      </Flexdiv>
+
+      <Flexdiv
+        flex='column'
+        w='95%'
+        marginl='5%'
+        margint='5%'
+        h='30%'
+      >
+        <Flexdiv
+          flex='row'
+          w = '100%'
+        >
+          <Text c='#FFF'>Decompose</Text>
+        </Flexdiv>
+        <Flexdiv
+          flex='row'
+          w = '100%'
+        >
+          <Flexdiv
+            flex='row'
+            w = '25%'
+          >
+            <Select
+              w='75%'
+              value={selectedDecomposition}
+              onChange={(e) => setSelectedDecomposition(e.target.value)}
+            >
+              {state.decompositions.map((decomposition, index)=>{
+                return(
+                  <option key={index} value={index}>{decomposition.input}</option>
+                )
+              })}
+            </Select>
+          </Flexdiv>
+          <Flexdiv
+            flex='row'
+            w = '45%'
+          >
+            <Text c='#FFF' margin='0'>
+              {state.decompositions[selectedDecomposition].output.map((asset)=>{
+                let tmp = asset.amount
+                if(amount > 0) {
+                  tmp *= amount
+                }
+                return `${asset.type} (${tmp})`
+              }).join(', ')}
+            </Text>
           </Flexdiv>
           <Flexdiv
             flex='row'
@@ -134,9 +229,9 @@ const Decomposer = props => {
               marginl='5%'
             >
               <Button
-                onClick={mintNewAssets}
+                onClick={createNewDecomposition}
               >
-                Create
+                Decompose
               </Button>
             </Flexdiv>
           </Flexdiv>

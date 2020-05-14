@@ -197,7 +197,11 @@ const Converter = props => {
           >
             <Text c='#FFF' margin='0'>
               {state.conversions[selectedConversion].input.map((asset)=>{
-                return `${asset.type} (${asset.amount})`
+                let tmp = asset.amount
+                if(amount > 0) {
+                  tmp *= amount
+                }
+                return `${asset.type} (${tmp})`
               }).join(', ')}
             </Text>
           </Flexdiv>
