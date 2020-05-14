@@ -1,7 +1,7 @@
 export const retrieveAssets = (dispatch) => {
   return dispatch({
     type: 'RETRIEVEASSETS',
-    payload: [{type:'asset 1'}, {type: 'asset 2'}]
+    payload: [{type:'asset 1', description: 'this is asset of type 1'}, {type: 'asset 2',description: 'this is asset of type 2'}]
   })
 }
 
