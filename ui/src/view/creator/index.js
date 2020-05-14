@@ -50,12 +50,13 @@ const Creator = props => {
           flex='row'
           w='100%'
         >
-          <Text c='#FFF' >Current Asset Types</Text>
+          <Text c='#A161A1' >Current Asset Types</Text>
         </Flexdiv>
         
         <Flexdiv
           flex='row'
           w='100%'
+          alignItems='center'
         >
           {state.assets.map((asset, index)=>{
             return(
@@ -82,15 +83,19 @@ const Creator = props => {
           flex='row'
           w = '100%'
         >
-          <Text c='#FFF'>Current Assets</Text>
+          <Text c='#A161A1'>Current Assets</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
           w = '100%'
+          h='100%'
+          alignItems='center'
         >
           <Flexdiv
             flex='row'
             w = '25%'
+            h='50%'
+            alignItems='center'
           >
             <Select
               w='75%'
@@ -107,16 +112,21 @@ const Creator = props => {
           <Flexdiv
             flex='row'
             w = '45%'
+            h='50%'
+            alignItems='center'
           >
             <Text c='#FFF' margin='0'>{state.assets[selectedAsset].description}</Text>
           </Flexdiv>
           <Flexdiv
             flex='row'
             w = '25%'
+            h='50%'
+            alignItems='center'
           >
             <Flexdiv
               flex='row'
               w = '47.5%'
+              h='50%'
             >
               <Input
                 placeholder='Amount'
@@ -131,9 +141,19 @@ const Creator = props => {
             <Flexdiv
               flex='row'
               w = '47.5%'
-              marginl='5%'
+              marginl='10%'
+              h='100%'
             >
               <Button
+                c='#A161A1'
+                background='#3E3E3E'
+                borderc='#A161A1'
+                hoverBackground='#A161A1'
+                hoverColor='#3E3E3E'
+                radius='3px'
+                fontSize='16px'
+                w='80%'
+                h='100%'
                 onClick={mintNewAssets}
               >
                 Create

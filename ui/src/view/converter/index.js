@@ -65,7 +65,7 @@ const Converter = props => {
           flex='row'
           w='100%'
         >
-          <Text c='#FFF' >Current Owned Assets</Text>
+          <Text c='#A161A1' >Current Owned Assets</Text>
         </Flexdiv>
         
         <Flexdiv
@@ -97,7 +97,7 @@ const Converter = props => {
           flex='row'
           w = '100%'
         >
-          <Text c='#FFF'>Create Purchase Order</Text>
+          <Text c='#A161A1'>Create Purchase Order</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
@@ -149,6 +149,15 @@ const Converter = props => {
               marginl='5%'
             >
               <Button
+                c='#A161A1'
+                background='#3E3E3E'
+                borderc='#A161A1'
+                hoverBackground='#A161A1'
+                hoverColor='#3E3E3E'
+                radius='3px'
+                fontSize='16px'
+                w='80%'
+                h='100%'
                 onClick={createNewPurchaseOrder}
               >
                 Purchase
@@ -169,7 +178,7 @@ const Converter = props => {
           flex='row'
           w = '100%'
         >
-          <Text c='#FFF'>Create Conversion</Text>
+          <Text c='#A161A1'>Create Conversion</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
@@ -229,6 +238,15 @@ const Converter = props => {
               marginl='5%'
             >
               <Button
+                c='#A161A1'
+                background='#3E3E3E'
+                borderc='#A161A1'
+                hoverBackground='#A161A1'
+                hoverColor='#3E3E3E'
+                radius='3px'
+                fontSize='16px'
+                w='80%'
+                h='100%'
                 onClick={createNewConversion}
               >
                 Create
