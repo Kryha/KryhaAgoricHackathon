@@ -13,7 +13,7 @@ export const makeContract = harden(zcf => {
   return zcf.addNewIssuer(issuer, 'TypeB').then(() => {
     const mintHook = offerHandle => {
       const requestOffer = zcf.getOffer(offerHandle);
-      const tokenRequestExtent = requestOffer.proposal.want.TypeA.extent;
+      const tokenRequestExtent = requestOffer.proposal.want.TypeB.extent;
 
       const amount = amountMath.make(tokenRequestExtent);
       const payment = mint.mintPayment(amount);

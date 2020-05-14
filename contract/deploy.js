@@ -51,11 +51,11 @@ export default async function deployContract (
     },
     {
       name: 'tokenBCreation',
-      path: `./src/tokenACreation.js`,
+      path: `./src/tokenBCreation.js`,
     },
     {
       name: 'tokenCCreation',
-      path: `./src/tokenACreation.js`,
+      path: `./src/tokenCCreation.js`,
     },
     {
       name: 'encouragement',
