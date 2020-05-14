@@ -4,7 +4,7 @@ import { Flexdiv, Text, Button, Input, Select } from '../shared/styled'
 import { useApplicationContext } from '../../store/storeContext'
 import {retrieveAssets, retrieveConversions, createPurchaseOrder, convert} from '../../services/actions/actions'
 
-const Convertor = props => {
+const Converter = props => {
   const { state, dispatch } = useApplicationContext()
   const [amount, setAmount] = useState(0)
   const [amountToBuy, setAmountToBuy] = useState(0)
@@ -233,4 +233,4 @@ const Convertor = props => {
   )
 }
 
-export default Convertor
+export default Converter

@@ -48,11 +48,11 @@ function App () {
               alignItems='center'
               hoverBackground='#B133FF'
               marginb='25%'
-              onClick={() => setActive('convertor')}
+              onClick={() => setActive('converter')}
             >
               <Text
                 marginl='15%'
-              >Convertor</Text>
+              >Connverter</Text>
             </Flexdiv>
             <Flexdiv
               flex='row'

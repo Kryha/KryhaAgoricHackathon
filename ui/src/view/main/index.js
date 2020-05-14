@@ -4,22 +4,22 @@ import Iframe from 'react-iframe'
 import dappConstants from '../../constants'
 
 import Creator from '../creator'
-import Convertor from '../convertor'
+import Converter from '../converter'
 import Decomposer from '../decomposer'
 
 const Main = props => {
     const {
     CREATOR_WALLET,
-    CONVERTOR_WALLET,
+    CONVERTER_WALLET,
     DECOMPOSER_WALLET
   } = dappConstants
 
   let wallet
   let render
 
-  if(props.active ==='convertor'){
-    render = <Convertor/>
-    wallet = CONVERTOR_WALLET
+  if(props.active ==='converter'){
+    render = <Converter/>
+    wallet = CONVERTER_WALLET
   }else if(props.active ==='decomposer'){
     render = <Decomposer/>
     wallet = DECOMPOSER_WALLET
