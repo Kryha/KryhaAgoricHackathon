@@ -2,7 +2,7 @@
 // Agoric Dapp api deployment script
 
 import fs from 'fs';
-import installationConstants from '../ui/public/conf/installationConstants.js';
+import installationConstants from '../ui/src/conf/installationConstants.js';
 import { E } from '@agoric/eventual-send';
 import produceIssuer from '@agoric/ertp';
 import harden from '@agoric/harden';
@@ -364,7 +364,8 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     BRIDGE_URL: 'http://127.0.0.1:8000',
     API_URL: 'http://127.0.0.1:8000',
   };
-  const defaultsFile = pathResolve(`../ui/public/conf/defaults.js`);
+  // const defaultsFile = pathResolve(`../ui/public/conf/defaults.js`);
+  const defaultsFile = pathResolve(`../ui/src/conf/default.js`);
   console.log('writing', defaultsFile);
   const defaultsContents = `\
   // GENERATED FROM ${pathResolve('./deploy.js')}
