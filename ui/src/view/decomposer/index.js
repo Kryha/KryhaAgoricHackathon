@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState } from 'react'
 import { Flexdiv, Text, Button, Input, Select } from '../shared/styled'
 
-
-import { Store } from '../../store'
+import { useApplicationContext } from '../../store/storeContext'
 
 const Decomposer = props => {
-  const { state, dispatch } = useContext(Store)
+  const { state, dispatch } = useApplicationContext()
   const [amount, setAmount] = useState(0)
   state.assets = [{type: 'test'}, {type: 'test2'}]
 

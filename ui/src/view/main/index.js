@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React from 'react'
 import { Flexdiv, Text } from '../shared/styled'
 import Iframe from 'react-iframe'
-import {
-  CREATOR_WALLET,
-  CONVERTOR_WALLET,
-  DECOMPOSER_WALLET
-} from '../../constants'
+import dappConstants from '../../constants'
 
 import Creator from '../creator'
 import Convertor from '../convertor'
 import Decomposer from '../decomposer'
 
-import { Store } from '../../store'
-
 const Main = props => {
-  const { state, dispatch } = useContext(Store)
+    const {
+    CREATOR_WALLET,
+    CONVERTOR_WALLET,
+    DECOMPOSER_WALLET
+  } = dappConstants
+
   let wallet
   let render
 
@@ -71,8 +70,8 @@ const Main = props => {
           <Iframe url={wallet}
             width="100%"
             height="100%"
-            id="myId"
-            className="myClassname"
+            id="walletBridgeIFrame"
+            className="walletBridgeIFrame"
             display="initial"
             position="flex"/>
         </Flexdiv>
