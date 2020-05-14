@@ -46,8 +46,16 @@ export default async function deployContract (
 
   const contracts = [
     {
-      name: 'tokenCreation',
-      path: `./src/tokenCreation.js`,
+      name: 'tokenACreation',
+      path: `./src/tokenACreation.js`,
+    },
+    {
+      name: 'tokenBCreation',
+      path: `./src/tokenACreation.js`,
+    },
+    {
+      name: 'tokenCCreation',
+      path: `./src/tokenACreation.js`,
     },
     {
       name: 'encouragement',

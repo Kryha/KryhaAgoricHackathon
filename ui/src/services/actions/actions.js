@@ -17,14 +17,29 @@ export const retrieveAssets = (dispatch) => {
 
 export const mintAssets = (type, purse, amount, dispatch) => {
   console.log('Action:mint', type, purse, amount)
-  if (purse !== 'typeA purse') {
+  const purses = ['typeA purse', 'typeB purse', 'typeC purse']
+  if (!purses.includes(purse)) {
     return alert('The Creator can only mint fungible tokens')
+  }
+  let instanceRegKey
+  switch (purse) {
+    case 'typeA purse':
+      instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_A
+      break;
+    case 'typeB purse':
+      instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_B
+      break;
+    case 'typeC purse':
+      instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_C
+      break
+    default:
+      break
   }
 
   const offer = {
     id: Date.now(),
-    instanceRegKey: defaults.INSTANCE_REG_KEY_FUNGIBLE,
-    contractIssuerIndexToKeyword: ['TypeA', 'TypeB'],
+    instanceRegKey: instanceRegKey,
+    contractIssuerIndexToKeyword: ['TypeA', 'TypeB', 'TypeC'],
     hooks: {
       publicAPI: {
         getInvite: ['makeInvite']

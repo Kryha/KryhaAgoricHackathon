@@ -15,12 +15,26 @@ import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 // The deployer's wallet's petname for the tip issuer.
 const TIP_ISSUER_PETNAME = process.env.TIP_ISSUER_PETNAME || 'typeA';
 let INSTANCE_REG_KEY_NFT;
-let INSTANCE_REG_KEY_FUNGIBLE;
+let INSTANCE_REG_KEY_FUNGIBLE_A;
+let INSTANCE_REG_KEY_FUNGIBLE_B;
+let INSTANCE_REG_KEY_FUNGIBLE_C;
 
 const TOKEN_A = {
-  contract: 'tokenCreation',
+  contract: 'tokenACreation',
   issuerName: 'typeA',
   purseName: 'typeA purse'
+}
+
+const TOKEN_B = {
+  contract: 'tokenBCreation',
+  issuerName: 'typeB',
+  purseName: 'typeB purse'
+}
+
+const TOKEN_C = {
+  contract: 'tokenCCreation',
+  issuerName: 'typeC',
+  purseName: 'typeC purse'
 }
 
 const PLASTIC_A = {
@@ -29,7 +43,7 @@ const PLASTIC_A = {
   purseName: 'plastic purse'
 }
 
-async function deployToken (references) {
+async function deployTokenA (references) {
   const {
     wallet,
     zoe,
@@ -67,7 +81,93 @@ async function deployToken (references) {
   await E(wallet).makeEmptyPurse(issuerName, pursePetname);
 
   let CONTRACT_NAME = TOKEN_A.contract;
-  INSTANCE_REG_KEY_FUNGIBLE = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+  INSTANCE_REG_KEY_FUNGIBLE_A = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+
+  return issuer;
+}
+
+async function deployTokenB (references) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  const {
+    contracts
+  } = installationConstants;
+
+  console.log('deployToken');
+
+  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === TOKEN_B.contract);
+  const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+
+  const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle);
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  const invite = await E(publicAPI).makeInvite();
+
+  const issuer = await E(publicAPI).getTokenIssuer();
+
+  const issuerName = TOKEN_B.issuerName;
+  const brandRegKey = await E(registry).register(
+    issuerName,
+    await E(issuer).getBrand()
+  )
+
+  await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
+
+  const pursePetname = TOKEN_B.purseName;
+  await E(wallet).makeEmptyPurse(issuerName, pursePetname);
+
+  let CONTRACT_NAME = TOKEN_B.contract;
+  INSTANCE_REG_KEY_FUNGIBLE_B = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+
+  return issuer;
+}
+
+async function deployTokenC (references) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  const {
+    contracts
+  } = installationConstants;
+
+  console.log('deployToken');
+
+  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === TOKEN_C.contract);
+  const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+
+  const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle);
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  const invite = await E(publicAPI).makeInvite();
+
+  const issuer = await E(publicAPI).getTokenIssuer();
+
+  const issuerName = TOKEN_C.issuerName;
+  const brandRegKey = await E(registry).register(
+    issuerName,
+    await E(issuer).getBrand()
+  )
+
+  await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
+
+  const pursePetname = TOKEN_C.purseName;
+  await E(wallet).makeEmptyPurse(issuerName, pursePetname);
+
+  let CONTRACT_NAME = TOKEN_C.contract;
+  INSTANCE_REG_KEY_FUNGIBLE_C = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
 
   return issuer;
 }
@@ -268,7 +368,9 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     contracts
   } = installationConstants;
 
-  const tokenIssuer = await deployToken(references);
+  const tokenAIssuer = await deployTokenA(references);
+  const tokenBIssuer = await deployTokenB(references);
+  const tokenCIssuer = await deployTokenC(references);
   const nftIssuer = await deployNFT(references);
   // await swapTokenNft(references, tokenIssuer, nftIssuer)
 
@@ -356,7 +458,9 @@ export default async function deployApi (referencesPromise, { bundleSource, path
 
   // Re-save the constants somewhere where the UI and api can find it.
   const dappConstants = {
-    INSTANCE_REG_KEY_FUNGIBLE,
+    INSTANCE_REG_KEY_FUNGIBLE_A,
+    INSTANCE_REG_KEY_FUNGIBLE_B,
+    INSTANCE_REG_KEY_FUNGIBLE_C,
     INSTANCE_REG_KEY_NFT,
     INSTANCE_REG_KEY,
     // BRIDGE_URL: 'agoric-lookup:https://local.agoric.com?append=/bridge',
@@ -364,8 +468,7 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     BRIDGE_URL: 'http://127.0.0.1:8000',
     API_URL: 'http://127.0.0.1:8000',
   };
-  // const defaultsFile = pathResolve(`../ui/public/conf/defaults.js`);
-  const defaultsFile = pathResolve(`../ui/src/conf/default.js`);
+  const defaultsFile = pathResolve(`../ui/src/conf/defaults.js`);
   console.log('writing', defaultsFile);
   const defaultsContents = `\
   // GENERATED FROM ${pathResolve('./deploy.js')}
