@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Flexdiv, Text, Button, Input, Select } from '../shared/styled'
 
 import { useApplicationContext } from '../../store/storeContext'
 import {retrieveAssets, mintAssets} from '../../services/actions/actions'
@@ -6,6 +7,7 @@ import {retrieveAssets, mintAssets} from '../../services/actions/actions'
 const Decomposer = props => {
   const { state, dispatch } = useApplicationContext()
   const [amount, setAmount] = useState(0)
+  const [selectedAsset, setSelectedAsset] = useState(0)
 
   useEffect(() =>{
     if(state.assets.length === 0){

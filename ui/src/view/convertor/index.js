@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Flexdiv, Text, Button, Input, Select } from '../shared/styled'
 
 import { useApplicationContext } from '../../store/storeContext'
 import {retrieveAssets, retrieveConversions, createPurchaseOrder, convert} from '../../services/actions/actions'
-
-import { Store } from '../../store'
 
 const Convertor = props => {
   const { state, dispatch } = useApplicationContext()
@@ -25,9 +23,6 @@ const Convertor = props => {
     }
   },[state.assets])
 
-<<<<<<< HEAD
-=======
-
   const createNewPurchaseOrder = () => {
     if(amount > 0){
       let asset = state.assets[selectedAsset]
@@ -47,7 +42,6 @@ const Convertor = props => {
     )
   }
 
->>>>>>> 90a56337fce44e69f2471a9de5c5a64095a80717
   return (
     <Flexdiv
       flex='column'
