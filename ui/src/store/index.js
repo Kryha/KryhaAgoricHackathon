@@ -4,6 +4,7 @@ export const Store = React.createContext()
 
 export const createDefaultState = () => {
   return {
+    purses: [],
     assets: [],
     conversions: [],
     decompositions: []
@@ -12,6 +13,8 @@ export const createDefaultState = () => {
 
 export function reducer (state, action) {
   switch (action.type) {
+    case 'UPDATEPURSES':
+      return { ...state, purses: action.payload }
     case 'RETRIEVEASSETS':
       return { ...state, assets: action.payload }
     case 'MINTASSETS':

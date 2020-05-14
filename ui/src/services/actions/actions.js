@@ -1,3 +1,10 @@
+export const updatePurses = (purses, dispatch) => {
+  return dispatch({
+    type: 'UPDATEPURSES',
+    payload: purses
+  })
+}
+
 export const retrieveAssets = (dispatch) => {
   return dispatch({
     type: 'RETRIEVEASSETS',
