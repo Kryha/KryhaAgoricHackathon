@@ -75,7 +75,7 @@ export const createPurchaseOrder = (type, purse, amount, dispatch) => {
   // TODO: Exchange paid_invoice NFT for amount of type tokens
   const offer = {
     id: Date.now(),
-    instanceRegKey: defaults.INSTANCE_REG_KEY_NFT,
+    instanceRegKey: defaults.INSTANCE_REG_KEY_INVOICE,
     hooks: {
       publicAPI: {
         getInvite: ['makeInvite']
@@ -83,12 +83,11 @@ export const createPurchaseOrder = (type, purse, amount, dispatch) => {
     },
     proposalTemplate: {
       want: {
-        Plastic: {
-          pursePetname: 'plastic purse',
+        Invoice: {
+          pursePetname: 'invoice purse',
           extent: [{
             type: type,
-            id: uuidv1(),
-            amount: Number(amount)
+            invoiceId: uuidv1()
           }]
         }
       },

@@ -69,6 +69,10 @@ export default async function deployContract (
       name: 'atomicSwap',
       path: `./src/atomicSwap.js`,
     },
+    {
+      name: 'invoiceCreation',
+      path: './src/invoiceCreation.js'
+    }
   ];
 
   const installedContracts = await Promise.all(

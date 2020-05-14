@@ -18,6 +18,7 @@ let INSTANCE_REG_KEY_NFT;
 let INSTANCE_REG_KEY_FUNGIBLE_A;
 let INSTANCE_REG_KEY_FUNGIBLE_B;
 let INSTANCE_REG_KEY_FUNGIBLE_C;
+let INSTANCE_REG_KEY_INVOICE;
 
 const TOKEN_A = {
   contract: 'tokenACreation',
@@ -41,6 +42,12 @@ const PLASTIC_A = {
   contract: 'plasticA',
   issuerName: 'plastic',
   purseName: 'plastic purse'
+}
+
+const INVOICE = {
+  contract: 'invoiceCreation',
+  issuerName: 'invoice',
+  purseName: 'invoice purse'
 }
 
 async function deployTokenA (references) {
@@ -215,6 +222,49 @@ async function deployNFT (references) {
   return issuer;
 }
 
+async function deployInvoice (references) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  const { contracts } = installationConstants;
+
+  console.log('deployInvoice');
+
+  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === INVOICE.contract);
+  const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
+
+  const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle);
+  console.log('- SUCCESS! contract instance is running on Zoe');
+
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  const invite = await E(publicAPI).makeInvite();
+
+  const issuer = await E(publicAPI).getTokenIssuer();
+
+  const issuerName = INVOICE.issuerName;
+  const brandRegKey = await E(registry).register(
+    issuerName,
+    await E(issuer).getBrand()
+  )
+
+  await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
+
+  const pursePetname = INVOICE.purseName;
+  await E(wallet).makeEmptyPurse(issuerName, pursePetname);
+
+  let CONTRACT_NAME = INVOICE.contract;
+  INSTANCE_REG_KEY_INVOICE = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+
+  return issuer;
+}
+
 
 async function swapTokenNft (references, tokenIssuer, nftIssuer) {
   const {
@@ -372,6 +422,7 @@ export default async function deployApi (referencesPromise, { bundleSource, path
   const tokenBIssuer = await deployTokenB(references);
   const tokenCIssuer = await deployTokenC(references);
   const nftIssuer = await deployNFT(references);
+  const invoiceIssuer = await deployInvoice(references);
   // await swapTokenNft(references, tokenIssuer, nftIssuer)
 
   const issuersArray = await E(wallet).getIssuers();
@@ -462,6 +513,7 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     INSTANCE_REG_KEY_FUNGIBLE_B,
     INSTANCE_REG_KEY_FUNGIBLE_C,
     INSTANCE_REG_KEY_NFT,
+    INSTANCE_REG_KEY_INVOICE,
     INSTANCE_REG_KEY,
     // BRIDGE_URL: 'agoric-lookup:https://local.agoric.com?append=/bridge',
     brandRegKeys: { Tip: TIP_BRAND_REGKEY },
