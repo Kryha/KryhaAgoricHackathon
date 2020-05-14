@@ -24,9 +24,8 @@ export default function Provider({ children }) {
     function messageHandler(message) {
       if (!message) return;
       const { type, data } = message;
-      console.log('data:', data)
       if (type === 'walletUpdatePurses') {
-        dispatch(updatePurses(JSON.parse(data)));
+        updatePurses(JSON.parse(data), dispatch)
       }
     }
 
@@ -34,18 +33,13 @@ export default function Provider({ children }) {
       return doFetch({ type: 'walletGetPurses' }).then(messageHandler);
     }
 
-    console.log('test')
-
     activateWebSocket({
       onConnect() {
-        console.log('onconnect')
         walletGetPurses();
       },
       onDisconnect() {
-        console.log('disconnect')
       },
       onMessage(data) {
-        console.log(JSON.parse(data))
         messageHandler(JSON.parse(data));
       },
     });

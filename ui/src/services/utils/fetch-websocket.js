@@ -44,8 +44,8 @@ function createSocket({ onConnect, onDisconnect, onMessage }, endpoint) {
         }
       });
     }
-    if (ifr && !ifr.src) walletLoaded = true // TODO: Refactor temporary fix
-    ifr.src = CREATOR_WALLET;
+
+    ifr.src = `${process.env.PUBLIC_URL}/lib/agoric-wallet.html`;
     if (onMessage) {
       messageSubscriptions.add(onMessage);
     }

@@ -15,6 +15,9 @@ const Creator = props => {
     }
   },[state.assets])
 
+  useEffect(() =>{
+    // TODO: do something with the purses
+  },[state.purses])
 
   const mintNewAssets = () => {
     if(amount > 0){

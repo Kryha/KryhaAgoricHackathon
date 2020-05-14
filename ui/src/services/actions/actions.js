@@ -1,7 +1,7 @@
-export const updatePurses = (dispatch) => {
+export const updatePurses = (purses, dispatch) => {
   return dispatch({
     type: 'UPDATEPURSES',
-    payload: []
+    payload: purses
   })
 }
 
