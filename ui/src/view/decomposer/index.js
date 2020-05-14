@@ -119,6 +119,10 @@ const Decomposer = props => {
             <Select
               w='75%'
               value={selectedAsset}
+              border='none'
+              size='14px'
+              background='#3E3E3E'
+              c='#fff'
               onChange={(e) => setSelectedAsset(e.target.value)}
             >
               {state.assets.map((asset, index)=>{
@@ -217,6 +221,10 @@ const Decomposer = props => {
             <Select
               w='75%'
               value={selectedDecomposition}
+              border='none'
+              size='14px'
+              background='#3E3E3E'
+              c='#fff'
               onChange={(e) => setSelectedDecomposition(e.target.value)}
             >
               {state.decompositions.map((decomposition, index)=>{

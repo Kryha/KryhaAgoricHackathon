@@ -115,6 +115,10 @@ const Converter = props => {
             <Select
               w='75%'
               value={selectedPurse}
+              border='none'
+              size='14px'
+              background='#3E3E3E'
+              c='#fff'
               onChange={(e) => setSelectedPurse(e.target.value)}
             >
               {state.purses.map((purse, index)=>{
@@ -213,6 +217,10 @@ const Converter = props => {
             <Select
               w='75%'
               value={selectedConversion}
+              border='none'
+              size='14px'
+              background='#3E3E3E'
+              c='#fff'
               onChange={(e) => setSelectedConversion(e.target.value)}
             >
               {state.conversions.map((conversions, index)=>{
