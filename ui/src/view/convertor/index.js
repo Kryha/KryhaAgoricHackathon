@@ -25,9 +25,16 @@ const Convertor = props => {
 
 
   const createNewPurchaseOrder = () => {
-    if(amount > 0){
+    if(amountToBuy > 0){
       let asset = state.assets[selectedAsset]
       createPurchaseOrder(asset.type, amount, asset.seller,dispatch)
+    }
+  }
+
+  const createNewConversion = () => {
+    if(amount > 0){
+      let conv = state.conversions[selectedConversion]
+      convert(conv.input, conv.output, conv.amount,dispatch)
     }
   }
 
@@ -215,7 +222,7 @@ const Convertor = props => {
               marginl='5%'
             >
               <Button
-                onClick={convert}
+                onClick={createNewConversion}
               >
                 Create
               </Button>
