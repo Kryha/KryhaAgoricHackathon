@@ -1,7 +1,7 @@
 /* globals window, WebSocket */
 
 import dappConstants from './../../constants';
-const { BRIDGE_URL, CREATOR_WALLET } = dappConstants;
+const { BRIDGE_URL } = dappConstants;
 
 // === WEB SOCKET
 
