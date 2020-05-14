@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Flexdiv, Text, Button, Input, Select } from '../shared/styled'
-import {retrieveAssets, mintAssets} from '../../services/actions/actions'
+import { mintAssets } from '../../services/actions/actions'
 
 import { useApplicationContext } from '../../store/storeContext'
 
@@ -14,8 +14,8 @@ const Creator = props => {
   },[state.purses])
 
   const mintNewAssets = () => {
-    if(amount < 1) return alert('Specify a postive amount')
-    const { brandRegKey, pursePetname} = state.purses[selectedPurse]
+    if(amount < 1) return alert('Specify a positive amount')
+    const { brandRegKey, pursePetname } = state.purses[selectedPurse]
     mintAssets(brandRegKey, pursePetname,  amount, dispatch)
   }
 

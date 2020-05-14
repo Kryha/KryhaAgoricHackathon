@@ -8,7 +8,7 @@ const Converter = props => {
   const { state, dispatch } = useApplicationContext()
   const [amount, setAmount] = useState(0)
   const [amountToBuy, setAmountToBuy] = useState(0)
-  const [selectedAsset, setSelectedAsset] = useState(0)
+  const [selectedPurse, setSelectedPurse] = useState(0)
   const [selectedConversion, setSelectedConversion] = useState(0)
 
   useEffect(() =>{
@@ -18,26 +18,22 @@ const Converter = props => {
   },[state.conversions])
 
   useEffect(() =>{
-    if(state.assets.length === 0){
-      retrieveAssets(dispatch)
-    }
-  },[state.assets])
+    // TODO: do something with the purses
+  },[state.purses])
 
   const createNewPurchaseOrder = () => {
-    if(amountToBuy > 0){
-      let asset = state.assets[selectedAsset]
-      createPurchaseOrder(asset.type, amount, asset.seller,dispatch)
-    }
+    if(amountToBuy < 1) return alert('Specify a positive amount')
+    const { brandRegKey, pursePetname } = state.purses[selectedPurse]
+    createPurchaseOrder(brandRegKey, pursePetname, amount, dispatch)
   }
 
   const createNewConversion = () => {
-    if(amount > 0){
-      let conv = state.conversions[selectedConversion]
-      convert(conv.input, conv.output, conv.amount,dispatch)
-    }
+    if(amount < 1) return alert('Specify a positive amount')
+    let conv = state.conversions[selectedConversion]
+    convert(conv.input, conv.output, conv.amount,dispatch)
   }
 
-  if (state.conversions.length === 0) {
+  if (state.purses.length === 0 || state.conversions.length === 0) {
     return (
       <Flexdiv
         flex='column'
@@ -76,14 +72,14 @@ const Converter = props => {
           alignItems='center'
           justify='center'
         >
-          {state.assets.map((asset, index)=>{
+          {state.purses.map((purse, index)=>{
             return(
               <Flexdiv
                 flex='row'
-                w={(100/state.assets.length)+'%'}
+                w={(100/purse.length)+'%'}
                 key={index}
               >
-                <Text key={index} c='#FFF'>{asset.type}</Text>
+                <Text key={index} c='#FFF'>{purse.regBrandKey}</Text>
               </Flexdiv>
             )
           })}
@@ -118,12 +114,12 @@ const Converter = props => {
           >
             <Select
               w='75%'
-              value={selectedAsset}
-              onChange={(e) => setSelectedAsset(e.target.value)}
+              value={selectedPurse}
+              onChange={(e) => setSelectedPurse(e.target.value)}
             >
-              {state.assets.map((asset, index)=>{
+              {state.purses.map((purse, index)=>{
                 return(
-                  <option key={index} value={index}>{asset.type}</option>
+                  <option key={index} value={index}>{purse.issuerPetname}</option>
                 )
               })}
             </Select>
@@ -134,7 +130,7 @@ const Converter = props => {
             h='50%'
             alignItems='center'
           >
-            <Text c='#FFF' margin='0'>{state.assets[selectedAsset].seller}</Text>
+            <Text c='#FFF' margin='0'>{state.purses[selectedPurse].issuerPetname}</Text>
           </Flexdiv>
           <Flexdiv
             flex='row'

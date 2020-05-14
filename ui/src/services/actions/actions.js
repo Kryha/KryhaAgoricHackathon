@@ -20,8 +20,10 @@ export const mintAssets = (type, purse, amount, dispatch) => {
   })
 }
 
-export const createPurchaseOrder = (type, amount, counterParty, dispatch) => {
-
+export const createPurchaseOrder = (type, purse, amount, dispatch) => {
+  console.log('Action:mint', type, purse, amount)
+  // TODO: Mint a new paid_invoice NFT
+  // TODO: Exchange paid_invoice NFT for amount of type tokens
   return dispatch({
     type: 'CREATEPURCHASEORDER',
     payload: true
