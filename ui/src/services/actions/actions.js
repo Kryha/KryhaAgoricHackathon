@@ -20,9 +20,11 @@ export const mintAssets = (type, purse, amount, dispatch) => {
   if (purse !== 'typeA purse') {
     return alert('The Creator can only mint fungible tokens')
   }
+
   const offer = {
     id: Date.now(),
     instanceRegKey: defaults.INSTANCE_REG_KEY_FUNGIBLE,
+    contractIssuerIndexToKeyword: ['TypeA', 'TypeB'],
     hooks: {
       publicAPI: {
         getInvite: ['makeInvite']
@@ -30,7 +32,7 @@ export const mintAssets = (type, purse, amount, dispatch) => {
     },
     proposalTemplate: {
       want: {
-        TypeA: {
+        'Type*': {
           pursePetname: purse,
           extent: Number(amount)
         }
