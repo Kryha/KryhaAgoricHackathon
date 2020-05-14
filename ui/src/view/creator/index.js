@@ -21,7 +21,7 @@ const Creator = props => {
         flex='column'
         w='95%'
         marginl='5%'
-        h='10%'
+        h='30%'
       >
         <Flexdiv
           flex='row'
@@ -53,7 +53,7 @@ const Creator = props => {
         w='95%'
         marginl='5%'
         margint='5%'
-        h='10%'
+        h='30%'
       >
         <Flexdiv
           flex='row'
