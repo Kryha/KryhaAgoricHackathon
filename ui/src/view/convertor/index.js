@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Flexdiv, Text, Button, Input, Select } from '../shared/styled'
+
+import { useApplicationContext } from '../../store/storeContext'
 import {retrieveAssets, retrieveConversions, createPurchaseOrder, convert} from '../../services/actions/actions'
 
-import { Store } from '../../store'
-
 const Convertor = props => {
-  const { state, dispatch } = useContext(Store)
+  const { state, dispatch } = useApplicationContext()
   const [amount, setAmount] = useState(0)
   const [amountToBuy, setAmountToBuy] = useState(0)
   const [selectedAsset, setSelectedAsset] = useState(0)
@@ -22,7 +22,6 @@ const Convertor = props => {
       retrieveAssets(dispatch)
     }
   },[state.assets])
-
 
   const createNewPurchaseOrder = () => {
     if(amountToBuy > 0){

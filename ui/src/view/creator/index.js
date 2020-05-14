@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Flexdiv, Text, Button, Input, Select } from '../shared/styled'
 import {retrieveAssets, mintAssets} from '../../services/actions/actions'
 
-import { Store } from '../../store'
+import { useApplicationContext } from '../../store/storeContext'
 
 const Creator = props => {
-  const { state, dispatch } = useContext(Store)
+  const { state, dispatch } = useApplicationContext()
   const [amount, setAmount] = useState(0)
   const [selectedAsset, setSelectedAsset] = useState(0)
 

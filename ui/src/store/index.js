@@ -2,13 +2,15 @@ import React from 'react'
 
 export const Store = React.createContext()
 
-const initialState = {
-  assets: [],
-  conversions: [],
-  decompositions: []
+export const createDefaultState = () => {
+  return {
+    assets: [],
+    conversions: [],
+    decompositions: []
+  }
 }
 
-function reducer (state, action) {
+export function reducer (state, action) {
   switch (action.type) {
     case 'RETRIEVEASSETS':
       return { ...state, assets: action.payload }
@@ -29,8 +31,8 @@ function reducer (state, action) {
   }
 }
 
-export function StoreProvider (props) {
-  const [state, dispatch] = React.useReducer(reducer, initialState)
-  const value = { state, dispatch }
-  return <Store.Provider value={value}>{props.children}</Store.Provider>
-}
+// export function StoreProvider ({children}) {
+//   const [state, dispatch] = React.useReducer(reducer, initialState)
+//   const value = { state, dispatch }
+//   return <Store.Provider value={value}>{children}</Store.Provider>
+// }
