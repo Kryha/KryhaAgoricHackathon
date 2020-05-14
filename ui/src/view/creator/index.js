@@ -7,22 +7,19 @@ import { useApplicationContext } from '../../store/storeContext'
 const Creator = props => {
   const { state, dispatch } = useApplicationContext()
   const [amount, setAmount] = useState(0)
-  const [selectedAsset, setSelectedAsset] = useState(0)
+  const [selectedPurse, setSelectedPurse] = useState(0)
 
   useEffect(() =>{
-    if(state.assets.length === 0){
-      retrieveAssets(dispatch)
-    }
-  },[state.assets])
-
+    // TODO: do something with the purses
+  },[state.purses])
 
   const mintNewAssets = () => {
-    if(amount > 0){
-      mintAssets(state.assets[selectedAsset].type, amount, dispatch)
-    }
+    if(amount < 1) return alert('Specify a postive amount')
+    const { brandRegKey, pursePetname} = state.purses[selectedPurse]
+    mintAssets(brandRegKey, pursePetname,  amount, dispatch)
   }
 
-  if (state.assets.length === 0) {
+  if (state.purses.length === 0) {
     return (
       <Flexdiv
         flex='column'
@@ -83,7 +80,7 @@ const Creator = props => {
           flex='row'
           w = '100%'
         >
-          <Text c='#A161A1'>Current Assets</Text>
+          <Text c='#A161A1'>Create Tokens for Mined Material</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
@@ -99,12 +96,12 @@ const Creator = props => {
           >
             <Select
               w='75%'
-              value={selectedAsset}
-              onChange={(e) => setSelectedAsset(e.target.value)}
+              value={selectedPurse}
+              onChange={(e) => setSelectedPurse(e.target.value)}
             >
-              {state.assets.map((asset, index)=>{
+              {state.purses.map((purse, index)=>{
                 return(
-                  <option key={index} value={index}>{asset.type}</option>
+                  <option key={index} value={index}>{purse.issuerPetname}</option>
                 )
               })}
             </Select>
@@ -115,7 +112,7 @@ const Creator = props => {
             h='50%'
             alignItems='center'
           >
-            <Text c='#FFF' margin='0'>{state.assets[selectedAsset].description}</Text>
+            <Text c='#FFF' margin='0'>{state.purses[selectedPurse].issuerPetname}</Text>
           </Flexdiv>
           <Flexdiv
             flex='row'

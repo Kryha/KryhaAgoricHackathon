@@ -1,3 +1,10 @@
+export const updatePurses = (purses, dispatch) => {
+  return dispatch({
+    type: 'UPDATEPURSES',
+    payload: purses
+  })
+}
+
 export const retrieveAssets = (dispatch) => {
   return dispatch({
     type: 'RETRIEVEASSETS',
@@ -5,8 +12,8 @@ export const retrieveAssets = (dispatch) => {
   })
 }
 
-export const mintAssets = (type, amount, dispatch) => {
-  
+export const mintAssets = (type, purse, amount, dispatch) => {
+  console.log('Action:mint', type, purse, amount)
   return dispatch({
     type: 'MINTASSETS',
     payload: true
