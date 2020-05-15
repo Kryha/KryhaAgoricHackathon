@@ -41,19 +41,23 @@ const Creator = props => {
         flex='column'
         w='95%'
         marginl='5%'
-        h='30%'
+        h='25%'
       >
         <Flexdiv
           flex='row'
           w='100%'
+          h='20%'
         >
-          <Text c='#ED7174' >Current Asset Types</Text>
+          <Text c='#000000' >Current Asset Types</Text>
         </Flexdiv>
         
         <Flexdiv
           flex='row'
           w='100%'
           alignItems='center'
+          justify='center'
+          w='80%'
+          h='80%'
         >
           {state.assets.map((asset, index)=>{
             return(
@@ -62,7 +66,7 @@ const Creator = props => {
                 w={(100/state.assets.length)+'%'}
                 key={index}
               >
-                <Text key={index} c='#FFF'>{asset.type}</Text>
+                <Text key={index} c='#000000'>{asset.type}</Text>
               </Flexdiv>
             )
           })}
@@ -73,7 +77,6 @@ const Creator = props => {
         flex='column'
         w='95%'
         marginl='5%'
-        margint='5%'
         h='30%'
       >
         <Flexdiv
@@ -81,13 +84,14 @@ const Creator = props => {
           w = '100%'
           h = '20%'
         >
-          <Text c='#ED7174'>Create Tokens for Mined Material</Text>
+          <Text c='#000000'>Create Tokens for Mined Material</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
           w = '100%'
           h='80%'
           alignItems='center'
+          justify='center'
         >
           <Flexdiv
             flex='row'
@@ -100,8 +104,8 @@ const Creator = props => {
               value={selectedPurse}
               border='none'
               size='14px'
-              background='#3E3E3E'
-              c='#fff'
+              background='#FFF'
+              c='#000000'
               onChange={(e) => setSelectedPurse(e.target.value)}
             >
               {state.purses.map((purse, index)=>{
@@ -113,21 +117,21 @@ const Creator = props => {
           </Flexdiv>
           <Flexdiv
             flex='row'
-            w = '45%'
+            w = '35%'
             h='50%'
             alignItems='center'
           >
-            <Text c='#FFF' margin='0'>{state.purses[selectedPurse].issuerPetname}</Text>
+            <Text c='#000000' margin='0'>{state.purses[selectedPurse].issuerPetname}</Text>
           </Flexdiv>
           <Flexdiv
             flex='row'
-            w = '25%'
+            w = '30%'
             h='50%'
             alignItems='center'
           >
             <Flexdiv
               flex='row'
-              w = '47.5%'
+              w = '35%'
               h='50%'
             >
               <Input
@@ -136,8 +140,8 @@ const Creator = props => {
                 w='100%'
                 border='none'
                 size='14px'
-                background='#3E3E3E'
-                c='#fff'
+                background='#FFF'
+                c='#000000'
                 value={amount === 0 ? '': amount}
                 onChange={(event)=> {
                   setAmount(event.target.value)}
@@ -146,16 +150,17 @@ const Creator = props => {
             </Flexdiv>
             <Flexdiv
               flex='row'
-              w = '47.5%'
+              w = '65%'
               marginl='10%'
+              justify='center'
               h='100%'
             >
               <Button
-                c='#ED7174'
-                background='#3E3E3E'
-                borderc='#ED7174'
-                hoverBackground='#ED7174'
-                hoverColor='#3E3E3E'
+                c='#AB2328'
+                background='#FFF'
+                borderc='#AB2328'
+                hoverBackground='#AB2328'
+                hoverColor='#FFF'
                 radius='3px'
                 fontSize='16px'
                 w='80%'

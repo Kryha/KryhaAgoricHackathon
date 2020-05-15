@@ -102,7 +102,7 @@ const Text = styled.p`
     word-break: ${props => props.break};
     overflow: ${props => props.overflow};
     cursor: ${props => props.cursor};
-    transform: ${props => props.transform};
+    text-transform: ${props => props.transform};
     z-index: ${props => props.zidx};
     :hover{
       background: ${props => props.hoverBackground};
@@ -192,37 +192,9 @@ const Image = styled.img`
 export const Page = styled.div`
   width:100vw;
   height:100vh;
-  background-color: #171717
+  background-color: #fafafa
   position: fixed;
   background-size: cover;
-`
-
-export const FlexTable = styled(Flexdiv)`
-  background: #3E3E3E;
-`
-
-export const FlexTableRow = styled(Flexdiv)`
-  :nth-child(odd) {
-    background: #383838;
-  }
-  :nth-child(n).active {
-    background: lightgray;
-  }
-  :hover{
-    background: lightgray;
-    cursor: pointer;
-  }
-`
-
-export const FlexTableHeader = styled(FlexTableRow)`
-background: #3E3E3E;
-`
-
-export const TableData = styled(Flexdiv)`
-  :not(: last - child) {
-    margin - right: 1em;
-  }
-  background: #3E3E3E;
 `
 
 export { Flexdiv, Button, Text, Input, InputArea, Image, Select }
