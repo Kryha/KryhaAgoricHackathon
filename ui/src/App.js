@@ -18,7 +18,7 @@ function App () {
           <Flexdiv
             flex='column'
             w='10%'
-            background='#6D206D'
+            background='#AB2328'
             h = '100%'
           >
             <Flexdiv
@@ -29,18 +29,22 @@ function App () {
               alignItems='center'
               justify='center'
             >
+              <a
+                style={{height:'100%', width:'100%', display:'flex', 'flex-direction':'row', 'justify-content':'center'}}
+                href='https://www.kryha.io'>
               <Image
                 src={window.location.origin + '/KryhaW.png'}
                 padding='10% 0 0 0'
                 h='100%'
                 w='100%'
               />
+              </a>
             </Flexdiv>
             <Flexdiv
               flex='row'
               h = '10%'
               alignItems='center'
-              hoverBackground='#853985'
+              hoverBackground='#C84145'
               marginb='25%'
               onClick={() => setActive('creator')}
             >
@@ -56,7 +60,7 @@ function App () {
               flex='row'
               h = '10%'
               alignItems='center'
-              hoverBackground='#853985'
+              hoverBackground='#C84145'
               marginb='25%'
               onClick={() => setActive('converter')}
             >
@@ -72,7 +76,7 @@ function App () {
               flex='row'
               h = '10%'
               alignItems='center'
-              hoverBackground='#853985'
+              hoverBackground='#C84145'
               marginb='25%'
               onClick={() => setActive('decomposer')}
             >
@@ -92,7 +96,7 @@ function App () {
               h='5%'
             >
               <Text
-                c='#A161A1'
+                c='#ED7174'
                 margint='0'
                 marginl='10%'
                 size='25px'

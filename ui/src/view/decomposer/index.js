@@ -66,7 +66,7 @@ const Decomposer = props => {
           w='100%'
           h='20%'
         >
-          <Text c='#A161A1' >Current Owned Assets</Text>
+          <Text c='#ED7174' >Current Owned Assets</Text>
         </Flexdiv>
         
         <Flexdiv
@@ -101,7 +101,7 @@ const Decomposer = props => {
           w = '100%'
           h = '20%'
         >
-          <Text c='#A161A1'>Create Purchase Order</Text>
+          <Text c='#ED7174'>Create Purchase Order</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
@@ -173,10 +173,10 @@ const Decomposer = props => {
               justify='center'
             >
               <Button
-                c='#A161A1'
+                c='#ED7174'
                 background='#3E3E3E'
-                borderc='#A161A1'
-                hoverBackground='#A161A1'
+                borderc='#ED7174'
+                hoverBackground='#ED7174'
                 hoverColor='#3E3E3E'
                 radius='3px'
                 fontSize='16px'
@@ -203,7 +203,7 @@ const Decomposer = props => {
           w = '100%'
           h='20%'
         >
-          <Text c='#A161A1'>Decompose</Text>
+          <Text c='#ED7174'>Decompose</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
@@ -282,10 +282,10 @@ const Decomposer = props => {
               justify='center'
             >
               <Button
-                c='#A161A1'
+                c='#ED7174'
                 background='#3E3E3E'
-                borderc='#A161A1'
-                hoverBackground='#A161A1'
+                borderc='#ED7174'
+                hoverBackground='#ED7174'
                 hoverColor='#3E3E3E'
                 radius='3px'
                 fontSize='16px'

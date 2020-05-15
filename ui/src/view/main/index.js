@@ -59,7 +59,7 @@ const Main = props => {
           h='5%'
         >
           <Text
-            c='#A161A1'
+            c='#ED7174'
             margin ='0'
             marginl='5%'
           >Approve/reject purchase orders</Text>

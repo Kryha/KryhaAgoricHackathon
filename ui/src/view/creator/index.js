@@ -47,7 +47,7 @@ const Creator = props => {
           flex='row'
           w='100%'
         >
-          <Text c='#A161A1' >Current Asset Types</Text>
+          <Text c='#ED7174' >Current Asset Types</Text>
         </Flexdiv>
         
         <Flexdiv
@@ -81,7 +81,7 @@ const Creator = props => {
           w = '100%'
           h = '20%'
         >
-          <Text c='#A161A1'>Create Tokens for Mined Material</Text>
+          <Text c='#ED7174'>Create Tokens for Mined Material</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
@@ -151,10 +151,10 @@ const Creator = props => {
               h='100%'
             >
               <Button
-                c='#A161A1'
+                c='#ED7174'
                 background='#3E3E3E'
-                borderc='#A161A1'
-                hoverBackground='#A161A1'
+                borderc='#ED7174'
+                hoverBackground='#ED7174'
                 hoverColor='#3E3E3E'
                 radius='3px'
                 fontSize='16px'
