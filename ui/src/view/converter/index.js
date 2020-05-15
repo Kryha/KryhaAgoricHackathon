@@ -62,7 +62,7 @@ const Converter = props => {
           w='100%'
           h='20%'
         >
-          <Text c='#ED7174' >Current Owned Assets</Text>
+          <Text c='#000000' >Current Owned Assets</Text>
         </Flexdiv>
         
         <Flexdiv
@@ -76,10 +76,11 @@ const Converter = props => {
             return(
               <Flexdiv
                 flex='row'
-                w={(100/purse.length)+'%'}
+                w={(80/purse.length)+'%'}
                 key={index}
+                justify='center'
               >
-                <Text key={index} c='#FFF'>{purse.regBrandKey}</Text>
+                <Text key={index} c='#000000'>{purse.regBrandKey}</Text>
               </Flexdiv>
             )
           })}
@@ -97,7 +98,7 @@ const Converter = props => {
           w = '100%'
           h = '20%'
         >
-          <Text c='#ED7174'>Create Purchase Order</Text>
+          <Text c='#000000'>Create Purchase Order</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
@@ -117,8 +118,8 @@ const Converter = props => {
               value={selectedPurse}
               border='none'
               size='14px'
-              background='#3E3E3E'
-              c='#fff'
+              background='#FFF'
+              c='#000000'
               onChange={(e) => setSelectedPurse(e.target.value)}
             >
               {state.purses.map((purse, index)=>{
@@ -134,7 +135,7 @@ const Converter = props => {
             h='50%'
             alignItems='center'
           >
-            <Text c='#FFF' margin='0'>{state.purses[selectedPurse].issuerPetname}</Text>
+            <Text c='#000000' margin='0'>{state.purses[selectedPurse].issuerPetname}</Text>
           </Flexdiv>
           <Flexdiv
             flex='row'
@@ -153,8 +154,8 @@ const Converter = props => {
                 w='100%'
                 border='none'
                 size='14px'
-                background='#3E3E3E'
-                c='#fff'
+                background='#FFF'
+                c='#000000'
                 value={amountToBuy === 0 ? '': amountToBuy}
                 onChange={(event)=> {
                   setAmountToBuy(event.target.value)}
@@ -169,11 +170,11 @@ const Converter = props => {
               justify='center'
             >
               <Button
-                c='#ED7174'
-                background='#3E3E3E'
-                borderc='#ED7174'
-                hoverBackground='#ED7174'
-                hoverColor='#3E3E3E'
+                c='#AB2328'
+                background='#FFF'
+                borderc='#AB2328'
+                hoverBackground='#AB2328'
+                hoverColor='#FFF'
                 radius='3px'
                 fontSize='16px'
                 w='80%'
@@ -199,7 +200,7 @@ const Converter = props => {
           w = '100%'
           h='20%'
         >
-          <Text c='#ED7174'>Create Conversion</Text>
+          <Text c='#000000'>Create Conversion</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
@@ -219,8 +220,8 @@ const Converter = props => {
               value={selectedConversion}
               border='none'
               size='14px'
-              background='#3E3E3E'
-              c='#fff'
+              background='#FFF'
+              c='#000000'
               onChange={(e) => setSelectedConversion(e.target.value)}
             >
               {state.conversions.map((conversions, index)=>{
@@ -234,7 +235,7 @@ const Converter = props => {
             flex='row'
             w = '35%'
           >
-            <Text c='#FFF' margin='0'>
+            <Text c='#000000' margin='0'>
               {state.conversions[selectedConversion].input.map((asset)=>{
                 let tmp = asset.amount
                 if(amount > 0) {
@@ -262,8 +263,8 @@ const Converter = props => {
                 w='100%'
                 border='none'
                 size='14px'
-                background='#3E3E3E'
-                c='#fff'
+                background='#FFF'
+                c='#000000'
                 value={amount === 0 ? '': amount}
                 onChange={(event)=> {
                   setAmount(event.target.value)}
@@ -278,11 +279,11 @@ const Converter = props => {
               justify='center'
             >
               <Button
-                c='#ED7174'
-                background='#3E3E3E'
-                borderc='#ED7174'
-                hoverBackground='#ED7174'
-                hoverColor='#3E3E3E'
+                c='#AB2328'
+                background='#FFF'
+                borderc='#AB2328'
+                hoverBackground='#AB2328'
+                hoverColor='#FFF'
                 radius='3px'
                 fontSize='16px'
                 w='80%'
