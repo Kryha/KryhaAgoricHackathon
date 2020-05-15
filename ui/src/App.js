@@ -46,6 +46,7 @@ function App () {
               h = '10%'
               alignItems='center'
               hoverBackground='#C84145'
+              background={active ==='creator'? '#C84145': 'none'}
               marginb='25%'
               cursor='pointer'
               onClick={() => setActive('creator')}
@@ -63,6 +64,7 @@ function App () {
               h = '10%'
               alignItems='center'
               hoverBackground='#C84145'
+              background={active ==='converter'? '#C84145': 'none'}
               marginb='25%'
               cursor='pointer'
               onClick={() => setActive('converter')}
@@ -80,6 +82,7 @@ function App () {
               h = '10%'
               alignItems='center'
               hoverBackground='#C84145'
+              background={active ==='decomposer'? '#C84145': 'none'}
               marginb='25%'
               cursor='pointer'
               onClick={() => setActive('decomposer')}
@@ -100,10 +103,11 @@ function App () {
               h='5%'
             >
               <Text
-                c='#ED7174'
+                c='#AB2328'
                 margint='0'
                 marginl='10%'
                 size='25px'
+                transform='capitalize'
               >{active+ ' overview'}</Text>
             </Flexdiv>
             <Flexdiv
