@@ -48,7 +48,7 @@ const Creator = props => {
           w='100%'
           h='20%'
         >
-          <Text c='#000000' >Current Asset Types</Text>
+          <Text c='#000000' size='20px'>Current Asset Types</Text>
         </Flexdiv>
         
         <Flexdiv
@@ -84,7 +84,7 @@ const Creator = props => {
           w = '100%'
           h = '20%'
         >
-          <Text c='#000000'>Create Tokens for Mined Material</Text>
+          <Text c='#000000' size='20px'>Create Tokens for Mined Material</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'

@@ -57,19 +57,7 @@ const Main = props => {
         <Flexdiv
           flex='row'
           w='100%'
-          h='5%'
-        >
-          <Text
-            c='#000000'
-            margin ='0'
-            marginl='5%'
-          >Approve/reject purchase orders</Text>
-        </Flexdiv>
-
-        <Flexdiv
-          flex='row'
-          w='100%'
-          h='95%'
+          h='200%'
           background='#FFF'
         >
           <Iframe url={wallet}

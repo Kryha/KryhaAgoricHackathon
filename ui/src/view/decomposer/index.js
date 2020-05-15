@@ -66,7 +66,7 @@ const Decomposer = props => {
           w='100%'
           h='20%'
         >
-          <Text c='#000000' >Current Owned Assets</Text>
+          <Text c='#000000' size='20px'>Current Owned Assets</Text>
         </Flexdiv>
         
         <Flexdiv
@@ -102,7 +102,7 @@ const Decomposer = props => {
           w = '100%'
           h = '20%'
         >
-          <Text c='#000000'>Create Purchase Order</Text>
+          <Text c='#000000' size='20px'>Create Purchase Order</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
@@ -204,7 +204,7 @@ const Decomposer = props => {
           w = '100%'
           h='20%'
         >
-          <Text c='#000000'>Decompose</Text>
+          <Text c='#000000' size='20px'>Decompose</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'

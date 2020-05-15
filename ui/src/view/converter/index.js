@@ -32,7 +32,7 @@ const Converter = props => {
     let conv = state.conversions[selectedConversion]
     convert(conv.input, conv.output, conv.amount, dispatch)
   }
-
+  
   if (state.purses.length === 0 || state.conversions.length === 0) {
     return (
       <Flexdiv
@@ -62,7 +62,7 @@ const Converter = props => {
           w='100%'
           h='20%'
         >
-          <Text c='#000000' >Current Owned Assets</Text>
+          <Text c='#000000' size='20px'>Current Owned Assets</Text>
         </Flexdiv>
         
         <Flexdiv
@@ -98,7 +98,7 @@ const Converter = props => {
           w = '100%'
           h = '20%'
         >
-          <Text c='#000000'>Create Purchase Order</Text>
+          <Text c='#000000' size='20px'>Create Purchase Order</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
@@ -200,7 +200,7 @@ const Converter = props => {
           w = '100%'
           h='20%'
         >
-          <Text c='#000000'>Create Conversion</Text>
+          <Text c='#000000' size='20px'>Create Conversion</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'

@@ -7,7 +7,8 @@ export const createDefaultState = () => {
     purses: [],
     assets: [],
     conversions: [],
-    decompositions: []
+    decompositions: [],
+    success: false,
   }
 }
 
@@ -24,7 +25,7 @@ export function reducer (state, action) {
     case 'RETRIEVECONVERSIONS':
       return { ...state, conversions: action.payload }
     case 'CONVERT':
-      return { ...state, conversions: action.payload }
+      return { ...state, success: action.payload }
     case 'RETRIEVEDECOMPOSITIONS':
       return { ...state, decompositions: action.payload }
     case 'DECOMPOSE':
