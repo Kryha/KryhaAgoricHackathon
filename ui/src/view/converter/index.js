@@ -32,7 +32,7 @@ const Converter = props => {
     let conv = state.conversions[selectedConversion]
     convert(conv.input, conv.output, conv.amount, dispatch)
   }
-
+  
   if (state.purses.length === 0 || state.conversions.length === 0) {
     return (
       <Flexdiv
