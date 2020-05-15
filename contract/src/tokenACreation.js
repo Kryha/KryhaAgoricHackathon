@@ -6,7 +6,7 @@ import { makeZoeHelpers } from '@agoric/zoe/src/contractSupport/zoeHelpers';
 export const makeContract = harden(zcf => {
   const { issuer, mint, amountMath } = produceIssuer('typeA');
 
-  const { inviteAnOffer } = makeZoeHelpers(zcf);
+  const { checkHook } = makeZoeHelpers(zcf);
 
   const zoeHelpers = makeZoeHelpers(zcf);
 
@@ -31,21 +31,16 @@ export const makeContract = harden(zcf => {
         });
     };
 
-    const makeInvite = () =>
-      inviteAnOffer(
-        harden({
-          offerHook: mintHook,
-          customProperties: { inviteDesc: 'mint' },
-        }),
-      );
+    const expectedOffer = harden({
+      want: { TypeA: null },
+    });
+
+    const makeInvite = () => {
+      return zcf.makeInvitation(checkHook(mintHook, expectedOffer), 'mint');
+    };
 
     return harden({
-      invite: inviteAnOffer(
-        harden({
-          offerHook: mintHook,
-          customProperties: { inviteDesc: 'mint' },
-        }),
-      ),
+      invite: makeInvite(),
       publicAPI: {
         makeInvite,
         getTokenIssuer: () => issuer,
