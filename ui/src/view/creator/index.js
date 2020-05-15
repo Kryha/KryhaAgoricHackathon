@@ -53,11 +53,10 @@ const Creator = props => {
         
         <Flexdiv
           flex='row'
-          w='100%'
-          alignItems='center'
-          justify='center'
           w='80%'
           h='80%'
+          alignItems='center'
+          justify='center'
         >
           {state.assets.map((asset, index)=>{
             return(
@@ -65,6 +64,7 @@ const Creator = props => {
                 flex='row'
                 w={(100/state.assets.length)+'%'}
                 key={index}
+                justify='center'
               >
                 <Text key={index} c='#000000'>{asset.type}</Text>
               </Flexdiv>

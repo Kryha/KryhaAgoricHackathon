@@ -76,8 +76,9 @@ const Converter = props => {
             return(
               <Flexdiv
                 flex='row'
-                w={(100/purse.length)+'%'}
+                w={(80/purse.length)+'%'}
                 key={index}
+                justify='center'
               >
                 <Text key={index} c='#000000'>{purse.regBrandKey}</Text>
               </Flexdiv>

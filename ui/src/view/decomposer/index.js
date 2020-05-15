@@ -82,6 +82,7 @@ const Decomposer = props => {
                 flex='row'
                 w={(100/state.assets.length)+'%'}
                 key={index}
+                justify='center'
               >
                 <Text key={index} c='#000000'>{asset.type}</Text>
               </Flexdiv>
