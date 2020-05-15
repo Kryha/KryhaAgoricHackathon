@@ -1,27 +1,8 @@
-import { doFetch } from '../utils/fetch-websocket';
-import defaults from '../../conf/defaults';
+import { doFetch } from './utils/fetch-websocket';
+import defaults from '../conf/defaults';
 import { v1 as uuidv1 } from 'uuid';
 
-export const updatePurses = (purses, dispatch) => {
-  return dispatch({
-    type: 'UPDATEPURSES',
-    payload: purses
-  })
-}
-
-export const retrieveAssets = (dispatch) => {
-  return dispatch({
-    type: 'RETRIEVEASSETS',
-    payload: [{ type: 'asset 1', description: 'this is asset of type 1' }, { type: 'asset 2', description: 'this is asset of type 2' }]
-  })
-}
-
-export const mintAssets = (type, purse, amount, dispatch) => {
-  console.log('Action:mint', type, purse, amount)
-  const purses = ['typeA purse', 'typeB purse', 'typeC purse']
-  if (!purses.includes(purse)) {
-    return alert('The Creator can only mint fungible tokens')
-  }
+export const mintAssetsOffer = (type, purse, amount) => {
   let instanceRegKey
   switch (purse) {
     case 'typeA purse':
@@ -34,13 +15,13 @@ export const mintAssets = (type, purse, amount, dispatch) => {
       instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_C
       break
     default:
-      break
+      return alert('The Creator can only mint raw material tokens')
   }
 
   const offer = {
     id: Date.now(),
-    instanceRegKey: instanceRegKey,
-    contractIssuerIndexToKeyword: ['TypeA', 'TypeB', 'TypeC'],
+    instanceRegKey,
+    contractIssuerIndexToKeyword: ['Type*'],
     hooks: {
       publicAPI: {
         getInvite: ['makeInvite']
@@ -56,26 +37,19 @@ export const mintAssets = (type, purse, amount, dispatch) => {
       exit: { onDemand: null }
     }
   };
-  console.log(offer.proposalTemplate);
-  doFetch(
-    {
-      type: 'walletAddOffer',
-      data: offer,
-    },
-  )
-  return dispatch({
-    type: 'MINTASSETS',
-    payload: true
-  })
+
+  return offer;
 }
 
-export const createPurchaseOrder = (type, purse, amount, dispatch) => {
+export const mintNFTOffer = (type, purse, amount, dispatch) => {
   console.log('Action:mint', type, purse, amount)
-  // TODO: Mint a new paid_invoice NFT
-  // TODO: Exchange paid_invoice NFT for amount of type tokens
+  
+  // TODO: Make this dynamic based on the purse/type
+  const instanceRegKey = defaults.INSTANCE_REG_KEY_INVOICE
+
   const offer = {
     id: Date.now(),
-    instanceRegKey: defaults.INSTANCE_REG_KEY_INVOICE,
+    instanceRegKey,
     hooks: {
       publicAPI: {
         getInvite: ['makeInvite']
@@ -84,27 +58,18 @@ export const createPurchaseOrder = (type, purse, amount, dispatch) => {
     proposalTemplate: {
       want: {
         Invoice: {
-          pursePetname: 'invoice purse',
+          pursePetname: purse,
           extent: [{
             type: type,
-            invoiceId: uuidv1()
+            id: uuidv1().substring(0,8),
+            amount,
           }]
         }
       },
       exit: { onDemand: null }
     }
   }
-  console.log(offer.proposalTemplate);
-  doFetch(
-    {
-      type: 'walletAddOffer',
-      data: offer,
-    },
-  )
-  return dispatch({
-    type: 'CREATEPURCHASEORDER',
-    payload: true
-  })
+  return offer;
 }
 
 export const retrieveConversions = (dispatch) => {

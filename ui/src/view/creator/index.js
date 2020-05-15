@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Flexdiv, Text, Button, Input, Select } from '../shared/styled'
-import { mintAssets } from '../../services/actions/actions'
+import { mintAssets } from '../../services/actions'
 
 import { useApplicationContext } from '../../store/storeContext'
 

@@ -7,7 +7,7 @@ import {
 } from './../services/utils/fetch-websocket';
 import {
   updatePurses,
-} from './../services/actions/actions';
+} from '../services/actions';
 import { reducer, createDefaultState } from '.';
 
 export const ApplicationContext = createContext();

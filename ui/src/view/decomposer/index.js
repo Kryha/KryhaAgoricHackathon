@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Flexdiv, Text, Button, Input, Select } from '../shared/styled'
 
 import { useApplicationContext } from '../../store/storeContext'
-import {retrieveAssets, createPurchaseOrder, decompose, retrieveDecompositions} from '../../services/actions/actions'
+import {retrieveAssets, createPurchaseOrder, decompose, retrieveDecompositions} from '../../services/actions'
 
 const Decomposer = props => {
   const { state, dispatch } = useApplicationContext()
