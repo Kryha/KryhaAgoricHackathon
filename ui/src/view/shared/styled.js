@@ -43,7 +43,8 @@ const Flexdiv = styled.div`
     transform: ${props => props.transform};
     :hover{
       background: ${props => props.hoverBackground};
-      color: ${props => props.hoverColor};  
+      color: ${props => props.hoverColor};
+      cursor:  ${props => props.cursor};
     }
     transition: ${props => props.transition};
     opacity: ${props => props.opacity};

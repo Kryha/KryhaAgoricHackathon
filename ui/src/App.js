@@ -28,6 +28,7 @@ function App () {
               marginb='25%'
               alignItems='center'
               justify='center'
+              cursor='pointer'
             >
               <a
                 style={{height:'100%', width:'100%', display:'flex', 'flex-direction':'row', 'justify-content':'center'}}
@@ -46,6 +47,7 @@ function App () {
               alignItems='center'
               hoverBackground='#C84145'
               marginb='25%'
+              cursor='pointer'
               onClick={() => setActive('creator')}
             >
               <Text
@@ -62,6 +64,7 @@ function App () {
               alignItems='center'
               hoverBackground='#C84145'
               marginb='25%'
+              cursor='pointer'
               onClick={() => setActive('converter')}
             >
               <Text
@@ -78,6 +81,7 @@ function App () {
               alignItems='center'
               hoverBackground='#C84145'
               marginb='25%'
+              cursor='pointer'
               onClick={() => setActive('decomposer')}
             >
               <Text
