@@ -19,6 +19,7 @@ let INSTANCE_REG_KEY_FUNGIBLE_A;
 let INSTANCE_REG_KEY_FUNGIBLE_B;
 let INSTANCE_REG_KEY_FUNGIBLE_C;
 let INSTANCE_REG_KEY_INVOICE;
+let INSTANCE_REG_KEY_SWAP;
 
 const TOKEN_A = {
   contract: 'tokenACreation',
@@ -48,6 +49,10 @@ const INVOICE = {
   contract: 'invoiceCreation',
   issuerName: 'invoice',
   purseName: 'invoice purse'
+}
+
+const SWAP = {
+  contract: 'atomicSwap'
 }
 
 async function deployTokenA (references) {
@@ -278,7 +283,6 @@ async function swapTokenNft (references, tokenIssuer, nftIssuer) {
   const { INSTALLATION_REG_KEY: swapRegKey } = contracts.find(({ name }) => name === 'atomicSwap');
   const swapContractInstallationHandle = await E(registry).get(swapRegKey);
 
-
   const tokenPurse = await E(wallet).getPurse(TOKEN_A.purseName);
   const nftPurse = await E(wallet).getPurse(PLASTIC_A.purseName);
 
@@ -332,34 +336,35 @@ async function swapTokenNft (references, tokenIssuer, nftIssuer) {
   const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
   const instanceHandle = await getInstanceHandle(bobExclusiveInvite);
   console.log('isntancerecord 0')
+  let CONTRACT_NAME = SWAP.contract;
+  INSTANCE_REG_KEY_SWAP = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+  // const {
+  //   installationHandle: bobInstallationId,
+  //   issuerKeywordRecord: bobIssuers,
+  // } = await E(zoe).getInstanceRecord(instanceHandle);
 
-  const {
-    installationHandle: bobInstallationId,
-    issuerKeywordRecord: bobIssuers,
-  } = await E(zoe).getInstanceRecord(instanceHandle);
+  // console.log('isntancerecord')
 
-  console.log('isntancerecord')
+  // const bobProposal = harden({
+  //   give: { Price: await E(tokenAmountMath).make(3) },
+  //   want: { Asset: currentAmount },
+  //   exit: { onDemand: null },
+  // });
 
-  const bobProposal = harden({
-    give: { Price: await E(tokenAmountMath).make(3) },
-    want: { Asset: currentAmount },
-    exit: { onDemand: null },
-  });
+  // console.log('extend proposal')
 
-  console.log('extend proposal')
+  // const bobPayment = await E(tokenPurse).withdraw(await E(tokenAmountMath).make(3))
+  // const bobPayments = { Price: bobPayment };
 
-  const bobPayment = await E(tokenPurse).withdraw(await E(tokenAmountMath).make(3))
-  const bobPayments = { Price: bobPayment };
+  // // 5: Bob makes an offer
+  // const { payout: bobPayoutP, outcome: bobOutcomeP } = await E(zoe).offer(
+  //   bobExclusiveInvite,
+  //   bobProposal,
+  //   bobPayments,
+  // );
 
-  // 5: Bob makes an offer
-  const { payout: bobPayoutP, outcome: bobOutcomeP } = await E(zoe).offer(
-    bobExclusiveInvite,
-    bobProposal,
-    bobPayments,
-  );
-
-  console.log('>>> Bob Done');
-  console.log(await bobPayoutP, await alicePayoutP)
+  // console.log('>>> Bob Done');
+  // console.log(await bobPayoutP, await alicePayoutP)
 }
 
 /**
@@ -423,7 +428,7 @@ export default async function deployApi (referencesPromise, { bundleSource, path
   const tokenCIssuer = await deployTokenC(references);
   const nftIssuer = await deployNFT(references);
   const invoiceIssuer = await deployInvoice(references);
-  // await swapTokenNft(references, tokenIssuer, nftIssuer)
+  await swapTokenNft(references, tokenAIssuer, nftIssuer)
 
   const issuersArray = await E(wallet).getIssuers();
   const issuers = new Map(issuersArray);
@@ -515,6 +520,7 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     INSTANCE_REG_KEY_NFT,
     INSTANCE_REG_KEY_INVOICE,
     INSTANCE_REG_KEY,
+    INSTANCE_REG_KEY_SWAP,
     // BRIDGE_URL: 'agoric-lookup:https://local.agoric.com?append=/bridge',
     brandRegKeys: { Tip: TIP_BRAND_REGKEY },
     BRIDGE_URL: 'http://127.0.0.1:8000',
