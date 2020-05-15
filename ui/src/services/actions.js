@@ -3,7 +3,7 @@ import defaults from '../conf/defaults';
 import { v1 as uuidv1 } from 'uuid';
 
 import { walletAddOffer } from './utils/wallet';
-import { mintAssetsOffer, mintNFTOffer } from './offers';
+import { mintAssetsOffer, mintNFTOffer, exchangeOffer, convertOffer } from './offers';
 
 export const updatePurses = (purses, dispatch) => {
   return dispatch({
@@ -34,6 +34,15 @@ export const createPurchaseOrder = async (type, purse, amount, dispatch) => {
   const temp = await walletAddOffer(mintOffer);
   console.log('temp:', temp);
 
+  console.log('mintOFFER:', mintOffer.proposalTemplate.want)
+
+  const want = mintOffer.proposalTemplate.want;
+
+  const mintOffer2 = exchangeOffer(type, purse, amount, want);
+  console.log('MINTOFFER222222', mintOffer2);
+  const temp2 = await walletAddOffer(mintOffer2);
+  console.log('temp:', temp2);
+
   // TODO: exchange for raw materials immediately after
   // const mintOffer2 = mintNFTOffer(type, purse, amount);
   // const temp2 = await walletAddOffer(mintOffer2)
@@ -52,8 +61,11 @@ export const retrieveConversions = (dispatch) => {
   })
 }
 
-export const convert = (input, output, amount, dispatch) => {
+export const convert = (type, purse, amount, dispatch) => {
   // input is gonna be a list of objects i think that i will destructure
+  const offer = convertOffer(type, purse, amount);
+  console.log('offer', offer)
+  walletAddOffer(offer);
 
   return dispatch({
     type: 'CONVERT',

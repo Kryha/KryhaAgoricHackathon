@@ -53,28 +53,25 @@ export default async function deployContract (
       name: 'tokenBCreation',
       path: `./src/tokenBCreation.js`,
     },
+    // {
+    //   name: 'tokenCCreation',
+    //   path: `./src/tokenCCreation.js`,
+    // },
     {
-      name: 'tokenCCreation',
-      path: `./src/tokenCCreation.js`,
-    },
-    {
-      name: 'encouragement',
-      path: `./src/encouragement.js`,
-    },
-    {
-      name: 'plasticA',
+      name: 'plasticA1',
       path: `./src/plasticA.js`,
     },
     {
-      name: 'atomicSwap',
-      path: `./src/atomicSwap.js`,
+      name: 'invoiceCreation',
+      path: './src/invoiceCreation.js',
     },
     {
-      name: 'invoiceCreation',
-      path: './src/invoiceCreation.js'
+      name: 'converter',
+      path: './src/converter.js',
     }
   ];
 
+  console.log('- Installing contract code installed on Zoe');
   const installedContracts = await Promise.all(
     contracts.map(async contract => {
       const { source, moduleFormat } = await bundleSource(
@@ -86,11 +83,7 @@ export default async function deployContract (
         `${contract.name}installation`,
         installationHandle,
       );
-      console.log('- SUCCESS! contract code installed on Zoe');
-      console.log(`-- Contract Name: ${contract.name}`);
-      console.log(
-        `-- InstallationHandle Register Key: ${INSTALLATION_REG_KEY}`,
-      );
+      console.log(`-- ${contract.name}::${INSTALLATION_REG_KEY}`);
 
       return { ...contract, INSTALLATION_REG_KEY };
     }),

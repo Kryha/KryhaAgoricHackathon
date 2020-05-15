@@ -72,6 +72,39 @@ export const mintNFTOffer = (type, purse, amount) => {
   return offer;
 }
 
+export const exchangeOffer = (type, purse, amount, want) => {
+  console.log('Action:mint', type, purse, amount)
+  
+  // TODO: Make this dynamic based on the purse/type
+  const instanceRegKey = defaults.INSTANCE_REG_KEY_SWAP
+
+  const offer = {
+    id: Date.now(),
+    instanceRegKey,
+    hooks: {
+      publicAPI: {
+        getInvite: ['makeInvite']
+      }
+    },
+    proposalTemplate: {
+      want: {
+        'Price': {
+          pursePetname: purse,
+          extent: Number(amount)
+        }
+      },
+      give: {
+        'Asset': {
+          pursePetname: 'invoice purse',
+          extent: want.Invoice.extent
+        }
+      },
+      exit: { onDemand: null }
+    }
+  }
+  return offer;
+}
+
 export const retrieveConversions = (dispatch) => {
 
   return dispatch({
@@ -80,13 +113,39 @@ export const retrieveConversions = (dispatch) => {
   })
 }
 
-export const convert = (input, output, amount, dispatch) => {
-  // input is gonna be a list of objects i think that i will destructure
+export const convertOffer = (type, purse, amount) => {
+  console.log('Action:mint', type, purse, amount);
 
-  return dispatch({
-    type: 'CONVERT',
-    payload: true
-  })
+  const instanceRegKey = defaults.INSTANCE_REG_KEY_CONVERTER;
+
+  const offer = {
+    id: Date.now(),
+    instanceRegKey,
+    hooks: {
+      publicAPI: {
+        getInvite: ['makeInvite']
+      }
+    },
+    proposalTemplate: {
+      want: {
+        'Plastic': {
+          pursePetname: 'plastic purse',
+          extent: [{
+            type: 'PlasticA',
+            id: uuidv1().substring(0,8)
+          }]
+        }
+      },
+      give: {
+        'Price': {
+          pursePetname: purse,
+          extent: Number(amount)
+        }
+      },
+      exit: { onDemand: null }
+    }
+  }
+  return offer;
 }
 
 export const retrieveDecompositions = (dispatch) => {
