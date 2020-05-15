@@ -30,7 +30,7 @@ const Converter = props => {
   const createNewConversion = () => {
     if(amount < 1) return alert('Specify a positive amount')
     let conv = state.conversions[selectedConversion]
-    convert(conv.input, conv.output, conv.amount,dispatch)
+    convert(conv.input, conv.output, conv.amount, dispatch)
   }
 
   if (state.purses.length === 0 || state.conversions.length === 0) {

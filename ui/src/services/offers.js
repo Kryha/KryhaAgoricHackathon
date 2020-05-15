@@ -41,7 +41,7 @@ export const mintAssetsOffer = (type, purse, amount) => {
   return offer;
 }
 
-export const mintNFTOffer = (type, purse, amount, dispatch) => {
+export const mintNFTOffer = (type, purse, amount) => {
   console.log('Action:mint', type, purse, amount)
   
   // TODO: Make this dynamic based on the purse/type
@@ -58,7 +58,7 @@ export const mintNFTOffer = (type, purse, amount, dispatch) => {
     proposalTemplate: {
       want: {
         Invoice: {
-          pursePetname: purse,
+          pursePetname: 'invoice purse',
           extent: [{
             type: type,
             id: uuidv1().substring(0,8),
