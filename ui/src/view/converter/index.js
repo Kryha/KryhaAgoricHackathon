@@ -24,8 +24,7 @@ const Converter = props => {
   const createNewPurchaseOrder = () => {
     if (amountToBuy < 1) return alert('Specify a positive amount')
     const { brandRegKey, pursePetname } = state.purses[selectedPurse]
-    // createPurchaseOrder(brandRegKey, pursePetname, amountToBuy, dispatch)
-    convert(brandRegKey, pursePetname, amountToBuy, dispatch)
+    createPurchaseOrder(brandRegKey, pursePetname, amountToBuy, dispatch)
   }
 
   const createNewConversion = () => {
