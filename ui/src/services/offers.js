@@ -5,13 +5,13 @@ import { v1 as uuidv1 } from 'uuid';
 export const mintAssetsOffer = (type, purse, amount) => {
   let instanceRegKey
   switch (purse) {
-    case 'typeA purse':
+    case 'TypeA purse':
       instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_A
       break;
-    case 'typeB purse':
+    case 'TypeB purse':
       instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_B
       break;
-    case 'typeC purse':
+    case 'TypeC purse':
       instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_C
       break
     default:

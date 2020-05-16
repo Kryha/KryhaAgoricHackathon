@@ -4,16 +4,20 @@ import produceIssuer from '@agoric/ertp';
 import { makeZoeHelpers } from '@agoric/zoe/src/contractSupport/zoeHelpers';
 
 export const makeContract = harden(zcf => {
-  const { issuer, mint, amountMath } = produceIssuer('typeA');
+  const {
+    terms: { issuerName },
+  } = zcf.getInstanceRecord();
 
-  const { inviteAnOffer } = makeZoeHelpers(zcf);
+  const { issuer, mint, amountMath } = produceIssuer('token');
+
+  const { checkHook } = makeZoeHelpers(zcf);
 
   const zoeHelpers = makeZoeHelpers(zcf);
 
-  return zcf.addNewIssuer(issuer, 'TypeB').then(() => {
+  return zcf.addNewIssuer(issuer, issuerName).then(() => {
     const mintHook = offerHandle => {
       const requestOffer = zcf.getOffer(offerHandle);
-      const tokenRequestExtent = requestOffer.proposal.want.TypeB.extent;
+      const tokenRequestExtent = requestOffer.proposal.want[issuerName].extent;
 
       const amount = amountMath.make(tokenRequestExtent);
       const payment = mint.mintPayment(amount);
@@ -22,7 +26,7 @@ export const makeContract = harden(zcf => {
         .escrowAndAllocateTo({
           amount,
           payment,
-          keyword: 'TypeB',
+          keyword: issuerName,
           recipientHandle: offerHandle,
         })
         .then(() => {
@@ -31,21 +35,16 @@ export const makeContract = harden(zcf => {
         });
     };
 
-    const makeInvite = () =>
-      inviteAnOffer(
-        harden({
-          offerHook: mintHook,
-          customProperties: { inviteDesc: 'mint' },
-        }),
-      );
+    const expectedOffer = harden({
+      want: { [issuerName]: null },
+    });
+
+    const makeInvite = () => {
+      return zcf.makeInvitation(checkHook(mintHook, expectedOffer), 'mint');
+    };
 
     return harden({
-      invite: inviteAnOffer(
-        harden({
-          offerHook: mintHook,
-          customProperties: { inviteDesc: 'mint' },
-        }),
-      ),
+      invite: makeInvite(),
       publicAPI: {
         makeInvite,
         getTokenIssuer: () => issuer,
