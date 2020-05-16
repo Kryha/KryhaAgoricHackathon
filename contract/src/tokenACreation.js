@@ -4,13 +4,18 @@ import produceIssuer from '@agoric/ertp';
 import { makeZoeHelpers } from '@agoric/zoe/src/contractSupport/zoeHelpers';
 
 export const makeContract = harden(zcf => {
+  // const {
+  //   terms: { issuerName },
+  // } = zcf.getInstanceRecord();
+  const issuerName = 'TypeA';
+
   const { issuer, mint, amountMath } = produceIssuer('typeA');
 
   const { checkHook } = makeZoeHelpers(zcf);
 
   const zoeHelpers = makeZoeHelpers(zcf);
 
-  return zcf.addNewIssuer(issuer, 'TypeA').then(() => {
+  return zcf.addNewIssuer(issuer, issuerName).then(() => {
     const mintHook = offerHandle => {
       const requestOffer = zcf.getOffer(offerHandle);
       const tokenRequestExtent = requestOffer.proposal.want.TypeA.extent;
@@ -22,7 +27,7 @@ export const makeContract = harden(zcf => {
         .escrowAndAllocateTo({
           amount,
           payment,
-          keyword: 'TypeA',
+          keyword: issuerName,
           recipientHandle: offerHandle,
         })
         .then(() => {

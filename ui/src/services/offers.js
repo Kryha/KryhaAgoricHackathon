@@ -129,9 +129,9 @@ export const convertOffer = (type, purse, amount) => {
     proposalTemplate: {
       want: {
         'Plastic': {
-          pursePetname: 'plastic purse',
+          pursePetname: 'plastic bottle purse',
           extent: [{
-            type: 'PlasticA',
+            type: 'Plastic',
             id: uuidv1().substring(0,8)
           }]
         }

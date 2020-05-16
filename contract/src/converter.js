@@ -18,15 +18,13 @@ export const makeContract = harden(zcf => {
   const { issuer, mint, amountMath } = produceIssuer('plastic', 'set');
 
   return zcf.addNewIssuer(issuer, 'Plastic').then(() => {
-    const amountMaths = zcf.getAmountMaths(
-      harden(['Plastic', 'Price']),
-    );
+    const amountMaths = zcf.getAmountMaths(harden(['Plastic', 'Price']));
 
     const convertHook = offerHandle => {
       return makeEmptyOffer().then(burnHandle => {
         const { proposal } = zcf.getOffer(offerHandle);
-        const wantedOfferAllocation = proposal.want.Plastic.extent;
-        const amount = amountMath.make(harden(wantedOfferAllocation));
+        const wantedOfferProposal = proposal.want.Plastic.extent;
+        const amount = amountMath.make(harden(wantedOfferProposal));
         const payment = mint.mintPayment(amount);
 
         return escrowAndAllocateTo({
