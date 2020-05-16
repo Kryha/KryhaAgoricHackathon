@@ -54,10 +54,6 @@ export default async function deployContract (
       path: `./src/plasticA.js`,
     },
     {
-      name: 'invoiceCreation',
-      path: './src/invoiceCreation.js',
-    },
-    {
       name: 'converter',
       path: './src/converter.js',
     }

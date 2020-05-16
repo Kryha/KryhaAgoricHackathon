@@ -43,7 +43,7 @@ export const mintAssetsOffer = (type, purse, amount) => {
 
 export const mintNFTOffer = (type, purse, amount) => {
   console.log('Action:mint', type, purse, amount)
-  
+
   // TODO: Make this dynamic based on the purse/type
   const instanceRegKey = defaults.INSTANCE_REG_KEY_INVOICE
 
@@ -61,7 +61,7 @@ export const mintNFTOffer = (type, purse, amount) => {
           pursePetname: 'invoice purse',
           extent: [{
             type: type,
-            id: uuidv1().substring(0,8),
+            id: uuidv1().substring(0, 8),
             amount,
           }]
         }
@@ -74,7 +74,7 @@ export const mintNFTOffer = (type, purse, amount) => {
 
 export const exchangeOffer = (type, purse, amount, want) => {
   console.log('Action:mint', type, purse, amount)
-  
+
   // TODO: Make this dynamic based on the purse/type
   const instanceRegKey = defaults.INSTANCE_REG_KEY_SWAP
 
@@ -128,11 +128,12 @@ export const convertOffer = (type, purse, amount) => {
     },
     proposalTemplate: {
       want: {
-        'Plastic': {
-          pursePetname: 'plastic bottle purse',
+        'Invoice': {
+          pursePetname: 'invoice purse',
           extent: [{
-            type: 'Plastic',
-            id: uuidv1().substring(0,8)
+            type: type,
+            amount: amount,
+            id: uuidv1().substring(0, 8)
           }]
         }
       },

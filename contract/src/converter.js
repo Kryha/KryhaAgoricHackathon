@@ -15,43 +15,43 @@ export const makeContract = harden(zcf => {
     escrowAndAllocateTo,
   } = makeZoeHelpers(zcf);
 
-  const { issuer, mint, amountMath } = produceIssuer('plastic', 'set');
+  const { issuer, mint, amountMath } = produceIssuer('invoice', 'set');
 
-  return zcf.addNewIssuer(issuer, 'Plastic').then(() => {
-    const amountMaths = zcf.getAmountMaths(harden(['Plastic', 'Price']));
+  return zcf.addNewIssuer(issuer, 'Invoice').then(() => {
+    const amountMaths = zcf.getAmountMaths(harden(['Invoice', 'Price']));
 
     const convertHook = offerHandle => {
       return makeEmptyOffer().then(burnHandle => {
         const { proposal } = zcf.getOffer(offerHandle);
-        const wantedOfferProposal = proposal.want.Plastic.extent;
+        const wantedOfferProposal = proposal.want.Invoice.extent;
         const amount = amountMath.make(harden(wantedOfferProposal));
         const payment = mint.mintPayment(amount);
 
         return escrowAndAllocateTo({
           amount,
           payment,
-          keyword: 'Plastic',
+          keyword: 'Invoice',
           recipientHandle: burnHandle,
         }).then(() => {
           const currentBurnAllocation = zcf.getCurrentAllocation(burnHandle);
           const currentOfferAllocation = zcf.getCurrentAllocation(offerHandle);
-  
+
           const wantedBurnAllocation = {
-            Plastic: amountMaths.Plastic.getEmpty(),
+            Invoice: amountMaths.Invoice.getEmpty(),
             Price: amountMaths.Price.add(
               currentBurnAllocation.Price,
               currentOfferAllocation.Price,
             ),
           };
-  
+
           const wantedOfferAllocation = {
-            Plastic: amountMaths.Plastic.add(
-              currentBurnAllocation.Plastic,
-              currentOfferAllocation.Plastic,
+            Invoice: amountMaths.Invoice.add(
+              currentBurnAllocation.Invoice,
+              currentOfferAllocation.Invoice,
             ),
             Price: amountMaths.Price.getEmpty(),
           };
-  
+
           zcf.reallocate(
             harden([burnHandle, offerHandle]),
             harden([wantedBurnAllocation, wantedOfferAllocation]),
@@ -64,7 +64,7 @@ export const makeContract = harden(zcf => {
     };
 
     const expectedOffer = harden({
-      want: { Plastic: null },
+      want: { Invoice: null },
       give: { Price: null },
     });
 

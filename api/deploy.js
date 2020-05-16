@@ -33,15 +33,15 @@ const INVOICE = {
 
 const CONVERTER_PLASTIC = {
   contract: 'converter',
-  issuerName: 'plastic bottle',
-  purseName: 'plastic bottle purse'
+  issuerName: 'invoice',
+  purseName: 'invoice purse'
 }
 
 const SWAP = {
   contract: 'fakeSwap'
 }
 
-function capitalize(str) {
+function capitalize (str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
@@ -68,7 +68,7 @@ async function deployToken (references, tokenName) {
   })
   const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle, harden({}), terms);
   console.log('--- instance is running on Zoe');
-  
+
   const instanceHandle = await getInstanceHandle(adminInvite);
 
   const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
@@ -177,7 +177,7 @@ async function deployInvoice (references) {
   let CONTRACT_NAME = INVOICE.contract;
   INSTANCE_REG_KEY_INVOICE = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
   console.log(`--- contract is added to the registry under: ${INSTANCE_REG_KEY_INVOICE}`);
-  
+
   return issuer;
 }
 
@@ -286,7 +286,7 @@ export default async function deployApi (referencesPromise, { bundleSource, path
   const { issuer: tokenBIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_B } = await deployToken(references, 'typeB');
   const { issuer: tokenCIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_C } = await deployToken(references, 'typeC');
   const nftIssuer = await deployNFT(references);
-  const invoiceIssuer = await deployInvoice(references);
+  // const invoiceIssuer = await deployInvoice(references);
   // await swapTokenNft(references, tokenAIssuer, nftIssuer);
   await deployConverter(references, tokenAIssuer);
 
@@ -300,7 +300,7 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     INSTANCE_REG_KEY_FUNGIBLE_B,
     INSTANCE_REG_KEY_FUNGIBLE_C,
     INSTANCE_REG_KEY_NFT,
-    INSTANCE_REG_KEY_INVOICE,
+    // INSTANCE_REG_KEY_INVOICE,
     // INSTANCE_REG_KEY,
     // INSTANCE_REG_KEY_SWAP,
     INSTANCE_REG_KEY_CONVERTER,
