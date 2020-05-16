@@ -15,29 +15,29 @@ export const makeContract = harden(zcf => {
     escrowAndAllocateTo,
   } = makeZoeHelpers(zcf);
 
-  const { issuer, mint, amountMath } = produceIssuer('invoice', 'set');
+  const { issuer, mint, amountMath } = produceIssuer('plastic', 'set');
 
-  return zcf.addNewIssuer(issuer, 'Invoice').then(() => {
-    const amountMaths = zcf.getAmountMaths(harden(['Invoice', 'Price']));
+  return zcf.addNewIssuer(issuer, 'Plastic').then(() => {
+    const amountMaths = zcf.getAmountMaths(harden(['Plastic', 'Price']));
 
     const convertHook = offerHandle => {
       return makeEmptyOffer().then(burnHandle => {
         const { proposal } = zcf.getOffer(offerHandle);
-        const wantedOfferProposal = proposal.want.Invoice.extent;
+        const wantedOfferProposal = proposal.want.Plastic.extent;
         const amount = amountMath.make(harden(wantedOfferProposal));
         const payment = mint.mintPayment(amount);
 
         return escrowAndAllocateTo({
           amount,
           payment,
-          keyword: 'Invoice',
+          keyword: 'Plastic',
           recipientHandle: burnHandle,
         }).then(() => {
           const currentBurnAllocation = zcf.getCurrentAllocation(burnHandle);
           const currentOfferAllocation = zcf.getCurrentAllocation(offerHandle);
 
           const wantedBurnAllocation = {
-            Invoice: amountMaths.Invoice.getEmpty(),
+            Plastic: amountMaths.Plastic.getEmpty(),
             Price: amountMaths.Price.add(
               currentBurnAllocation.Price,
               currentOfferAllocation.Price,
@@ -45,9 +45,9 @@ export const makeContract = harden(zcf => {
           };
 
           const wantedOfferAllocation = {
-            Invoice: amountMaths.Invoice.add(
-              currentBurnAllocation.Invoice,
-              currentOfferAllocation.Invoice,
+            Plastic: amountMaths.Plastic.add(
+              currentBurnAllocation.Plastic,
+              currentOfferAllocation.Plastic,
             ),
             Price: amountMaths.Price.getEmpty(),
           };
@@ -64,7 +64,7 @@ export const makeContract = harden(zcf => {
     };
 
     const expectedOffer = harden({
-      want: { Invoice: null },
+      want: { Plastic: null },
       give: { Price: null },
     });
 

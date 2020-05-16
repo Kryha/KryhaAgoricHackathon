@@ -50,8 +50,12 @@ export default async function deployContract (
       path: `./src/tokenCreation.js`,
     },
     {
-      name: 'plastic',
+      name: 'plasticA1',
       path: `./src/plasticA.js`,
+    },
+    {
+      name: 'invoiceCreation',
+      path: './src/invoiceCreation.js',
     },
     {
       name: 'converter',

@@ -73,39 +73,10 @@ export const mintNFTOffer = (type, purse, amount) => {
 }
 
 export const exchangeOffer = (type, purse, amount, want) => {
-  // console.log('Action:mint', type, purse, amount)
+  console.log('Action:mint', type, purse, amount)
 
-  // // TODO: Make this dynamic based on the purse/type
-  // const instanceRegKey = defaults.INSTANCE_REG_KEY_SWAP
-
-  // const offer = {
-  //   id: Date.now(),
-  //   instanceRegKey,
-  //   hooks: {
-  //     publicAPI: {
-  //       getInvite: ['makeInvite']
-  //     }
-  //   },
-  //   proposalTemplate: {
-  //     want: {
-  //       'Price': {
-  //         pursePetname: purse,
-  //         extent: Number(amount)
-  //       }
-  //     },
-  //     give: {
-  //       'Asset': {
-  //         pursePetname: 'invoice purse',
-  //         extent: want.Invoice.extent
-  //       }
-  //     },
-  //     exit: { onDemand: null }
-  //   }
-  // }
-  // return offer;
-  console.log('Action:mint', type, purse, amount);
-
-  const instanceRegKey = defaults.INSTANCE_REG_KEY_CONVERTER;
+  // TODO: Make this dynamic based on the purse/type
+  const instanceRegKey = defaults.INSTANCE_REG_KEY_SWAP
 
   const offer = {
     id: Date.now(),
@@ -117,19 +88,15 @@ export const exchangeOffer = (type, purse, amount, want) => {
     },
     proposalTemplate: {
       want: {
-        'Invoice': {
-          pursePetname: 'invoice purse',
-          extent: [{
-            type: type,
-            amount: amount,
-            id: uuidv1().substring(0, 8)
-          }]
-        }
-      },
-      give: {
         'Price': {
           pursePetname: purse,
           extent: Number(amount)
+        }
+      },
+      give: {
+        'Asset': {
+          pursePetname: 'invoice purse',
+          extent: want.Invoice.extent
         }
       },
       exit: { onDemand: null }
@@ -149,7 +116,7 @@ export const retrieveConversions = (dispatch) => {
 export const convertOffer = (type, purse, amount) => {
   console.log('Action:mint', type, purse, amount);
 
-  const instanceRegKey = defaults.INSTANCE_REG_KEY_NFT;
+  const instanceRegKey = defaults.INSTANCE_REG_KEY_CONVERTER;
 
   const offer = {
     id: Date.now(),
@@ -162,12 +129,17 @@ export const convertOffer = (type, purse, amount) => {
     proposalTemplate: {
       want: {
         'Plastic': {
-          pursePetname: 'plastic purse',
+          pursePetname: 'plastic bottle purse',
           extent: [{
-            type: type,
-            amount: amount,
+            type: 'Plastic',
             id: uuidv1().substring(0, 8)
           }]
+        }
+      },
+      give: {
+        'Price': {
+          pursePetname: purse,
+          extent: Number(amount)
         }
       },
       exit: { onDemand: null }
