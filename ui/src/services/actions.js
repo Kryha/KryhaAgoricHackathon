@@ -30,22 +30,9 @@ export const mintAssets = (type, purse, amount, dispatch) => {
 }
 
 export const createPurchaseOrder = async (type, purse, amount, dispatch) => {
-  const mintOffer = mintNFTOffer(type, purse, amount);
-  const temp = await walletAddOffer(mintOffer);
-  console.log('temp:', temp);
-
-  console.log('mintOFFER:', mintOffer.proposalTemplate.want)
-
-  const want = mintOffer.proposalTemplate.want;
-
-  const mintOffer2 = exchangeOffer(type, purse, amount, want);
-  console.log('MINTOFFER222222', mintOffer2);
-  const temp2 = await walletAddOffer(mintOffer2);
-  console.log('temp:', temp2);
-
-  // TODO: exchange for raw materials immediately after
-  // const mintOffer2 = mintNFTOffer(type, purse, amount);
-  // const temp2 = await walletAddOffer(mintOffer2)
+  const offer = exchangeOffer(type, purse, amount);
+  console.log('offer', offer)
+  walletAddOffer(offer);
 
   return dispatch({
     type: 'CREATEPURCHASEORDER',

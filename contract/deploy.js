@@ -50,7 +50,7 @@ export default async function deployContract (
       path: `./src/tokenCreation.js`,
     },
     {
-      name: 'plasticA1',
+      name: 'plastic',
       path: `./src/plasticA.js`,
     },
     {
