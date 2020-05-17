@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 
 import ApplicationContextProvider from './store/storeContext'
 import { Flexdiv, Page, Text, Image } from './view/shared/styled'
@@ -19,11 +19,11 @@ function App () {
             flex='column'
             w='10%'
             background='#AB2328'
-            h = '100%'
+            h='100%'
           >
             <Flexdiv
               flex='row'
-              h = '10%'
+              h='10%'
               w='100%'
               marginb='25%'
               alignItems='center'
@@ -31,22 +31,22 @@ function App () {
               cursor='pointer'
             >
               <a
-                style={{height:'100%', width:'100%', display:'flex', 'flex-direction':'row', 'justify-content':'center'}}
+                style={{ height: '100%', width: '100%', display: 'flex', 'flexDirection': 'row', 'justifyContent': 'center' }}
                 href='https://www.kryha.io'>
-              <Image
-                src={window.location.origin + '/KryhaW.png'}
-                padding='10% 0 0 0'
-                h='100%'
-                w='100%'
-              />
+                <Image
+                  src={window.location.origin + '/KryhaW.png'}
+                  padding='10% 0 0 0'
+                  h='100%'
+                  w='100%'
+                />
               </a>
             </Flexdiv>
             <Flexdiv
               flex='row'
-              h = '10%'
+              h='10%'
               alignItems='center'
               hoverBackground='#C84145'
-              background={active ==='creator'? '#C84145': 'none'}
+              background={active === 'creator' ? '#C84145' : 'none'}
               marginb='25%'
               cursor='pointer'
               onClick={() => setActive('creator')}
@@ -61,10 +61,10 @@ function App () {
             </Flexdiv>
             <Flexdiv
               flex='row'
-              h = '10%'
+              h='10%'
               alignItems='center'
               hoverBackground='#C84145'
-              background={active ==='converter'? '#C84145': 'none'}
+              background={active === 'converter' ? '#C84145' : 'none'}
               marginb='25%'
               cursor='pointer'
               onClick={() => setActive('converter')}
@@ -79,10 +79,10 @@ function App () {
             </Flexdiv>
             <Flexdiv
               flex='row'
-              h = '10%'
+              h='10%'
               alignItems='center'
               hoverBackground='#C84145'
-              background={active ==='decomposer'? '#C84145': 'none'}
+              background={active === 'decomposer' ? '#C84145' : 'none'}
               marginb='25%'
               cursor='pointer'
               onClick={() => setActive('decomposer')}
@@ -96,7 +96,7 @@ function App () {
               >Decomposer</Text>
             </Flexdiv>
           </Flexdiv>
-          
+
           <Flexdiv w='90%' h='97%' marginr='10vw' margint='3%' flex='column'>
             <Flexdiv
               flex='row'
@@ -108,7 +108,7 @@ function App () {
                 marginl='10%'
                 size='25px'
                 transform='capitalize'
-              >{active+ ' overview'}</Text>
+              >{active + ' overview'}</Text>
             </Flexdiv>
             <Flexdiv
               flex='row'
