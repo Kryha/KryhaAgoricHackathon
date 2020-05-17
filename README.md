@@ -8,7 +8,6 @@ For this case study we focussed on tracing plastic bottles from where the initia
 ## Limitations
 - Have to run the project with `--delay 1` because of `unimplemented errors` in the fakeChain.
 - Working with multiple wallets caused too many problems, and therefore we did not implement a transaction contract between wallets.
-- In order to demonstrate our concept with one wallet, when tokens are being used, they are also being burnt.
 
 ## Clone the repo
 ```git clone https://github.com/Kryha/KryhaAgoricHackathon.git```
@@ -37,10 +36,10 @@ While developing follow the guide for every change you make
 https://agoric.com/documentation/getting-started/development-cycle.html
 
 ## Smart Contracts
-- ```tokenCreation```: Mints fungible tokens, for the Creator.
-- ```converter```: Expects an amount of fungible tokens, when they are received burns them and mints an invoice NFT.
-- ```plastic```: Mints a NFT which represents the plastic bottles with a specific type and amount of tokens that were used to create it.
+- ```tokenCreation```: Mints fungible tokens, for the Creator. Mirroring the initial raw (virgin) materials being sourced in the physical world.
+- ```converter```: Creates a new non-fungible token in exchange for burning (destructive usage of) fungible tokens. This contract converts input A into output B, losing A in the process. This contract mirrors a manufacturing process where raw materials are being converted into new empty plastic bottles using up the raw materials in the process.
 
 ## Improvements
-- Use multiple wallets: This way the demo can be closer to real use case scenarios and also more descentralized. All identities will have a need to know basic, and their own purses. 
+- Use multiple wallets: This way the demo can be closer to real use case scenarios and also more descentralized. All identities will have a need to know basis, and their own purses. This will also make it possible to trace plastics to individual parties and trace the recycle history of individual products. For example; we can trace how much of a specific bottle has been made of recycled plastics.
 - More checks need to done in the smart contract level in order to utilize Zoe's security.
+- Tests have to be written to validate the correct behaviour of the smart contracts.
