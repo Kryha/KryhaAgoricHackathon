@@ -2,22 +2,7 @@ import { doFetch } from './utils/fetch-websocket';
 import defaults from '../conf/defaults';
 import { v1 as uuidv1 } from 'uuid';
 
-export const mintAssetsOffer = (type, purse, amount) => {
-  let instanceRegKey
-  switch (purse) {
-    case 'TypeA purse':
-      instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_A
-      break;
-    case 'TypeB purse':
-      instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_B
-      break;
-    case 'TypeC purse':
-      instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_C
-      break
-    default:
-      return alert('The Creator can only mint raw material tokens')
-  }
-
+export const mintAssetsOffer = (type, purse, amount, instanceRegKey) => {
   const offer = {
     id: Date.now(),
     instanceRegKey,
@@ -44,7 +29,6 @@ export const mintAssetsOffer = (type, purse, amount) => {
 export const mintNFTOffer = (type, purse, amount) => {
   console.log('Action:mint', type, purse, amount)
 
-  // TODO: Make this dynamic based on the purse/type
   const instanceRegKey = defaults.INSTANCE_REG_KEY_INVOICE
 
   const offer = {
