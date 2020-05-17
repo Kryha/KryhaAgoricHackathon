@@ -22,6 +22,8 @@ export function reducer (state, action) {
       return { ...state, success: action.payload }
     case 'CREATEPURCHASEORDER':
       return { ...state, success: action.payload }
+    case 'CREATEPURCHASEORDERDEC':
+      return { ...state, success: action.payload }
     case 'RETRIEVECONVERSIONS':
       return { ...state, conversions: action.payload }
     case 'CONVERT':
@@ -29,7 +31,7 @@ export function reducer (state, action) {
     case 'RETRIEVEDECOMPOSITIONS':
       return { ...state, decompositions: action.payload }
     case 'DECOMPOSE':
-      return { ...state, conversions: action.payload }    
+      return { ...state, conversions: action.payload }
     default:
       return state
   }
