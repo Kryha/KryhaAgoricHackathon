@@ -29,7 +29,6 @@ function createSocket({ onConnect, onDisconnect, onMessage }, endpoint) {
       ifr.setAttribute('style', 'display: none');
       document.body.appendChild(ifr);
       window.addEventListener('message', ev => {
-        console.log('ev', ev.data.type, ev.data)
         if (ev.data && ev.data.type === 'walletBridgeLoaded') {
           walletLoaded = true;
           for (const sub of connectSubscriptions.keys()) {
@@ -152,7 +151,6 @@ export async function doFetch(req, endpoint = '/private/wallet-bridge') {
   const expectedResponse = req.type === 'walletAddOffer' ? 'walletUpdatePurses' : `${req.type}Response`;
   function getResponse({ data: msg }) {
     const obj = JSON.parse(msg);
-    console.log('doFETCH:', req, obj)
     if (obj.type === expectedResponse) {
       resolve(obj);
       socket.removeEventListener('message', getResponse);

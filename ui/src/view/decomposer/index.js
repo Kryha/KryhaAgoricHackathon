@@ -34,17 +34,17 @@ const Decomposer = props => {
   }
 
   const createNewDecomposition = () => {
-    if (amount < 1) return alert('Specify a positive amount')
-    let decomp = state.decompositions[selectedDecomposition]
-    // state.purses.map((purse, index) => {
-    //   if (purse.pursePetname === 'Decomposer invoice purse') {
-    //     if (purse.extent[0].amount < amount * 5) {
-    //       alert("The Converter first must create a purchase order for the amount requested.")
-    //       return
-    //     }
-    //   }
-    // })
-    decompose(decomp.input, decomp.amount, dispatch)
+    if (amount > 0) {
+      let decomp = state.decompositions[selectedDecomposition]
+      console.log('decomp', decomp)
+
+      const input = decomp.input.map(i => {
+        const matchingPurse = state.purses.find(p => p.pursePetname === i.purse)
+        return { ...i, extent: matchingPurse.extent.slice(0, amount * i.amount) }
+      })
+
+      decompose(input, decomp.output, amount, dispatch)
+    }
   }
 
   if (state.purses.length === 0 || state.decompositions.length === 0) {
@@ -242,8 +242,9 @@ const Decomposer = props => {
               onChange={(e) => setSelectedDecomposition(e.target.value)}
             >
               {state.decompositions.map((decomposition, index) => {
+                console.log(decomposition)
                 return (
-                  <option key={index} value={index}>{decomposition.input}</option>
+                  <option key={index} value={index}>{decomposition.input.map(i => i.type).join(", ")}</option>
                 )
               })}
             </Select>

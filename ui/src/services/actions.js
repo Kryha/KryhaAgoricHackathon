@@ -3,7 +3,7 @@ import defaults from '../conf/defaults';
 import { v1 as uuidv1 } from 'uuid';
 
 import { walletAddOffer } from './utils/wallet';
-import { mintAssetsOffer, mintNFTOffer, exchangeOffer, convertOffer } from './offers';
+import { mintAssetsOffer, mintNFTOffer, exchangeOffer, convertOffer, decomposeOffer } from './offers';
 
 export const updatePurses = (purses, dispatch) => {
   return dispatch({
@@ -79,7 +79,7 @@ export const retrieveConversions = (dispatch) => {
 export const convert = (input, output, amount, dispatch) => {
   // input is gonna be a list of objects i think that i will destructure
   const offer = convertOffer(input, output, amount);
-  console.log('offer', offer)
+  console.log('Convert:Offer:', offer)
   walletAddOffer(offer);
 
   return dispatch({
@@ -89,15 +89,16 @@ export const convert = (input, output, amount, dispatch) => {
 }
 
 export const retrieveDecompositions = (dispatch) => {
-
   return dispatch({
     type: 'RETRIEVEDECOMPOSITIONS',
-    payload: [{ output: [{ type: 'asset 1', amount: 10 }, { type: 'asset 2', amount: 5 }], input: 'type b' }]
-  })
+    payload: [{ input: [{ type: 'plastic bottle', purse: 'plastic bottle purse', amount: 1 }], output: [{ type: 'typeA2', purse: 'Recycled typeA2 purse', amount: 4 }] }]
+  });
 }
 
-export const decompose = (input, amount, dispatch) => {
-  // find right decomposition that matches input
+export const decompose = (input, output, amount, dispatch) => {
+  const offer = decomposeOffer(input, output, amount);
+  console.log('Decompose:offer:', offer)
+  walletAddOffer(offer);
 
   return dispatch({
     type: 'DECOMPOSE',

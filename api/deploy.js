@@ -16,6 +16,7 @@ let INSTANCE_REG_KEY_NFT;
 let INSTANCE_REG_KEY_INVOICE;
 let INSTANCE_REG_KEY_SWAP;
 let INSTANCE_REG_KEY_CONVERTER;
+let INSTANCE_REG_KEY_DECOMPOSER;
 
 const TOKEN_CONTRACT = 'tokenCreation'
 
@@ -35,6 +36,11 @@ const CONVERTER_PLASTIC = {
   contract: 'converter',
   issuerName: 'plastic bottle',
   purseName: 'plastic bottle purse'
+}
+
+const DECOMPOSER_PLASTIC = {
+  contract: 'decomposer',
+  issuerName: 'typeA2',
 }
 
 const SWAP = {
@@ -234,7 +240,64 @@ async function deployConverter (references, tokenIssuer) {
   let CONTRACT_NAME = CONVERTER_PLASTIC.contract;
   INSTANCE_REG_KEY_CONVERTER = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
   console.log(`--- contract is added to the registry under: ${INSTANCE_REG_KEY_CONVERTER}`);
+
+  return { issuer }
 }
+
+
+async function deployDecomposer (references, assetIssuer) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  console.log(`-- deploying: Decomposer`)
+
+  const { contracts } = installationConstants;
+
+  const { INSTALLATION_REG_KEY: converterRegKey } = contracts.find(({ name }) => name === DECOMPOSER_PLASTIC.contract);
+  const converterContractInstallationHandle = await E(registry).get(converterRegKey);
+
+  const issuerName = DECOMPOSER_PLASTIC.issuerName;
+
+  const issuerKeywordRecord = harden({
+    Asset: assetIssuer,
+  });
+  const terms = harden({
+    issuerName: capitalize(issuerName),
+    conversionRate: Number(4),
+  })
+  const adminInvite = await E(zoe).makeInstance(converterContractInstallationHandle, issuerKeywordRecord, terms);
+  console.log('--- instance is running on Zoe');
+
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+
+  const issuer = await E(publicAPI).getTokenIssuer();
+  const conversionRate = await E(publicAPI).getConversionRate();
+  console.log('--- Conversion rate retrieved:', conversionRate)
+
+  const brandRegKey = await E(registry).register(
+    issuerName,
+    await E(issuer).getBrand()
+  )
+
+  await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
+
+  const pursePetname = `Recycled ${issuerName} purse`;
+  await E(wallet).makeEmptyPurse(issuerName, pursePetname);
+
+  console.log(`--- empty ${pursePetname} is added to wallet`);
+
+  let CONTRACT_NAME = DECOMPOSER_PLASTIC.contract;
+  INSTANCE_REG_KEY_DECOMPOSER = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+  console.log(`--- contract is added to the registry under: ${INSTANCE_REG_KEY_DECOMPOSER}`);
+}
+
 
 
 async function swapTokenNft (references, tokenIssuer, nftIssuer) {
@@ -297,7 +360,8 @@ export default async function deployApi (referencesPromise, { bundleSource, path
   const nftIssuer = await deployNFT(references);
   const invoiceIssuer = await deployInvoice(references);
   // await swapTokenNft(references, tokenAIssuer, nftIssuer);
-  await deployConverter(references, tokenAIssuer);
+  const {issuer: plasticBottleIssuer } = await deployConverter(references, tokenAIssuer);
+  await deployDecomposer(references, plasticBottleIssuer);
 
   const issuersArray = await E(wallet).getIssuers();
   const issuers = new Map(issuersArray);
@@ -313,6 +377,7 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     // INSTANCE_REG_KEY,
     // INSTANCE_REG_KEY_SWAP,
     INSTANCE_REG_KEY_CONVERTER,
+    INSTANCE_REG_KEY_DECOMPOSER,
     // BRIDGE_URL: 'agoric-lookup:https://local.agoric.com?append=/bridge',
     // brandRegKeys: { Tip: TIP_BRAND_REGKEY },
     BRIDGE_URL: 'http://127.0.0.1:8000',

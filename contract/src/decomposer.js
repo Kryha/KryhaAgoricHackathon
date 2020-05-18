@@ -18,74 +18,58 @@ export const makeContract = harden(zcf => {
     escrowAndAllocateTo,
   } = makeZoeHelpers(zcf);
 
-  assertKeywords(harden(['Price']));
+  assertKeywords(harden(['Asset']));
 
   const {
-    terms: { conversionRate },
+    terms: { issuerName, conversionRate },
   } = zcf.getInstanceRecord();
 
-  assert(
-    conversionRate !== undefined,
-    details`inputOutputRatio must be present`,
-  );
+  const { issuer, mint, amountMath } = produceIssuer('token');
 
-  assert(
-    conversionRate.extent >= 1,
-    details`inputOutputRatio must be greater or equal to 1`,
-  );
+  return zcf.addNewIssuer(issuer, issuerName).then(() => {
+    const amountMaths = zcf.getAmountMaths(harden(['Asset', issuerName]));
 
-  const { issuer, mint, amountMath } = produceIssuer('asset', 'set');
-
-  return zcf.addNewIssuer(issuer, 'Asset').then(() => {
-    const amountMaths = zcf.getAmountMaths(harden(['Asset', 'Price']));
-
-    const convertHook = offerHandle => {
+    const decomposeHook = offerHandle => {
       return makeEmptyOffer().then(burnHandle => {
         const { proposal } = zcf.getOffer(offerHandle);
-        const assetExtent = proposal.want.Asset.extent;
+        const tokenExtent = proposal.want[issuerName].extent;
+        if (tokenExtent < 1) {
+          throw rejectOffer(offerHandle, `Request at least 1 ${issuerName}`);
+        }
+
+        const assetExtent = proposal.give.Asset.extent;
         if (assetExtent.length < 1) {
-          throw rejectOffer(offerHandle, `Request at least 1 Asset`);
+          throw rejectOffer(offerHandle, `Provide at least 1 Asset`);
         }
 
-        const priceExtent = proposal.give.Price.extent;
-        if (priceExtent < 1) {
-          throw rejectOffer(offerHandle, `Provide a price of at least 1`);
-        }
-
-        const expectedRatio = conversionRate.extent;
-        if (priceExtent !== expectedRatio * assetExtent.length) {
+        const expectedRatio = conversionRate;
+        if (assetExtent.length * expectedRatio !== tokenExtent) {
           throw rejectOffer(
             offerHandle,
             `Invalid conversion rate specified, conversion rate should be: ${expectedRatio}.`,
           );
         }
 
-        const amount = amountMath.make(harden(assetExtent));
+        const amount = amountMath.make(harden(tokenExtent));
         const payment = mint.mintPayment(amount);
 
         return escrowAndAllocateTo({
           amount,
           payment,
-          keyword: 'Asset',
+          keyword: issuerName,
           recipientHandle: burnHandle,
         }).then(() => {
           const currentBurnAllocation = zcf.getCurrentAllocation(burnHandle);
           const currentOfferAllocation = zcf.getCurrentAllocation(offerHandle);
 
           const wantedBurnAllocation = {
-            Asset: amountMaths.Asset.getEmpty(),
-            Price: amountMaths.Price.add(
-              currentBurnAllocation.Price,
-              currentOfferAllocation.Price,
-            ),
+            Asset: currentOfferAllocation.Asset,
+            [issuerName]: amountMaths[issuerName].getEmpty(),
           };
 
           const wantedOfferAllocation = {
-            Asset: amountMaths.Asset.add(
-              currentBurnAllocation.Asset,
-              currentOfferAllocation.Asset,
-            ),
-            Price: amountMaths.Price.getEmpty(),
+            Asset: amountMaths.Asset.getEmpty(),
+            [issuerName]: currentBurnAllocation[issuerName],
           };
 
           zcf.reallocate(
@@ -100,12 +84,15 @@ export const makeContract = harden(zcf => {
     };
 
     const expectedOffer = harden({
-      want: { Asset: null },
-      give: { Price: null },
+      want: { [issuerName]: null },
+      give: { Asset: null },
     });
 
     const makeInvite = () => {
-      return zcf.makeInvitation(checkHook(convertHook, expectedOffer), 'offer');
+      return zcf.makeInvitation(
+        checkHook(decomposeHook, expectedOffer),
+        'offer',
+      );
     };
 
     return harden({
