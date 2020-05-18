@@ -7,17 +7,19 @@ import { useApplicationContext } from '../../store/storeContext'
 const Creator = props => {
   const { state, dispatch } = useApplicationContext()
   const [amount, setAmount] = useState(0)
-  const [selectedPurse, setSelectedPurse] = useState(0)
+  const [selectedPurse, setSelectedPurse] = useState(2)
+  const [creatorPurses, setCreatorPurses] = useState([])
 
-  useEffect(() =>{
+  useEffect(() => {
     // TODO: do something with the purses
-  },[state.purses])
+  }, [state.purses])
 
   const mintNewAssets = () => {
-    if(amount < 1) return alert('Specify a positive amount')
+    if (amount < 1) return alert('Specify a positive amount')
     const { brandRegKey, pursePetname } = state.purses[selectedPurse]
-    mintAssets(brandRegKey, pursePetname,  amount, dispatch)
+    mintAssets(brandRegKey, pursePetname, amount, dispatch)
   }
+
 
   if (state.purses.length === 0) {
     return (
@@ -50,7 +52,7 @@ const Creator = props => {
         >
           <Text c='#000000' size='20px'>Current Asset Types</Text>
         </Flexdiv>
-        
+
         <Flexdiv
           flex='row'
           w='80%'
@@ -58,11 +60,11 @@ const Creator = props => {
           alignItems='center'
           justify='center'
         >
-          {state.assets.map((asset, index)=>{
-            return(
+          {state.assets.map((asset, index) => {
+            return (
               <Flexdiv
                 flex='row'
-                w={(100/state.assets.length)+'%'}
+                w={(100 / state.assets.length) + '%'}
                 key={index}
                 justify='center'
               >
@@ -81,21 +83,21 @@ const Creator = props => {
       >
         <Flexdiv
           flex='row'
-          w = '100%'
-          h = '20%'
+          w='100%'
+          h='20%'
         >
           <Text c='#000000' size='20px'>Create Tokens for Mined Material</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
-          w = '100%'
+          w='100%'
           h='80%'
           alignItems='center'
           justify='center'
         >
           <Flexdiv
             flex='row'
-            w = '25%'
+            w='25%'
             h='50%'
             alignItems='center'
           >
@@ -108,16 +110,18 @@ const Creator = props => {
               c='#000000'
               onChange={(e) => setSelectedPurse(e.target.value)}
             >
-              {state.purses.map((purse, index)=>{
-                return(
-                  <option key={index} value={index}>{purse.issuerPetname}</option>
-                )
+              {state.purses.map((purse, index) => {
+                if (purse.issuerPetname === 'typeA' || purse.issuerPetname === 'typeB' || purse.issuerPetname === 'typeC') {
+                  return (
+                    <option key={index} value={index}>{purse.issuerPetname}</option>
+                  )
+                }
               })}
             </Select>
           </Flexdiv>
           <Flexdiv
             flex='row'
-            w = '35%'
+            w='35%'
             h='50%'
             alignItems='center'
           >
@@ -125,13 +129,13 @@ const Creator = props => {
           </Flexdiv>
           <Flexdiv
             flex='row'
-            w = '30%'
+            w='30%'
             h='50%'
             alignItems='center'
           >
             <Flexdiv
               flex='row'
-              w = '35%'
+              w='35%'
               h='50%'
             >
               <Input
@@ -142,15 +146,16 @@ const Creator = props => {
                 size='14px'
                 background='#FFF'
                 c='#000000'
-                value={amount === 0 ? '': amount}
-                onChange={(event)=> {
-                  setAmount(event.target.value)}
+                value={amount === 0 ? '' : amount}
+                onChange={(event) => {
+                  setAmount(event.target.value)
+                }
                 }
               />
             </Flexdiv>
             <Flexdiv
               flex='row'
-              w = '65%'
+              w='65%'
               marginl='10%'
               justify='center'
               h='100%'

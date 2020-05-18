@@ -8,7 +8,7 @@ const Decomposer = props => {
   const { state, dispatch } = useApplicationContext()
   const [amount, setAmount] = useState(0)
   const [amountToBuy, setAmountToBuy] = useState(0)
-  const [selectedPurse, setSelectedPurse] = useState(0)
+  const [selectedPurse, setSelectedPurse] = useState(8)
   const [selectedDecomposition, setSelectedDecomposition] = useState(0)
 
   useEffect(() => {
@@ -125,9 +125,11 @@ const Decomposer = props => {
               onChange={(e) => setSelectedPurse(e.target.value)}
             >
               {state.purses.map((purse, index) => {
-                return (
-                  <option key={index} value={index}>{purse.issuerPetname}</option>
-                )
+                if (purse.issuerPetname === 'plastic bottle') {
+                  return (
+                    <option key={index} value={index}>{purse.issuerPetname}</option>
+                  )
+                }
               })}
             </Select>
           </Flexdiv>
