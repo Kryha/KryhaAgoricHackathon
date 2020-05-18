@@ -42,42 +42,6 @@ const Creator = props => {
         flex='column'
         w='95%'
         marginl='5%'
-        h='25%'
-      >
-        <Flexdiv
-          flex='row'
-          w='100%'
-          h='20%'
-        >
-          <Text c='#000000' size='20px'>Current Asset Types</Text>
-        </Flexdiv>
-
-        <Flexdiv
-          flex='row'
-          w='80%'
-          h='80%'
-          alignItems='center'
-          justify='center'
-        >
-          {state.assets.map((asset, index) => {
-            return (
-              <Flexdiv
-                flex='row'
-                w={(100 / state.assets.length) + '%'}
-                key={index}
-                justify='center'
-              >
-                <Text key={index} c='#000000'>{asset.type}</Text>
-              </Flexdiv>
-            )
-          })}
-        </Flexdiv>
-      </Flexdiv>
-
-      <Flexdiv
-        flex='column'
-        w='95%'
-        marginl='5%'
         h='30%'
       >
         <Flexdiv

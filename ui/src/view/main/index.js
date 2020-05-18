@@ -44,7 +44,7 @@ const Main = props => {
       <Flexdiv
         flex='row'
         w='100%'
-        h='50%'
+        h='25%'
       >
         {render}
       </Flexdiv>
@@ -52,7 +52,7 @@ const Main = props => {
       <Flexdiv
         flex='column'
         w='100%'
-        h='50%'
+        h='65%'
       >
         <Flexdiv
           flex='row'

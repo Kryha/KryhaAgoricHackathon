@@ -78,42 +78,6 @@ const Converter = props => {
         flex='column'
         w='95%'
         marginl='5%'
-        h='25%'
-      >
-        <Flexdiv
-          flex='row'
-          w='100%'
-          h='20%'
-        >
-          <Text c='#000000' size='20px'>Current Owned Assets</Text>
-        </Flexdiv>
-
-        <Flexdiv
-          flex='row'
-          w='80%'
-          h='80%'
-          alignItems='center'
-          justify='center'
-        >
-          {state.purses.map((purse, index) => {
-            return (
-              <Flexdiv
-                flex='row'
-                w={(80 / purse.length) + '%'}
-                key={index}
-                justify='center'
-              >
-                <Text key={index} c='#000000'>{purse.regBrandKey}</Text>
-              </Flexdiv>
-            )
-          })}
-        </Flexdiv>
-      </Flexdiv>
-
-      <Flexdiv
-        flex='column'
-        w='95%'
-        marginl='5%'
         h='30%'
       >
         <Flexdiv
@@ -317,7 +281,7 @@ const Converter = props => {
                 h='100%'
                 onClick={createNewConversion}
               >
-                Create
+                Convert
               </Button>
             </Flexdiv>
           </Flexdiv>
