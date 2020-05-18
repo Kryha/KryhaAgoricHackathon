@@ -8,6 +8,10 @@ For this case study we focussed on tracing plastic bottles from where the initia
 ## Limitations
 - Working with multiple wallets caused too many problems, and therefore we did not implement a transaction contract between wallets. This limitation is essential for this demo. In order to make it more clear every transaction that needs further explanation creates an alert.
 
+## Install the agoric SDK
+Follow the instructions from:  
+https://agoric.com/documentation/getting-started/before-using-agoric.html
+
 ## Clone the repo
 ```git clone https://github.com/Kryha/KryhaAgoricHackathon.git```
 
