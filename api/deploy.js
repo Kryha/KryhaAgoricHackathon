@@ -2,8 +2,9 @@
 // Agoric Dapp api deployment script
 
 import fs from 'fs';
-import installationConstants from '../ui/public/conf/installationConstants.js';
+import installationConstants from '../ui/src/conf/installationConstants.js';
 import { E } from '@agoric/eventual-send';
+import produceIssuer from '@agoric/ertp';
 import harden from '@agoric/harden';
 import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 
@@ -11,8 +12,321 @@ import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 // spawner runs within ag-solo, so is persistent.  Once the deploy.js
 // script ends, connections to any of its objects are severed.
 
-// The deployer's wallet's petname for the tip issuer.
-const TIP_ISSUER_PETNAME = process.env.TIP_ISSUER_PETNAME || 'moola';
+let INSTANCE_REG_KEY_NFT;
+let INSTANCE_REG_KEY_INVOICE;
+let INSTANCE_REG_KEY_SWAP;
+let INSTANCE_REG_KEY_CONVERTER;
+let INSTANCE_REG_KEY_DECOMPOSER;
+
+const TOKEN_CONTRACT = 'tokenCreation'
+
+const PLASTIC_A = {
+  contract: 'plasticA1',
+  issuerName: 'plasticA1',
+  purseName: 'plasticA1 purse'
+}
+
+const INVOICE = {
+  contract: 'invoiceCreation',
+  issuerName: 'invoice',
+  purseName: 'invoice purse'
+}
+
+const CONVERTER_PLASTIC = {
+  contract: 'converter',
+  issuerName: 'plastic bottle',
+  purseName: 'plastic bottle purse'
+}
+
+const DECOMPOSER_PLASTIC = {
+  contract: 'decomposer',
+  issuerName: 'typeA2',
+}
+
+const SWAP = {
+  contract: 'fakeSwap'
+}
+
+function capitalize (str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+async function deployToken (references, tokenName) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  const {
+    contracts
+  } = installationConstants;
+
+  console.log(`-- deploying: ${tokenName}`)
+
+  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === TOKEN_CONTRACT);
+  const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+
+  const terms = harden({
+    issuerName: capitalize(tokenName),
+  })
+  const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle, harden({}), terms);
+  console.log('--- instance is running on Zoe');
+
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  const issuer = await E(publicAPI).getTokenIssuer();
+
+  const brandRegKey = await E(registry).register(
+    tokenName,
+    await E(issuer).getBrand()
+  )
+
+  await E(wallet).addIssuer(tokenName, issuer, brandRegKey)
+
+  const pursePetName = `${capitalize(tokenName)} purse`;
+  await E(wallet).makeEmptyPurse(tokenName, pursePetName);
+  console.log(`--- empty ${pursePetName} is added to wallet`);
+
+  const regKey = await E(registry).register(`${TOKEN_CONTRACT}_${tokenName}_instance`, instanceHandle);
+  console.log(`--- contract is added to the registry under: ${regKey}`);
+
+  return { issuer, regKey };
+}
+
+async function deployNFT (references) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  const { contracts } = installationConstants;
+
+  console.log(`-- deploying: NFT`)
+
+  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === PLASTIC_A.contract);
+  const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
+
+  const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle);
+  console.log('--- instance is running on Zoe');
+
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  const invite = await E(publicAPI).makeInvite();
+
+  const issuer = await E(publicAPI).getTokenIssuer();
+
+  const issuerName = PLASTIC_A.issuerName;
+  const brandRegKey = await E(registry).register(
+    issuerName,
+    await E(issuer).getBrand()
+  )
+
+  await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
+
+  const pursePetname = PLASTIC_A.purseName;
+  await E(wallet).makeEmptyPurse(issuerName, pursePetname);
+  console.log(`--- empty ${pursePetname} is added to wallet`);
+
+  let CONTRACT_NAME = PLASTIC_A.contract;
+  INSTANCE_REG_KEY_NFT = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+  console.log(`--- contract is added to the registry under: ${INSTANCE_REG_KEY_NFT}`);
+
+  return issuer;
+}
+
+async function deployInvoice (references) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  const { contracts } = installationConstants;
+
+  console.log(`-- deploying: Invoice`)
+
+  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === INVOICE.contract);
+  const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
+
+  const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle);
+  console.log('--- instance is running on Zoe');
+
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  const invite = await E(publicAPI).makeInvite();
+
+  const issuer = await E(publicAPI).getTokenIssuer();
+
+  const issuerName = INVOICE.issuerName;
+  const brandRegKey = await E(registry).register(
+    issuerName,
+    await E(issuer).getBrand()
+  )
+
+  await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
+
+  const pursePetname = INVOICE.purseName;
+  await E(wallet).makeEmptyPurse(issuerName, "Converter " + pursePetname);
+  await E(wallet).makeEmptyPurse(issuerName, "Decomposer " + pursePetname);
+  console.log(`--- empty ${pursePetname} is added to wallet`);
+
+  let CONTRACT_NAME = INVOICE.contract;
+  INSTANCE_REG_KEY_INVOICE = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+  console.log(`--- contract is added to the registry under: ${INSTANCE_REG_KEY_INVOICE}`);
+
+  return issuer;
+}
+
+async function deployConverter (references, tokenIssuer) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  console.log(`-- deploying: Converter`)
+
+  const { contracts } = installationConstants;
+
+  const { INSTALLATION_REG_KEY: converterRegKey } = contracts.find(({ name }) => name === CONVERTER_PLASTIC.contract);
+  const converterContractInstallationHandle = await E(registry).get(converterRegKey);
+
+
+  const tokenAmountMath = await E(tokenIssuer).getAmountMath();
+
+  const issuerKeywordRecord = harden({
+    Price: tokenIssuer,
+  });
+  const terms = harden({
+    conversionRate: await E(tokenAmountMath).make(5),
+  })
+  const adminInvite = await E(zoe).makeInstance(converterContractInstallationHandle, issuerKeywordRecord, terms);
+  console.log('--- instance is running on Zoe');
+
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+
+  const issuer = await E(publicAPI).getTokenIssuer();
+  const conversionRate = await E(publicAPI).getConversionRate();
+  console.log('--- Conversion rate retrieved:', conversionRate.extent)
+
+  const issuerName = CONVERTER_PLASTIC.issuerName;
+  const brandRegKey = await E(registry).register(
+    issuerName,
+    await E(issuer).getBrand()
+  )
+
+  await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
+
+  const pursePetname = CONVERTER_PLASTIC.purseName;
+  await E(wallet).makeEmptyPurse(issuerName, pursePetname);
+
+  console.log(`--- empty ${pursePetname} is added to wallet`);
+
+  let CONTRACT_NAME = CONVERTER_PLASTIC.contract;
+  INSTANCE_REG_KEY_CONVERTER = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+  console.log(`--- contract is added to the registry under: ${INSTANCE_REG_KEY_CONVERTER}`);
+
+  return { issuer }
+}
+
+
+async function deployDecomposer (references, assetIssuer) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  console.log(`-- deploying: Decomposer`)
+
+  const { contracts } = installationConstants;
+
+  const { INSTALLATION_REG_KEY: converterRegKey } = contracts.find(({ name }) => name === DECOMPOSER_PLASTIC.contract);
+  const converterContractInstallationHandle = await E(registry).get(converterRegKey);
+
+  const issuerName = DECOMPOSER_PLASTIC.issuerName;
+
+  const issuerKeywordRecord = harden({
+    Asset: assetIssuer,
+  });
+  const terms = harden({
+    issuerName: capitalize(issuerName),
+    conversionRate: Number(4),
+  })
+  const adminInvite = await E(zoe).makeInstance(converterContractInstallationHandle, issuerKeywordRecord, terms);
+  console.log('--- instance is running on Zoe');
+
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+
+  const issuer = await E(publicAPI).getTokenIssuer();
+  const conversionRate = await E(publicAPI).getConversionRate();
+  console.log('--- Conversion rate retrieved:', conversionRate)
+
+  const brandRegKey = await E(registry).register(
+    issuerName,
+    await E(issuer).getBrand()
+  )
+
+  await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
+
+  const pursePetname = `Recycled ${issuerName} purse`;
+  await E(wallet).makeEmptyPurse(issuerName, pursePetname);
+
+  console.log(`--- empty ${pursePetname} is added to wallet`);
+
+  let CONTRACT_NAME = DECOMPOSER_PLASTIC.contract;
+  INSTANCE_REG_KEY_DECOMPOSER = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+  console.log(`--- contract is added to the registry under: ${INSTANCE_REG_KEY_DECOMPOSER}`);
+}
+
+
+
+async function swapTokenNft (references, tokenIssuer, nftIssuer) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  const { contracts } = installationConstants;
+
+  const { INSTALLATION_REG_KEY: swapRegKey } = contracts.find(({ name }) => name === SWAP.contract);
+  const swapContractInstallationHandle = await E(registry).get(swapRegKey);
+
+  const issuerKeywordRecord = harden({
+    Asset: nftIssuer,
+    Price: tokenIssuer,
+  });
+  const adminInvite = await E(zoe).makeInstance(swapContractInstallationHandle, issuerKeywordRecord);
+  console.log('--- instance is running on Zoe');
+
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  let CONTRACT_NAME = SWAP.contract;
+  INSTANCE_REG_KEY_SWAP = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
+  console.log(`--- contract is added to the registry under: ${INSTANCE_REG_KEY_SWAP}`);
+}
 
 /**
  * @typedef {Object} DeployPowers The special powers that `agoric deploy` gives us
@@ -25,168 +339,30 @@ const TIP_ISSUER_PETNAME = process.env.TIP_ISSUER_PETNAME || 'moola';
  * available from REPL home
  * @param {DeployPowers} powers
  */
-export default async function deployApi(referencesPromise, { bundleSource, pathResolve }) {
-
-  // Let's wait for the promise to resolve.
+export default async function deployApi (referencesPromise, { bundleSource, pathResolve }) {
   const references = await referencesPromise;
 
-  // Unpack the references.
-  const { 
-
-    // *** LOCAL REFERENCES ***
-
-    // This wallet only exists on this machine, and only you have
-    // access to it. The wallet stores purses and handles transactions.
-    wallet, 
-
-    // Scratch is a map only on this machine, and can be used for
-    // communication in objects between processes/scripts on this
-    // machine.
-    uploads: scratch,  
-
-    // The spawner persistently runs scripts within ag-solo, off-chain.
-    spawner,
-
-    // *** ON-CHAIN REFERENCES ***
-
-    // Zoe lives on-chain and is shared by everyone who has access to
-    // the chain. In this demo, that's just you, but on our testnet,
-    // everyone has access to the same Zoe.
-    zoe, 
-
-    // The registry also lives on-chain, and is used to make private
-    // objects public to everyone else on-chain. These objects get
-    // assigned a unique string key. Given the key, other people can
-    // access the object through the registry
-    registry,
-
-    // The http request handler.
-    // TODO: add more explanation
-    http,
-
-
-  }  = references;
-
-
-  // To get the backend of our dapp up and running, first we need to
-  // grab the installationHandle that our contract deploy script put
-  // in the public registry.
-  const { 
-    INSTALLATION_REG_KEY,
-    CONTRACT_NAME,
-  } = installationConstants;
-  const encouragementContractInstallationHandle = await E(registry).get(INSTALLATION_REG_KEY);
-  
-  // Second, we can use the installationHandle to create a new
-  // instance of our contract code on Zoe. A contract instance is a running
-  // program that can take offers through Zoe. Creating a contract
-  // instance gives you an invite to the contract. In this case, it is
-  // an admin invite with special authority - whoever redeems this
-  // admin invite will get all of the tips from the encouragement
-  // contract instance.
-
-  // At the time that we make the contract instance, we need to tell
-  // Zoe what kind of token to accept as tip money. In this instance,
-  // we will only accept moola. (If we wanted to accept other kinds of
-  // tips, we could create other instances or edit the contract code
-  // and redeploy.) We need to put this information in the form of a
-  // keyword (a string that the contract determines, in this case,
-  // 'Tip') plus an issuer for the token kind, the moolaIssuer.
-
-  // In our example, moola is a widely used token. Someone has already
-  // registered the moolaIssuer in the registry. We could also get it
-  // from our wallet.
-
-  // getIssuers returns an array, because we currently cannot
-  // serialize maps. We can immediately create a map using the array,
-  // though. https://github.com/Agoric/agoric-sdk/issues/838
-  const issuersArray = await E(wallet).getIssuers();
-  const issuers = new Map(issuersArray);
-  const tipIssuer = issuers.get(TIP_ISSUER_PETNAME);
-
-  if (tipIssuer === undefined) {
-    console.error('Cannot find TIP_ISSUER_PETNAME', TIP_ISSUER_PETNAME, 'in home.wallet');
-    console.error('Have issuers:', [...issuers.keys()].join(', '));
-    process.exit(1);
-  }
-
-  // Find its brand registry key so we can communicate the issuer to other wallets.
-  // Equivalent to: await wallet~.getIssuerNames(tipIssuer)~.brandRegKey
-  const TIP_BRAND_REGKEY = await E.G(E(wallet).getIssuerNames(tipIssuer)).brandRegKey;
-
-  const issuerKeywordRecord = harden({ Tip: tipIssuer });
-  const adminInvite = await E(zoe).makeInstance(encouragementContractInstallationHandle, issuerKeywordRecord);
-  console.log('- SUCCESS! contract instance is running on Zoe');
-  
-  // Let's get the Zoe invite issuer to be able to inspect our invite further
-  const inviteIssuer = await E(zoe).getInviteIssuer();
-
-  // Use the helper function to get an instanceHandle from the invite.
-  // An instanceHandle is like an installationHandle in that it is a
-  // similar opaque identifier. In this case, though, it identifies a
-  // running contract instance, not code. 
-  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
-  const instanceHandle = await getInstanceHandle(adminInvite);
-
-  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
-
-  // Let's use the adminInvite to make an offer. Note that we aren't
-  // specifying any proposal, and we aren't escrowing any assets with
-  // Zoe in this offer. We are doing this so that Zoe will eventually
-  // give us a payout of all of the tips. We can trigger this payout
-  // by calling the `cancel` function on the `cancelObj`.
-  const {
-    payout: adminPayoutP,
-    outcome: adminOutcomeP, 
-    cancelObj,
-  } = await E(zoe).offer(adminInvite);
-
-  const outcome = await adminOutcomeP;
-  console.log(`-- ${outcome}`);
-
-  // When the promise for a payout resolves, we want to deposit the
-  // payments in our purses. We will put the adminPayoutP and
-  // cancelObj in our scratch location so that we can share the
-  // live objects with the shutdown.js script. 
-  E(scratch).set('adminPayoutP', adminPayoutP);
-  E(scratch).set('cancelObj', cancelObj);
-
-  // Now that we've done all the admin work, let's share this
-  // instanceHandle by adding it to the registry. Any users of our
-  // contract will use this instanceHandle to get invites to the
-  // contract in order to make an offer.
-  const INSTANCE_REG_KEY = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
-
-  console.log(`-- Contract Name: ${CONTRACT_NAME}`);
-  console.log(`-- InstanceHandle Register Key: ${INSTANCE_REG_KEY}`);
-  console.log(`-- TIP_BRAND_REGKEY: ${TIP_BRAND_REGKEY}`)
-
-  // We want the handler to run persistently. (Scripts such as this
-  // deploy.js script are ephemeral and all connections to objects
-  // within this script are severed when the script is done running.)
-  // To run the handler persistently, we must use the spawner to run
-  // the code on this machine even when the script is done running.
-
-  // Bundle up the handler code
-  const { source, moduleFormat } = await bundleSource(pathResolve('./src/handler.js'));
-  
-  // Install it on the spawner
-  const handlerInstall = E(spawner).install(source, moduleFormat);
-
-  // Spawn the running code
-  const handler = E(handlerInstall).spawn({ publicAPI, http });
-  await E(http).registerAPIHandler(handler);
-
+  const { issuer: tokenAIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_A } = await deployToken(references, 'typeA');
+  const { issuer: tokenBIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_B } = await deployToken(references, 'typeB');
+  const { issuer: tokenCIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_C } = await deployToken(references, 'typeC');
+  const nftIssuer = await deployNFT(references);
+  const invoiceIssuer = await deployInvoice(references);
+  const {issuer: plasticBottleIssuer } = await deployConverter(references, tokenAIssuer);
+  await deployDecomposer(references, plasticBottleIssuer);
 
   // Re-save the constants somewhere where the UI and api can find it.
   const dappConstants = {
-    INSTANCE_REG_KEY,
-    // BRIDGE_URL: 'agoric-lookup:https://local.agoric.com?append=/bridge',
-    brandRegKeys: { Tip: TIP_BRAND_REGKEY },
+    INSTANCE_REG_KEY_FUNGIBLE_A,
+    INSTANCE_REG_KEY_FUNGIBLE_B,
+    INSTANCE_REG_KEY_FUNGIBLE_C,
+    INSTANCE_REG_KEY_NFT,
+    INSTANCE_REG_KEY_INVOICE,
+    INSTANCE_REG_KEY_CONVERTER,
+    INSTANCE_REG_KEY_DECOMPOSER,
     BRIDGE_URL: 'http://127.0.0.1:8000',
     API_URL: 'http://127.0.0.1:8000',
   };
-  const defaultsFile = pathResolve(`../ui/public/conf/defaults.js`);
+  const defaultsFile = pathResolve(`../ui/src/conf/defaults.js`);
   console.log('writing', defaultsFile);
   const defaultsContents = `\
   // GENERATED FROM ${pathResolve('./deploy.js')}

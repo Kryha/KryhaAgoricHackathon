@@ -17,70 +17,59 @@ import { E } from '@agoric/eventual-send';
  * @param {*} referencesPromise
  * @param {DeployPowers} powers
  */
-export default async function deployContract(
+export default async function deployContract (
   referencesPromise,
   { bundleSource, pathResolve },
 ) {
-  // Your off-chain machine (what we call an ag-solo) starts off with
-  // a number of references, some of which are shared objects on chain, and
-  // some of which are objects that only exist on your machine.
-
-  // Let's wait for the promise to resolve.
   const references = await referencesPromise;
+  const { zoe, registry } = references;
 
-  // Unpack the references.
-  const {
-    // *** ON-CHAIN REFERENCES ***
+  const contracts = [
+    {
+      name: 'tokenCreation',
+      path: `./src/tokenCreation.js`,
+    },
+    {
+      name: 'plasticA1',
+      path: `./src/plasticA.js`,
+    },
+    {
+      name: 'invoiceCreation',
+      path: './src/invoiceCreation.js',
+    },
+    {
+      name: 'converter',
+      path: './src/converter.js',
+    },
+    {
+      name: 'decomposer',
+      path: './src/decomposer.js',
+    }
+  ];
 
-    // Zoe lives on-chain and is shared by everyone who has access to
-    // the chain. In this demo, that's just you, but on our testnet,
-    // everyone has access to the same Zoe.
-    zoe,
+  console.log('- Installing contract code installed on Zoe');
+  const installedContracts = await Promise.all(
+    contracts.map(async contract => {
+      const { source, moduleFormat } = await bundleSource(
+        pathResolve(contract.path),
+      );
+      const installationHandle = await E(zoe).install(source, moduleFormat);
 
-    // The registry also lives on-chain, and is used to make private
-    // objects public to everyone else on-chain. These objects get
-    // assigned a unique string key. Given the key, other people can
-    // access the object through the registry.
-    registry,
-  } = references;
+      const INSTALLATION_REG_KEY = await E(registry).register(
+        `${contract.name}installation`,
+        installationHandle,
+      );
+      console.log(`-- ${contract.name}::${INSTALLATION_REG_KEY}`);
 
-  // First, we must bundle up our contract code (./src/contract.js)
-  // and install it on Zoe. This returns an installationHandle, an
-  // opaque, unforgeable identifier for our contract code that we can
-  // reuse again and again to create new, live contract instances.
-  const { source, moduleFormat } = await bundleSource(
-    pathResolve(`./src/contract.js`),
+      return { ...contract, INSTALLATION_REG_KEY };
+    }),
   );
-  const installationHandle = await E(zoe).install(source, moduleFormat);
-
-  // Let's share this installationHandle with other people, so that
-  // they can run our encouragement contract code by making a contract
-  // instance (see the api deploy script in this repo to see an
-  // example of how to use the installationHandle to make a new contract
-  // instance.)
-
-  // To share the installationHandle, we're going to put it in the
-  // registry. The registry is a shared, on-chain object that maps
-  // strings to objects. We will need to provide a starting name when
-  // we register our installationHandle, and the registry will add a
-  // suffix creating a guaranteed unique name.
-  const CONTRACT_NAME = 'encouragement';
-  const INSTALLATION_REG_KEY = await E(registry).register(
-    `${CONTRACT_NAME}installation`,
-    installationHandle,
-  );
-  console.log('- SUCCESS! contract code installed on Zoe');
-  console.log(`-- Contract Name: ${CONTRACT_NAME}`);
-  console.log(`-- InstallationHandle Register Key: ${INSTALLATION_REG_KEY}`);
 
   // Save the constants somewhere where the UI and api can find it.
   const dappConstants = {
-    CONTRACT_NAME,
-    INSTALLATION_REG_KEY,
+    contracts: installedContracts,
   };
-  const defaultsFile = pathResolve(
-    `../ui/public/conf/installationConstants.js`,
-  );
+  const defaultsFile = pathResolve(`../ui/src/conf/installationConstants.js`);
   console.log('writing', defaultsFile);
   const defaultsContents = `\
   // GENERATED FROM ${pathResolve('./deploy.js')}

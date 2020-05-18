@@ -9,7 +9,8 @@
     "build": "parcel build public/index.html",
     "lint-check": "eslint '**/*.{js,jsx}'",
     "lint-fix": "eslint --fix '**/*.{js,jsx}'",
-    "start": "parcel serve --host=127.0.0.1 --port=3000 public/index.html"
+    "parcel": "parcel serve --host=127.0.0.1 --port=3000 public/index.html",
+    "start": "react-scripts start"
   },
   "browserslist": {
     "production": [
@@ -39,8 +40,22 @@
     "watcherGlob": "**/*.html"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
+    "dotenv-flow": "^3.1.0",
+    "esm": "^3.2.25",
+    "nodemon": "^2.0.3",
     "parcel-bundler": "^1.12.4",
-    "parcel-plugin-static-files-copy": "^2.3.1"
+    "parcel-plugin-static-files-copy": "^2.3.1",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "react-icons": "^3.8.0",
+    "react-iframe": "^1.8.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.3.0",
+    "react-select": "^3.0.8",
+    "react-table": "^6.10.3",
+    "styled-components": "^4.4.1",
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
