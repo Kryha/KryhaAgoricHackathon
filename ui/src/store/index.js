@@ -32,6 +32,8 @@ export function reducer (state, action) {
       return { ...state, decompositions: action.payload }
     case 'DECOMPOSE':
       return { ...state, conversions: action.payload }
+    case 'EXPLAIN':
+      return { ...state }
     default:
       return state
   }

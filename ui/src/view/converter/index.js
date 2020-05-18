@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Flexdiv, Text, Button, Input, Select } from '../shared/styled'
 
 import { useApplicationContext } from '../../store/storeContext'
-import { retrieveAssets, retrieveConversions, createPurchaseOrder, convert } from '../../services/actions'
+import { retrieveAssets, retrieveConversions, createPurchaseOrder, convert, explain } from '../../services/actions'
 
 const Converter = props => {
   const { state, dispatch } = useApplicationContext()
@@ -23,7 +23,8 @@ const Converter = props => {
 
   const createNewPurchaseOrder = () => {
     if (amountToBuy < 1) return alert('Specify a positive amount')
-    alert("Creating a purchase order with multiple wallets would invoke an exchange. In this simple demo with one wallet it only mints the invoice requested.")
+    // alert("Creating a purchase order with multiple wallets would invoke an exchange. In this simple demo with one wallet it only mints the invoice requested.")
+    explain(dispatch)
     const { brandRegKey, pursePetname } = state.purses[selectedPurse]
     const invoicePurse = 'Converter invoice purse'
     createPurchaseOrder(brandRegKey, pursePetname, amountToBuy, invoicePurse, dispatch)

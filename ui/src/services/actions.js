@@ -104,3 +104,10 @@ export const decompose = (input, amount, dispatch) => {
     payload: true
   })
 }
+
+export const explain = (dispatch) => {
+  alert("Creating a purchase order with multiple wallets would invoke an exchange. In this simple demo with one wallet it only mints the invoice requested.")
+  return dispatch({
+    type: 'EXPLAIN',
+  })
+}
