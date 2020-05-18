@@ -1,6 +1,5 @@
 /* eslint-disable no-use-before-define */
 import harden from '@agoric/harden';
-import { assert, details } from '@agoric/assert';
 import produceIssuer from '@agoric/ertp';
 import { makeZoeHelpers } from '@agoric/zoe/src/contractSupport/zoeHelpers';
 

@@ -29,7 +29,7 @@ export default async function main() {
     switch (obj.type) {
       case 'walletUpdatePurses': {
         const purses = JSON.parse(obj.data);
-        console.log('got purses', purses);
+        console.log('walletGetPurses', purses);
         walletUpdatePurses(purses, selects);
         $inputAmount.removeAttribute('disabled');
         break;

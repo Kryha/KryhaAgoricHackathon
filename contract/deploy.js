@@ -21,28 +21,8 @@ export default async function deployContract (
   referencesPromise,
   { bundleSource, pathResolve },
 ) {
-  // Your off-chain machine (what we call an ag-solo) starts off with
-  // a number of references, some of which are shared objects on chain, and
-  // some of which are objects that only exist on your machine.
-
-  // Let's wait for the promise to resolve.
   const references = await referencesPromise;
-
-  // Unpack the references.
-  const {
-    // *** ON-CHAIN REFERENCES ***
-
-    // Zoe lives on-chain and is shared by everyone who has access to
-    // the chain. In this demo, that's just you, but on our testnet,
-    // everyone has access to the same Zoe.
-    zoe,
-
-    // The registry also lives on-chain, and is used to make private
-    // objects public to everyone else on-chain. These objects get
-    // assigned a unique string key. Given the key, other people can
-    // access the object through the registry.
-    registry,
-  } = references;
+  const { zoe, registry } = references;
 
   const contracts = [
     {
@@ -89,9 +69,7 @@ export default async function deployContract (
   const dappConstants = {
     contracts: installedContracts,
   };
-  const defaultsFile = pathResolve(
-    `../ui/src/conf/installationConstants.js`,
-  );
+  const defaultsFile = pathResolve(`../ui/src/conf/installationConstants.js`);
   console.log('writing', defaultsFile);
   const defaultsContents = `\
   // GENERATED FROM ${pathResolve('./deploy.js')}

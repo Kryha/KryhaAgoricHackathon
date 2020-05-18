@@ -13,7 +13,6 @@
       let bridgeOrigin;
       let bridgeURL;
       function fromFrame(ev) {
-        // console.log('have from frame', ev.origin, localAgoricOrigin, bridgeOrigin);
         if (ev.origin === localAgoricOrigin) {
           if (typeof ev.data !== 'string') {
             return;
@@ -45,13 +44,11 @@
             }
           };
         } else if (!ev.data || !ev.data.type || !ev.data.type.startsWith('wallet')) {
-          // console.log('not a wallet message', ev);
         } else if (ev.origin === bridgeOrigin) {
           if (window.parent !== window) {
             window.parent.postMessage(ev.data, '*');
           }
         } else {
-          // console.log('from dapp', ev.data);
           if (bridgeOrigin === undefined || ifr.src !== bridgeURL) {
             walletQueue.push(ev.data);
           } else {

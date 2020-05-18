@@ -1,6 +1,4 @@
-import { doFetch } from './utils/fetch-websocket';
 import defaults from '../conf/defaults';
-import { v1 as uuidv1 } from 'uuid';
 
 import { walletAddOffer } from './utils/wallet';
 import { mintAssetsOffer, mintNFTOffer, exchangeOffer, convertOffer, decomposeOffer } from './offers';
@@ -79,7 +77,6 @@ export const retrieveConversions = (dispatch) => {
 export const convert = (input, output, amount, dispatch) => {
   // input is gonna be a list of objects i think that i will destructure
   const offer = convertOffer(input, output, amount);
-  console.log('Convert:Offer:', offer)
   walletAddOffer(offer);
 
   return dispatch({
@@ -97,7 +94,6 @@ export const retrieveDecompositions = (dispatch) => {
 
 export const decompose = (input, output, amount, dispatch) => {
   const offer = decomposeOffer(input, output, amount);
-  console.log('Decompose:offer:', offer)
   walletAddOffer(offer);
 
   return dispatch({

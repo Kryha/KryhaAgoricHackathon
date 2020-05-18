@@ -17,10 +17,6 @@ const Decomposer = props => {
     }
   }, [state.decompositions])
 
-  useEffect(() => {
-
-  }, [state.purses])
-
   const createNewPurchaseOrder = () => {
     if (amountToBuy < 1) return alert('Specify a positive amount')
     if (Object.keys(state.purses[selectedPurse].extent).length < amountToBuy) {
@@ -36,7 +32,6 @@ const Decomposer = props => {
   const createNewDecomposition = () => {
     if (amount > 0) {
       let decomp = state.decompositions[selectedDecomposition]
-      console.log('decomp', decomp)
 
       const input = decomp.input.map(i => {
         const matchingPurse = state.purses.find(p => p.pursePetname === i.purse)
@@ -58,7 +53,7 @@ const Decomposer = props => {
       </Flexdiv>
     )
   }
-  console.log(state.decompositions)
+
   return (
     <Flexdiv
       flex='column'
@@ -242,7 +237,6 @@ const Decomposer = props => {
               onChange={(e) => setSelectedDecomposition(e.target.value)}
             >
               {state.decompositions.map((decomposition, index) => {
-                console.log(decomposition)
                 return (
                   <option key={index} value={index}>{decomposition.input.map(i => i.type).join(", ")}</option>
                 )

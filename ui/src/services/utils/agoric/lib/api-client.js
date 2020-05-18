@@ -92,7 +92,6 @@ export async function rpc(req, endpoint = '/api') {
   socket.send(req);
   const expectedResponse = `${req.type}Response`;
   function getResponse(obj) {
-    // console.log('got', msg);
     if (obj.type === expectedResponse) {
       resolve(obj);
       socket.removeHandler(getResponse);

@@ -17,10 +17,6 @@ const Converter = props => {
     }
   }, [state.conversions])
 
-  useEffect(() => {
-    // TODO: do something with the purses
-  }, [state.purses])
-
   const createNewPurchaseOrder = () => {
     if (amountToBuy < 1) return alert('Specify a positive amount')
     if (state.purses[selectedPurse].extent < amountToBuy) {
@@ -36,7 +32,6 @@ const Converter = props => {
   const createNewConversion = () => {
     if (amount < 1) return alert('Specify a positive amount')
     let conv = state.conversions[selectedConversion]
-    console.log('conv', conv);
 
     const purse = state.purses.find(purse => purse.pursePetname === 'Converter invoice purse')
     if (!purse) return alert('The converter invoice purse is not present, please redeploy the dapp')

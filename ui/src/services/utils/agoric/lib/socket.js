@@ -60,7 +60,6 @@ export async function rpc(req, endpoint) {
    * @param {{ type: string; }} obj
    */
   function getResponse(obj) {
-    // console.log('got', msg);
     if (obj.type === expectedResponse) {
       resolve(obj);
       socket.removeHandler(getResponse);

@@ -36,7 +36,6 @@ function createSocket({ onConnect, onDisconnect, onMessage }, endpoint = '/priva
   if (!initializedIframe) {
     initializedIframe = true;
     window.addEventListener('message', ev => {
-      // console.log('dapp ui got', ev);
       if (ev.data && ev.data.type === 'walletBridgeLoaded') {
         walletLoaded = true;
         for (const sub of connectSubscriptions.keys()) {

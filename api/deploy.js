@@ -341,31 +341,14 @@ async function swapTokenNft (references, tokenIssuer, nftIssuer) {
  */
 export default async function deployApi (referencesPromise, { bundleSource, pathResolve }) {
   const references = await referencesPromise;
-  const {
-    wallet,
-    uploads: scratch,
-    spawner,
-    zoe,
-    registry,
-    http,
-  } = references;
-
-  const {
-    contracts
-  } = installationConstants;
 
   const { issuer: tokenAIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_A } = await deployToken(references, 'typeA');
   const { issuer: tokenBIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_B } = await deployToken(references, 'typeB');
   const { issuer: tokenCIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_C } = await deployToken(references, 'typeC');
   const nftIssuer = await deployNFT(references);
   const invoiceIssuer = await deployInvoice(references);
-  // await swapTokenNft(references, tokenAIssuer, nftIssuer);
   const {issuer: plasticBottleIssuer } = await deployConverter(references, tokenAIssuer);
   await deployDecomposer(references, plasticBottleIssuer);
-
-  const issuersArray = await E(wallet).getIssuers();
-  const issuers = new Map(issuersArray);
-  console.log(issuers);
 
   // Re-save the constants somewhere where the UI and api can find it.
   const dappConstants = {
@@ -374,12 +357,8 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     INSTANCE_REG_KEY_FUNGIBLE_C,
     INSTANCE_REG_KEY_NFT,
     INSTANCE_REG_KEY_INVOICE,
-    // INSTANCE_REG_KEY,
-    // INSTANCE_REG_KEY_SWAP,
     INSTANCE_REG_KEY_CONVERTER,
     INSTANCE_REG_KEY_DECOMPOSER,
-    // BRIDGE_URL: 'agoric-lookup:https://local.agoric.com?append=/bridge',
-    // brandRegKeys: { Tip: TIP_BRAND_REGKEY },
     BRIDGE_URL: 'http://127.0.0.1:8000',
     API_URL: 'http://127.0.0.1:8000',
   };

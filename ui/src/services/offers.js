@@ -1,4 +1,3 @@
-import { doFetch } from './utils/fetch-websocket';
 import defaults from '../conf/defaults';
 import { v1 as uuidv1 } from 'uuid';
 
@@ -27,8 +26,6 @@ export const mintAssetsOffer = (type, purse, amount, instanceRegKey) => {
 }
 
 export const mintNFTOffer = (type, purse, invoicePurse, amount) => {
-  console.log('Action:mint', type, purse, invoicePurse, amount)
-
   const instanceRegKey = defaults.INSTANCE_REG_KEY_INVOICE
 
   const offer = {
@@ -57,8 +54,6 @@ export const mintNFTOffer = (type, purse, invoicePurse, amount) => {
 }
 
 export const exchangeOffer = (type, purse, amount, want) => {
-  console.log('Action:mint', type, purse, amount)
-
   // TODO: Make this dynamic based on the purse/type
   const instanceRegKey = defaults.INSTANCE_REG_KEY_SWAP
 
@@ -90,8 +85,6 @@ export const exchangeOffer = (type, purse, amount, want) => {
 }
 
 export const convertOffer = (input, output, amount) => {
-  console.log('Action:convert', input, output, amount);
-
   const instanceRegKey = defaults.INSTANCE_REG_KEY_CONVERTER;
 
   const prices = input.map(i => {
@@ -138,8 +131,6 @@ export const convertOffer = (input, output, amount) => {
 }
 
 export const decomposeOffer = (input, output, amount) => {
-  console.log('Action:decompose', input, output, amount);
-
   const instanceRegKey = defaults.INSTANCE_REG_KEY_DECOMPOSER;
 
   const tokens = output.map(o => {
