@@ -1,9 +1,21 @@
 # KryhaAgoricHackathon
 
 ## Project description
-As Kryha team we focused on building a complete Agoric Dapp for one specific but easily generalizable usecase. We aim to improve circularity within supply chains by enabling traceability of its individual components.
+For this Hackathon, we focused on building a complete Agoric Dapp to solve a circular economy problem. The specific use-case that we are tackling revolves around the manufacturing and recycling of plastic bottles.
 
-For this case study we focussed on tracing plastic bottles from where the initial raw materials where mined to the conversion of these raw materials into empty bottles to the recycler that decomposes these bottles back to raw materials.
+One of the current problems in circular value chains is a lack of reliable information about the products and their life cycles. This lack of information makes it difficult for recyclers to know what kind of plastic bottles are produced and which ones are recyclable. Unfortunately, these circular model inefficiencies lead to an increase in the overall cost, making the model less viable than the linear model. 
+
+Our solution solves this problem by providing all value chain stakeholders with a shared source of truth for the tracking of the plastic product lifecycles. This single source of truth enables the recyclers to know exactly which products are recyclable, increasing the overall efficiency in the circular economy.
+
+Our demo includes three stakeholders namely a creator, a converter and a decomposer.
+
+![Image of Hackathon diagram](hackathon.png)
+
+Creator: able to create new plastic raw materials that can be used by a converter.
+
+Converter: able to purchase plastic raw materials from the creator and convert them into plastic bottles.
+
+Decomposer: able to purchase waste plastic bottles from the converter and decompose them into raw materials.
 
 ## Limitations
 - At the start of the project we encountered several issues when working with multiple wallets. We modified the project to work without multiple wallets by including an invoice system that simulates payments without actually exchanging any tokens or assets. This caused the workflow to make less sense and therefore, we included a message within the application that explains when a transaction should have occurred.
