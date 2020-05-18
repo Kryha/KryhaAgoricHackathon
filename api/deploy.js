@@ -203,7 +203,7 @@ async function deployConverter (references, tokenIssuer) {
     Price: tokenIssuer,
   });
   const terms = harden({
-    inputOutputRatio: await E(tokenAmountMath).make(5),
+    conversionRate: await E(tokenAmountMath).make(5),
   })
   const adminInvite = await E(zoe).makeInstance(converterContractInstallationHandle, issuerKeywordRecord, terms);
   console.log('--- instance is running on Zoe');
@@ -215,6 +215,8 @@ async function deployConverter (references, tokenIssuer) {
   const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
 
   const issuer = await E(publicAPI).getTokenIssuer();
+  const conversionRate = await E(publicAPI).getConversionRate();
+  console.log('--- Conversion rate retrieved:', conversionRate.extent)
 
   const issuerName = CONVERTER_PLASTIC.issuerName;
   const brandRegKey = await E(registry).register(

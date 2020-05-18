@@ -12,22 +12,25 @@ import { makeZoeHelpers } from '@agoric/zoe/src/contractSupport/zoeHelpers';
 export const makeContract = harden(zcf => {
   const {
     rejectOffer,
+    assertKeywords,
     checkHook,
     makeEmptyOffer,
     escrowAndAllocateTo,
   } = makeZoeHelpers(zcf);
 
+  assertKeywords(harden(['Price']));
+
   const {
-    terms: { inputOutputRatio },
+    terms: { conversionRate },
   } = zcf.getInstanceRecord();
 
   assert(
-    inputOutputRatio !== undefined,
+    conversionRate !== undefined,
     details`inputOutputRatio must be present`,
   );
 
   assert(
-    inputOutputRatio.extent >= 1,
+    conversionRate.extent >= 1,
     details`inputOutputRatio must be greater or equal to 1`,
   );
 
@@ -49,7 +52,7 @@ export const makeContract = harden(zcf => {
           throw rejectOffer(offerHandle, `Provide a price of at least 1`);
         }
 
-        const expectedRatio = inputOutputRatio.extent;
+        const expectedRatio = conversionRate.extent;
         if (priceExtent !== expectedRatio * assetExtent.length) {
           throw rejectOffer(
             offerHandle,
@@ -110,6 +113,7 @@ export const makeContract = harden(zcf => {
       publicAPI: {
         makeInvite,
         getTokenIssuer: () => issuer,
+        getConversionRate: () => conversionRate,
       },
     });
   });
