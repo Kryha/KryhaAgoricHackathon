@@ -70,16 +70,15 @@ export const createPurchaseOrderDec = async (type, purse, amount, dispatch) => {
 }
 
 export const retrieveConversions = (dispatch) => {
-
   return dispatch({
     type: 'RETRIEVECONVERSIONS',
-    payload: [{ input: [{ type: 'typeA', amount: 10 }, { type: 'typeB', amount: 5 }], output: 'Plastic' }]
+    payload: [{ input: [{ type: 'typeA', purse: 'TypeA purse', amount: 10 }], output: [{ type: 'plastic bottle', purse: 'plastic bottle purse', amount: 1 }] }]
   })
 }
 
-export const convert = (type, purse, amount, dispatch) => {
+export const convert = (input, output, amount, dispatch) => {
   // input is gonna be a list of objects i think that i will destructure
-  const offer = convertOffer(type, purse, amount);
+  const offer = convertOffer(input, output, amount);
   console.log('offer', offer)
   walletAddOffer(offer);
 

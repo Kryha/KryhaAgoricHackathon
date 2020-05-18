@@ -89,18 +89,28 @@ export const exchangeOffer = (type, purse, amount, want) => {
   return offer;
 }
 
-export const retrieveConversions = (dispatch) => {
-
-  return dispatch({
-    type: 'RETRIEVECONVERSIONS',
-    payload: [{ input: [{ type: 'asset 1', amount: 10 }, { type: 'asset 2', amount: 5 }], output: 'type b' }]
-  })
-}
-
-export const convertOffer = (type, purse, amount) => {
-  console.log('Action:mint', type, purse, amount);
+export const convertOffer = (input, output, amount) => {
+  console.log('Action:convert', input, output, amount);
 
   const instanceRegKey = defaults.INSTANCE_REG_KEY_CONVERTER;
+
+  const prices = input.map(i => {
+    return {
+      pursePetname: i.purse,
+      extent: Number(i.amount * amount)
+    }
+  })
+
+  const assets = output.map(o => {
+    return {
+      pursePetname: o.purse,
+      extent: [{
+        type: o.type,
+        id: uuidv1().substring(0, 8),
+        amount: Number(o.amount * amount)
+      }]
+    }
+  })
 
   const offer = {
     id: Date.now(),
@@ -112,32 +122,15 @@ export const convertOffer = (type, purse, amount) => {
     },
     proposalTemplate: {
       want: {
-        'Plastic': {
-          pursePetname: 'plastic bottle purse',
-          extent: [{
-            type: 'Plastic',
-            id: uuidv1().substring(0, 8)
-          }]
-        }
+        'Plastic': assets[0]
       },
       give: {
-        'Price': {
-          pursePetname: purse,
-          extent: Number(amount)
-        }
+        'Price': prices[0]
       },
       exit: { onDemand: null }
     }
   }
   return offer;
-}
-
-export const retrieveDecompositions = (dispatch) => {
-
-  return dispatch({
-    type: 'RETRIEVEDECOMPOSITIONS',
-    payload: [{ output: [{ type: 'asset 1', amount: 10 }, { type: 'asset 2', amount: 5 }], input: 'type b' }]
-  })
 }
 
 export const decompose = (input, amount, dispatch) => {

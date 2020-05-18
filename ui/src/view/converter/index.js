@@ -31,7 +31,7 @@ const Converter = props => {
     if (amount < 1) return alert('Specify a positive amount')
     let conv = state.conversions[selectedConversion]
     console.log('conv', conv);
-    convert(conv.input, conv.output, conv.amount, dispatch)
+    convert(conv.input, conv.output, amount, dispatch)
   }
 
   if (state.purses.length === 0 || state.conversions.length === 0) {
@@ -228,7 +228,7 @@ const Converter = props => {
             >
               {state.conversions.map((conversions, index) => {
                 return (
-                  <option key={index} value={index}>{conversions.output}</option>
+                  <option key={index} value={index}>{conversions.output.map(o => o.type).join(", ")}</option>
                 )
               })}
             </Select>
