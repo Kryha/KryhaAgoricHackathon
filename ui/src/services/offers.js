@@ -137,11 +137,39 @@ export const convertOffer = (input, output, amount) => {
   return offer;
 }
 
-export const decompose = (input, amount, dispatch) => {
-  // find right decomposition that matches input
+export const decomposeOffer = (input, output, amount) => {
+  console.log('Action:decompose', input, output, amount);
 
-  return dispatch({
-    type: 'DECOMPOSE',
-    payload: true
+  const instanceRegKey = defaults.INSTANCE_REG_KEY_DECOMPOSER;
+
+  const tokens = output.map(o => {
+    return {
+      pursePetname: o.purse,
+      extent: Number(o.amount * amount)
+    }
   })
+
+  const offer = {
+    id: Date.now(),
+    instanceRegKey,
+    contractIssuerIndexToKeyword: ['Type*'],
+    hooks: {
+      publicAPI: {
+        getInvite: ['makeInvite']
+      }
+    },
+    proposalTemplate: {
+      want: {
+        'Type*': tokens[0]
+      },
+      give: {
+        'Asset': {
+          pursePetname: input[0].purse,
+          extent: input[0].extent
+        },
+      },
+      exit: { onDemand: null }
+    }
+  }
+  return offer;
 }

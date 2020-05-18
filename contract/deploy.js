@@ -60,6 +60,10 @@ export default async function deployContract (
     {
       name: 'converter',
       path: './src/converter.js',
+    },
+    {
+      name: 'decomposer',
+      path: './src/decomposer.js',
     }
   ];
 
