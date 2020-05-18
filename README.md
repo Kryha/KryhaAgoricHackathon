@@ -37,6 +37,8 @@ https://agoric.com/documentation/getting-started/development-cycle.html
 ## Smart Contracts
 - ```tokenCreation```: Mints fungible tokens, for the Creator. Mirroring the initial raw (virgin) materials being sourced in the physical world.
 - ```converter```: Creates a new non-fungible token in exchange for burning (destructive usage of) fungible tokens. This contract converts input A into output B, losing A in the process. This contract mirrors a manufacturing process where raw materials are being converted into new empty plastic bottles using up the raw materials in the process.
+- ```invoiceCreation```: Mints a non-fungible token which represents an invoice and sets the attributes of the invoice.
+- ```plasticA```: Mints a non-fungible token which represents a plastic of type A and sets the attributes of the plastic.
 
 ## Improvements
 - Use multiple wallets: This way the demo can be closer to real use case scenarios and also more descentralized. All identities will have a need to know basis, and their own purses. This will also make it possible to trace plastics to individual parties and trace the recycle history of individual products. For example; we can trace how much of a specific bottle has been made of recycled plastics.
