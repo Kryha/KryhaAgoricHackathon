@@ -6,8 +6,7 @@ As Kryha team we focused on building a complete Agoric Dapp for one specific but
 For this case study we focussed on tracing plastic bottles from where the initial raw materials where mined to the conversion of these raw materials into empty bottles to the recycler that decomposes these bottles back to raw materials.
 
 ## Limitations
-- Have to run the project with `--delay 1` because of `unimplemented errors` in the fakeChain.
-- Working with multiple wallets caused too many problems, and therefore we did not implement a transaction contract between wallets.
+- Working with multiple wallets caused too many problems, and therefore we did not implement a transaction contract between wallets. This limitation is essential for this demo. In order to make it more clear every transaction that needs further explanation creates an alert.
 
 ## Clone the repo
 ```git clone https://github.com/Kryha/KryhaAgoricHackathon.git```
@@ -19,7 +18,7 @@ For this case study we focussed on tracing plastic bottles from where the initia
 ```agoric install```
 
 ## Start the Agoric VM 
-```agoric start --delay 1 --reset```
+```agoric start --reset```
 
 ## Deploy Dapp, install smart contracts and web apis
 ```agoric deploy ./contract/deploy.js ./api/deploy.js```
