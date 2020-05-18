@@ -23,6 +23,7 @@ const Decomposer = props => {
 
   const createNewPurchaseOrder = () => {
     if (amountToBuy < 1) return alert('Specify a positive amount')
+    alert("Creating a purchase order with multiple wallets would invoke an exchange. In this simple demo with one wallet it only mints the invoice requested.")
     const { brandRegKey, pursePetname } = state.purses[selectedPurse]
     const invoicePurse = 'Decomposer invoice purse'
     createPurchaseOrderDec(brandRegKey, pursePetname, amountToBuy, invoicePurse, dispatch)
