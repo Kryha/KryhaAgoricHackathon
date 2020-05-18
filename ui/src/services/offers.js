@@ -26,8 +26,8 @@ export const mintAssetsOffer = (type, purse, amount, instanceRegKey) => {
   return offer;
 }
 
-export const mintNFTOffer = (type, purse, amount) => {
-  console.log('Action:mint', type, purse, amount)
+export const mintNFTOffer = (type, purse, invoicePurse, amount) => {
+  console.log('Action:mint', type, purse, invoicePurse, amount)
 
   const instanceRegKey = defaults.INSTANCE_REG_KEY_INVOICE
 
@@ -42,7 +42,7 @@ export const mintNFTOffer = (type, purse, amount) => {
     proposalTemplate: {
       want: {
         Invoice: {
-          pursePetname: 'invoice purse',
+          pursePetname: invoicePurse,
           extent: [{
             type: type,
             id: uuidv1().substring(0, 8),
