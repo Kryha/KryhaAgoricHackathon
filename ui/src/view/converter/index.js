@@ -37,13 +37,22 @@ const Converter = props => {
     if (amount < 1) return alert('Specify a positive amount')
     let conv = state.conversions[selectedConversion]
     console.log('conv', conv);
-    state.purses.map((purse, index) => {
-      if (purse.pursePetname === 'Converter invoice purse' && purse.extent[0].amount < amount * 5) {
-        alert("The Converter first must create a purchase order for the amount requested.")
+    const purse = state.purses.find(purse => purse.pursePetname === 'Converter invoice purse')
+    console.log(purse)
+    if (!purse) return alert('The converter invoice purse is not present, please redeploy the dapp')
+    const invoiceAmount = purse.extent.map(e => e.amount).reduce((a, b) => a + b, 0)
+    console.log('invoiceAmount', invoiceAmount)
+    let isValid = true;
+    conv.input.forEach(i => {
+      const requestedAmount = amount * i.amount
+      console.log('requestedAmount', requestedAmount)
+      if (invoiceAmount < requestedAmount) {
+        isValid = false;
         return
       }
     })
-    convert(conv.input, conv.output, amount, dispatch)
+
+    isValid ? convert(conv.input, conv.output, amount, dispatch) : alert('The Converter first must create a purchase order for the amount requested.')
   }
 
   if (state.purses.length === 0 || state.conversions.length === 0) {
