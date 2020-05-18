@@ -1,4 +1,4 @@
-  // GENERATED FROM /Users/panagiotisganelis/Projects/KryhaAgoricHackathon/api/deploy.js
+  // GENERATED FROM /Users/terry/github/agoric/hackathon/api/deploy.js
   export default {
   "INSTANCE_REG_KEY_FUNGIBLE_A": "tokencreation_typea_instance_7165",
   "INSTANCE_REG_KEY_FUNGIBLE_B": "tokencreation_typeb_instance_1880",

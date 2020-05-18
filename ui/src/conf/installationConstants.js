@@ -1,4 +1,4 @@
-  // GENERATED FROM /Users/panagiotisganelis/Projects/KryhaAgoricHackathon/contract/deploy.js
+  // GENERATED FROM /Users/terry/github/agoric/hackathon/contract/deploy.js
   export default {
   "contracts": [
     {
@@ -9,7 +9,7 @@
     {
       "name": "plasticA1",
       "path": "./src/plasticA.js",
-      "INSTALLATION_REG_KEY": "plastica1installation_5496"
+      "INSTALLATION_REG_KEY": "plastica1installation_5714"
     },
     {
       "name": "invoiceCreation",
@@ -24,7 +24,7 @@
     {
       "name": "decomposer",
       "path": "./src/decomposer.js",
-      "INSTALLATION_REG_KEY": "decomposerinstallation_5714"
+      "INSTALLATION_REG_KEY": "decomposerinstallation_5496"
     }
   ]
 };
