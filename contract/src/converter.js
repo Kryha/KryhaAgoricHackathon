@@ -56,7 +56,7 @@ export const makeContract = harden(zcf => {
         if (priceExtent !== expectedRatio * assetExtent.length) {
           throw rejectOffer(
             offerHandle,
-            `Invalid input to output ratio specified, ${priceExtent}, ${assetExtent.length}, ${expectedRatio}.`,
+            `Invalid conversion rate specified, conversion rate should be: ${expectedRatio}.`,
           );
         }
 
