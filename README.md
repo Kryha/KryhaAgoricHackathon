@@ -8,35 +8,41 @@ For this case study we focussed on tracing plastic bottles from where the initia
 ## Limitations
 - Working with multiple wallets caused too many problems, and therefore we did not implement a transaction contract between wallets. This limitation is essential for this demo. In order to make it more clear every transaction that needs further explanation creates an alert.
 
-## Install the agoric SDK
+---
+
+## Development
+
+### Install the agoric SDK
 Follow the instructions from:  
 https://agoric.com/documentation/getting-started/before-using-agoric.html
 
-## Clone the repo
+### Clone the repo
 ```git clone https://github.com/Kryha/KryhaAgoricHackathon.git```
 
-## Checkout to develop branch
+### Checkout to develop branch
 ```git checkout develop```
 
-## Install Javascript dependencies
+### Install Javascript dependencies
 ```agoric install```
 
-## Start the Agoric VM 
+### Start the Agoric VM 
 ```agoric start --reset```
 
-## Deploy Dapp, install smart contracts and web apis
+### Deploy Dapp, install smart contracts and web apis
 ```agoric deploy ./contract/deploy.js ./api/deploy.js```
 
-## Frontend
+### Start the Frontend
 ```cd ui```
 ```yarn install```
 ```yarn start```
 
 Visit ```http://localhost:3000``` for the frontend and ```http://localhost:8000/``` for the wallet.
 
-## Development
+### Important todo after any code change
 While developing follow the guide for every change you make
 https://agoric.com/documentation/getting-started/development-cycle.html
+
+---
 
 ## Smart Contracts
 - ```tokenCreation```: Mints fungible tokens, for the Creator. Mirroring the initial raw (virgin) materials being sourced in the physical world.
