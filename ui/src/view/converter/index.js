@@ -20,7 +20,7 @@ const Converter = props => {
   const createNewPurchaseOrder = () => {
     if (amountToBuy < 1) return alert('Specify a positive amount')
     if (state.purses[selectedPurse].extent < amountToBuy) {
-      alert("The amount requested first must be minted from the Converter.")
+      alert("The amount requested first must be minted from the Creator.")
       return
     }
     explain(dispatch)
@@ -38,9 +38,9 @@ const Converter = props => {
 
     // TODO: Make dynamic filter for the correct input types
     const invoiceAmount = purse.extent
-    .filter(e => e.type.startsWith('typea'))
-    .map(e => Number(e.amount))
-    .reduce((a, b) => a + b, 0)
+      .filter(e => e.type.startsWith('typea'))
+      .map(e => Number(e.amount))
+      .reduce((a, b) => a + b, 0)
 
     let isValid = true;
     conv.input.forEach(i => {
