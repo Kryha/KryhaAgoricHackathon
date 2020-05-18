@@ -40,7 +40,7 @@ const Decomposer = props => {
 
       const input = decomp.input.map(i => {
         const matchingPurse = state.purses.find(p => p.pursePetname === i.purse)
-        return { ...i, extent: matchingPurse.extent.slice(0, amount * i.amount)}
+        return { ...i, extent: matchingPurse.extent.slice(0, amount * i.amount) }
       })
 
       decompose(input, decomp.output, amount, dispatch)
