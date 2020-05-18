@@ -6,7 +6,7 @@ As Kryha team we focused on building a complete Agoric Dapp for one specific but
 For this case study we focussed on tracing plastic bottles from where the initial raw materials where mined to the conversion of these raw materials into empty bottles to the recycler that decomposes these bottles back to raw materials.
 
 ## Limitations
-- Working with multiple wallets caused too many problems, and therefore we did not implement a transaction contract between wallets. This limitation is essential for this demo. In order to make it more clear every transaction that needs further explanation creates an alert.
+- At the start of the project we encountered several issues when working with multiple wallets. We modified the project to work without multiple wallets by including an invoice system that simulates payments without actually exchanging any tokens or assets. This caused the workflow to make less sense and therefore, we included a message within the application that explains when a transaction should have occurred.
 
 ---
 
@@ -46,8 +46,8 @@ https://agoric.com/documentation/getting-started/development-cycle.html
 
 ## Smart Contracts
 - ```tokenCreation```: Mints fungible tokens, for the Creator. Mirroring the initial raw (virgin) materials being sourced in the physical world.
-- ```converter```: Creates a new non-fungible token in exchange for burning (destructive usage of) fungible tokens. This contract converts input A into output B, losing A in the process. This contract mirrors a manufacturing process where raw materials are being converted into new empty plastic bottles using up the raw materials in the process.
-- ```invoiceCreation```: Mints a non-fungible token which represents an invoice and sets the attributes of the invoice.
+- ```converter```: The converter contract creates a new non-fungible token in exchange for burning (destructive usage of) a predefined number of fungible tokens. This contract converts input A into output B, losing A in the process. This contract mirrors a destructive manufacturing process. As an example we use a process in which raw materials are used to make an empty plastic bottle. The tokens representing the raw materials are used in the process of creating the badge for the newly minted empty plastic bottle.
+- ```decomposer```: Opposite of the converter contract. This contract recycles the materials created by the converter contract. It takes an NFT and converts it into its source materials. In our example an empty plastic bottle is decomposed into new tokens representing the recycled representation of the source materials. Another option would have been to combine the converter and decomposer contract by holding the inputs in the contract until they are needed for a decomposition, if both the conversion and decomposition processes are perfect, this would be possible but we assume that this is not the case and therefore have chosen to split them up. An improvement would be to create one convert contract that is able to convert NFTs to Fungible tokens and vice versa and to take any amount of tokens/assets as input and output.
 - ```plasticA```: Mints a non-fungible token which represents a plastic of type A and sets the attributes of the plastic.
 
 ## Improvements
