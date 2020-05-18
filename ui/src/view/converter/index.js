@@ -23,7 +23,10 @@ const Converter = props => {
 
   const createNewPurchaseOrder = () => {
     if (amountToBuy < 1) return alert('Specify a positive amount')
-    // alert("Creating a purchase order with multiple wallets would invoke an exchange. In this simple demo with one wallet it only mints the invoice requested.")
+    if (state.purses[selectedPurse].extent < amountToBuy) {
+      alert("The amount requested first must be minted from the Converter.")
+      return
+    }
     explain(dispatch)
     const { brandRegKey, pursePetname } = state.purses[selectedPurse]
     const invoicePurse = 'Converter invoice purse'
