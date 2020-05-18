@@ -24,7 +24,8 @@ const Decomposer = props => {
   const createNewPurchaseOrder = () => {
     if (amountToBuy < 1) return alert('Specify a positive amount')
     const { brandRegKey, pursePetname } = state.purses[selectedPurse]
-    createPurchaseOrderDec(brandRegKey, pursePetname, amountToBuy, dispatch)
+    const invoicePurse = 'Decomposer invoice purse'
+    createPurchaseOrderDec(brandRegKey, pursePetname, amountToBuy, invoicePurse, dispatch)
   }
 
   const createNewDecomposition = () => {

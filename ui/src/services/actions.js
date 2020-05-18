@@ -43,11 +43,11 @@ export const mintAssets = (type, purse, amount, dispatch) => {
   })
 }
 
-export const createPurchaseOrder = async (type, purse, amount, dispatch) => {
+export const createPurchaseOrder = async (type, purse, amount, invoicePurse, dispatch) => {
   if (!(purse === 'TypeA purse' || purse === 'TypeB purse' || purse === 'TypeC purse')) {
     return alert('The Converter can only create an invoice for raw material tokens')
   }
-  const mintOffer = mintNFTOffer(type, purse, amount);
+  const mintOffer = mintNFTOffer(type, purse, invoicePurse, amount);
   await walletAddOffer(mintOffer);
 
   return dispatch({
@@ -56,11 +56,11 @@ export const createPurchaseOrder = async (type, purse, amount, dispatch) => {
   })
 }
 
-export const createPurchaseOrderDec = async (type, purse, amount, dispatch) => {
+export const createPurchaseOrderDec = async (type, purse, amount, invoicePurse, dispatch) => {
   if (!(purse === 'plastic bottle purse')) {
     return alert('The Decomposer can only create an invoice for plastic tokens')
   }
-  const mintOffer = mintNFTOffer(type, purse, amount);
+  const mintOffer = mintNFTOffer(type, purse, invoicePurse, amount);
   await walletAddOffer(mintOffer);
 
   return dispatch({

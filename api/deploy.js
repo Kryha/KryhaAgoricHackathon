@@ -171,7 +171,8 @@ async function deployInvoice (references) {
   await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
 
   const pursePetname = INVOICE.purseName;
-  await E(wallet).makeEmptyPurse(issuerName, pursePetname);
+  await E(wallet).makeEmptyPurse(issuerName, "Converter " + pursePetname);
+  await E(wallet).makeEmptyPurse(issuerName, "Decomposer " + pursePetname);
   console.log(`--- empty ${pursePetname} is added to wallet`);
 
   let CONTRACT_NAME = INVOICE.contract;
