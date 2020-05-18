@@ -42,19 +42,19 @@ const Creator = props => {
         flex='column'
         w='95%'
         marginl='5%'
-        h='30%'
+        h='50%'
       >
         <Flexdiv
           flex='row'
           w='100%'
-          h='20%'
+          h='30%'
         >
           <Text c='#000000' size='20px'>Create Tokens for Mined Material</Text>
         </Flexdiv>
         <Flexdiv
           flex='row'
           w='100%'
-          h='80%'
+          h='70%'
           alignItems='center'
           justify='center'
         >
