@@ -23,7 +23,7 @@ const Decomposer = props => {
 
   const createNewPurchaseOrder = () => {
     if (amountToBuy < 1) return alert('Specify a positive amount')
-    if (state.purses[selectedPurse].extent < amountToBuy) {
+    if (Object.keys(state.purses[selectedPurse].extent).length < amountToBuy) {
       alert("The amount requested first must be minted from the Converter.")
       return
     }
