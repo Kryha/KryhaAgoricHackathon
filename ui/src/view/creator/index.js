@@ -8,7 +8,6 @@ const Creator = props => {
   const { state, dispatch } = useApplicationContext()
   const [amount, setAmount] = useState(0)
   const [selectedPurse, setSelectedPurse] = useState(2)
-  const [creatorPurses, setCreatorPurses] = useState([])
 
   useEffect(() => {
     // TODO: do something with the purses
