@@ -1,5 +1,6 @@
 /* eslint-disable no-use-before-define */
 import harden from '@agoric/harden';
+import { assert, details } from '@agoric/assert';
 import produceIssuer from '@agoric/ertp';
 import { makeZoeHelpers } from '@agoric/zoe/src/contractSupport/zoeHelpers';
 
@@ -10,34 +11,66 @@ import { makeZoeHelpers } from '@agoric/zoe/src/contractSupport/zoeHelpers';
 // zcf is the Zoe Contract Facet, i.e. the contract-facing API of Zoe
 export const makeContract = harden(zcf => {
   const {
+    rejectOffer,
     checkHook,
     makeEmptyOffer,
     escrowAndAllocateTo,
   } = makeZoeHelpers(zcf);
 
-  const { issuer, mint, amountMath } = produceIssuer('plastic', 'set');
+  const {
+    terms: { inputOutputRatio },
+  } = zcf.getInstanceRecord();
 
-  return zcf.addNewIssuer(issuer, 'Plastic').then(() => {
-    const amountMaths = zcf.getAmountMaths(harden(['Plastic', 'Price']));
+  assert(
+    inputOutputRatio !== undefined,
+    details`inputOutputRatio must be present`,
+  );
+
+  assert(
+    inputOutputRatio.extent >= 1,
+    details`inputOutputRatio must be greater or equal to 1`,
+  );
+
+  const { issuer, mint, amountMath } = produceIssuer('asset', 'set');
+
+  return zcf.addNewIssuer(issuer, 'Asset').then(() => {
+    const amountMaths = zcf.getAmountMaths(harden(['Asset', 'Price']));
 
     const convertHook = offerHandle => {
       return makeEmptyOffer().then(burnHandle => {
         const { proposal } = zcf.getOffer(offerHandle);
-        const wantedOfferProposal = proposal.want.Plastic.extent;
-        const amount = amountMath.make(harden(wantedOfferProposal));
+        const assetExtent = proposal.want.Asset.extent;
+        if (assetExtent.length < 1) {
+          throw rejectOffer(offerHandle, `Request at least 1 Asset`);
+        }
+
+        const priceExtent = proposal.give.Price.extent;
+        if (priceExtent < 1) {
+          throw rejectOffer(offerHandle, `Provide a price of at least 1`);
+        }
+
+        const expectedRatio = inputOutputRatio.extent;
+        if (priceExtent !== expectedRatio * assetExtent.length) {
+          throw rejectOffer(
+            offerHandle,
+            `Invalid input to output ratio specified, ${priceExtent}, ${assetExtent.length}, ${expectedRatio}.`,
+          );
+        }
+
+        const amount = amountMath.make(harden(assetExtent));
         const payment = mint.mintPayment(amount);
 
         return escrowAndAllocateTo({
           amount,
           payment,
-          keyword: 'Plastic',
+          keyword: 'Asset',
           recipientHandle: burnHandle,
         }).then(() => {
           const currentBurnAllocation = zcf.getCurrentAllocation(burnHandle);
           const currentOfferAllocation = zcf.getCurrentAllocation(offerHandle);
 
           const wantedBurnAllocation = {
-            Plastic: amountMaths.Plastic.getEmpty(),
+            Asset: amountMaths.Asset.getEmpty(),
             Price: amountMaths.Price.add(
               currentBurnAllocation.Price,
               currentOfferAllocation.Price,
@@ -45,9 +78,9 @@ export const makeContract = harden(zcf => {
           };
 
           const wantedOfferAllocation = {
-            Plastic: amountMaths.Plastic.add(
-              currentBurnAllocation.Plastic,
-              currentOfferAllocation.Plastic,
+            Asset: amountMaths.Asset.add(
+              currentBurnAllocation.Asset,
+              currentOfferAllocation.Asset,
             ),
             Price: amountMaths.Price.getEmpty(),
           };
@@ -64,7 +97,7 @@ export const makeContract = harden(zcf => {
     };
 
     const expectedOffer = harden({
-      want: { Plastic: null },
+      want: { Asset: null },
       give: { Price: null },
     });
 

@@ -102,13 +102,17 @@ export const convertOffer = (input, output, amount) => {
   })
 
   const assets = output.map(o => {
-    return {
-      pursePetname: o.purse,
-      extent: [{
+    const outputAmount = o.amount * amount
+    const assets = Array.from(Array(outputAmount)).map(() => {
+      return {
         type: o.type,
         id: uuidv1().substring(0, 8),
-        amount: Number(o.amount * amount)
-      }]
+      }
+    });
+
+    return {
+      pursePetname: o.purse,
+      extent: assets
     }
   })
 
@@ -122,7 +126,7 @@ export const convertOffer = (input, output, amount) => {
     },
     proposalTemplate: {
       want: {
-        'Plastic': assets[0]
+        'Asset': assets[0]
       },
       give: {
         'Price': prices[0]

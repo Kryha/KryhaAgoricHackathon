@@ -72,7 +72,7 @@ export const createPurchaseOrderDec = async (type, purse, amount, dispatch) => {
 export const retrieveConversions = (dispatch) => {
   return dispatch({
     type: 'RETRIEVECONVERSIONS',
-    payload: [{ input: [{ type: 'typeA', purse: 'TypeA purse', amount: 10 }], output: [{ type: 'plastic bottle', purse: 'plastic bottle purse', amount: 1 }] }]
+    payload: [{ input: [{ type: 'typeA', purse: 'TypeA purse', amount: 5 }], output: [{ type: 'plastic bottle', purse: 'plastic bottle purse', amount: 1 }] }]
   })
 }
 

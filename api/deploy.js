@@ -195,10 +195,16 @@ async function deployConverter (references, tokenIssuer) {
   const { INSTALLATION_REG_KEY: converterRegKey } = contracts.find(({ name }) => name === CONVERTER_PLASTIC.contract);
   const converterContractInstallationHandle = await E(registry).get(converterRegKey);
 
+
+  const tokenAmountMath = await E(tokenIssuer).getAmountMath();
+
   const issuerKeywordRecord = harden({
     Price: tokenIssuer,
   });
-  const adminInvite = await E(zoe).makeInstance(converterContractInstallationHandle, issuerKeywordRecord);
+  const terms = harden({
+    inputOutputRatio: await E(tokenAmountMath).make(5),
+  })
+  const adminInvite = await E(zoe).makeInstance(converterContractInstallationHandle, issuerKeywordRecord, terms);
   console.log('--- instance is running on Zoe');
 
   const inviteIssuer = await E(zoe).getInviteIssuer();
