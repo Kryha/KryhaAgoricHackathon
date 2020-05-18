@@ -19,8 +19,8 @@ https://agoric.com/documentation/getting-started/before-using-agoric.html
 ### Clone the repo
 ```git clone https://github.com/Kryha/KryhaAgoricHackathon.git```
 
-### Checkout to develop branch
-```git checkout develop```
+### Go to directory
+```cd KryhaAgoricHackathon```
 
 ### Install Javascript dependencies
 ```agoric install```
