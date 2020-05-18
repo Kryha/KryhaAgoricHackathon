@@ -37,6 +37,12 @@ const Converter = props => {
     if (amount < 1) return alert('Specify a positive amount')
     let conv = state.conversions[selectedConversion]
     console.log('conv', conv);
+    state.purses.map((purse, index) => {
+      if (purse.pursePetname === 'Converter invoice purse' && purse.extent[0].amount < amount * 5) {
+        alert("The Converter first must create a purchase order for the amount requested.")
+        return
+      }
+    })
     convert(conv.input, conv.output, amount, dispatch)
   }
 

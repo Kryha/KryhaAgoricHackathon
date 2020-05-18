@@ -34,10 +34,17 @@ const Decomposer = props => {
   }
 
   const createNewDecomposition = () => {
-    if (amount > 0) {
-      let decomp = state.decompositions[selectedDecomposition]
-      decompose(decomp.input, decomp.amount, dispatch)
-    }
+    if (amount < 1) return alert('Specify a positive amount')
+    let decomp = state.decompositions[selectedDecomposition]
+    // state.purses.map((purse, index) => {
+    //   if (purse.pursePetname === 'Decomposer invoice purse') {
+    //     if (purse.extent[0].amount < amount * 5) {
+    //       alert("The Converter first must create a purchase order for the amount requested.")
+    //       return
+    //     }
+    //   }
+    // })
+    decompose(decomp.input, decomp.amount, dispatch)
   }
 
   if (state.purses.length === 0 || state.decompositions.length === 0) {
