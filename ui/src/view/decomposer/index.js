@@ -81,7 +81,7 @@ const Decomposer = props => {
           alignItems='center'
           justify='center'
         >
-          <Flexdiv
+          {/* <Flexdiv
             flex='row'
             w='25%'
             h='50%'
@@ -112,7 +112,7 @@ const Decomposer = props => {
             alignItems='center'
           >
             <Text c='#000000' margin='0'>{state.purses[selectedPurse].issuerPetname}</Text>
-          </Flexdiv>
+          </Flexdiv> */}
           <Flexdiv
             flex='row'
             w='30%'

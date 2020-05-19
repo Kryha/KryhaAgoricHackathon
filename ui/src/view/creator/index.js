@@ -74,11 +74,9 @@ const Creator = props => {
               onChange={(e) => setSelectedPurse(e.target.value)}
             >
               {state.purses.map((purse, index) => {
-                if (purse.issuerPetname === 'typeA' || purse.issuerPetname === 'typeB' || purse.issuerPetname === 'typeC') {
-                  return (
-                    <option key={index} value={index}>{purse.issuerPetname}</option>
-                  )
-                }
+                return (
+                  <option key={index} value={index}>{purse.issuerPetname}</option>
+                )
               })}
             </Select>
           </Flexdiv>

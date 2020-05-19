@@ -8,7 +8,7 @@ import Converter from '../converter'
 import Decomposer from '../decomposer'
 
 const Main = props => {
-    const {
+  const {
     CREATOR_WALLET,
     CONVERTER_WALLET,
     DECOMPOSER_WALLET
@@ -17,19 +17,19 @@ const Main = props => {
   let wallet
   let render
 
-  if(props.active ==='converter'){
-    render = <Converter/>
+  if (props.active === 'converter') {
+    render = <Converter />
     wallet = CONVERTER_WALLET
-  }else if(props.active ==='decomposer'){
-    render = <Decomposer/>
+  } else if (props.active === 'decomposer') {
+    render = <Decomposer />
     wallet = DECOMPOSER_WALLET
   } else {
-    render = <Creator/>
+    render = <Creator />
     wallet = CREATOR_WALLET
   }
 
   // TODO: Decide whether to include or delete multiple wallet support. This is a temporary fix 
-  wallet = CREATOR_WALLET
+  // wallet = CREATOR_WALLET
 
   return (
     <Flexdiv
@@ -66,7 +66,7 @@ const Main = props => {
             id="walletBridgeIFrame"
             className="walletBridgeIFrame"
             display="initial"
-            position="flex"/>
+            position="flex" />
         </Flexdiv>
       </Flexdiv>
     </Flexdiv>

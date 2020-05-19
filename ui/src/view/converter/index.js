@@ -100,7 +100,7 @@ const Converter = props => {
             h='50%'
             alignItems='center'
           >
-            <Select
+            {/* <Select
               w='75%'
               value={selectedPurse}
               border='none'
@@ -116,16 +116,16 @@ const Converter = props => {
                   )
                 }
               })}
-            </Select>
+            </Select> */}
           </Flexdiv>
-          <Flexdiv
+          {/* <Flexdiv
             flex='row'
             w='35%'
             h='50%'
             alignItems='center'
           >
             <Text c='#000000' margin='0'>{state.purses[selectedPurse].issuerPetname}</Text>
-          </Flexdiv>
+          </Flexdiv> */}
           <Flexdiv
             flex='row'
             w='30%'
