@@ -2,7 +2,7 @@
 // Agoric Dapp api deployment script
 
 import fs from 'fs';
-import installationConstants from '../ui/src/conf/installationConstantsCreator.js';
+import installationConstants from '../ui/src/conf/installationConstantsConverter.js';
 import { E } from '@agoric/eventual-send';
 import produceIssuer from '@agoric/ertp';
 import harden from '@agoric/harden';
@@ -12,53 +12,53 @@ import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 // spawner runs within ag-solo, so is persistent.  Once the deploy.js
 // script ends, connections to any of its objects are severed.
 
-const TOKEN_CONTRACT = 'tokenCreation'
-
-function capitalize (str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+const INVOICE = {
+  contract: 'invoiceCreation',
+  issuerName: 'invoice',
+  purseName: 'invoice purse'
 }
 
-async function deployToken (references, tokenName) {
+let CONTRACT_NAME = INVOICE.contract;
+
+async function deployInvoice (references) {
   const {
     wallet,
     zoe,
     registry,
   } = references;
 
-  const {
-    contracts
-  } = installationConstants;
+  const { contracts } = installationConstants;
 
-  console.log(`-- deploying: ${tokenName}`)
+  console.log(`-- deploying: Invoice`)
 
-  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === TOKEN_CONTRACT);
+  const { INSTALLATION_REG_KEY: tokenCreationRegKey } = contracts.find(({ name }) => name === INVOICE.contract);
   const mintContractInstallationHandle = await E(registry).get(tokenCreationRegKey);
-  const inviteIssuer = await E(zoe).getInviteIssuer();
-  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
 
-  const terms = harden({
-    issuerName: capitalize(tokenName),
-  })
-  const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle, harden({}), terms);
+  const adminInvite = await E(zoe).makeInstance(mintContractInstallationHandle);
   console.log('--- instance is running on Zoe');
 
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
   const instanceHandle = await getInstanceHandle(adminInvite);
 
   const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  const invite = await E(publicAPI).makeInvite();
+
   const issuer = await E(publicAPI).getTokenIssuer();
 
+  const issuerName = INVOICE.issuerName;
   const brandRegKey = await E(registry).register(
-    tokenName,
+    issuerName,
     await E(issuer).getBrand()
   )
 
-  await E(wallet).addIssuer(tokenName, issuer, brandRegKey)
+  await E(wallet).addIssuer(issuerName, issuer, brandRegKey)
 
-  const pursePetName = `${capitalize(tokenName)} purse`;
-  await E(wallet).makeEmptyPurse(tokenName, pursePetName);
-  console.log(`--- empty ${pursePetName} is added to wallet`);
+  const pursePetname = INVOICE.purseName;
+  await E(wallet).makeEmptyPurse(issuerName, "Converter " + pursePetname);
+  console.log(`--- empty ${pursePetname} is added to wallet`);
 
-  const regKey = await E(registry).register(`${TOKEN_CONTRACT}_${tokenName}_instance`, instanceHandle);
+  const regKey = await E(registry).register(`${CONTRACT_NAME}instance`, instanceHandle);
   console.log(`--- contract is added to the registry under: ${regKey}`);
 
   return { issuer, regKey };
@@ -78,19 +78,15 @@ async function deployToken (references, tokenName) {
 export default async function deployApi (referencesPromise, { bundleSource, pathResolve }) {
   const references = await referencesPromise;
 
-  const { issuer: tokenAIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_A } = await deployToken(references, 'typeA');
-  const { issuer: tokenBIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_B } = await deployToken(references, 'typeB');
-  const { issuer: tokenCIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_C } = await deployToken(references, 'typeC');
+  const { issuer: invoiceIssuer, regKey: INSTANCE_REG_KEY_INVOICE } = await deployInvoice(references);
 
   // Re-save the constants somewhere where the UI and api can find it.
   const dappConstants = {
-    INSTANCE_REG_KEY_FUNGIBLE_A,
-    INSTANCE_REG_KEY_FUNGIBLE_B,
-    INSTANCE_REG_KEY_FUNGIBLE_C,
-    BRIDGE_URL: 'http://127.0.0.1:8000',
-    API_URL: 'http://127.0.0.1:8000',
+    INSTANCE_REG_KEY_INVOICE,
+    BRIDGE_URL: 'http://127.0.0.1:8001',
+    API_URL: 'http://127.0.0.1:8001',
   };
-  const defaultsFile = pathResolve(`../ui/src/conf/defaultsCreator.js`);
+  const defaultsFile = pathResolve(`../ui/src/conf/defaultsConverter.js`);
   console.log('writing', defaultsFile);
   const defaultsContents = `\
   // GENERATED FROM ${pathResolve('./deploy.js')}

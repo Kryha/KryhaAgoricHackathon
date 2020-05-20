@@ -1,4 +1,6 @@
-import defaults from '../conf/defaults';
+import defaultsCreator from '../conf/defaultsCreator';
+import defaultsConverter from '../conf/defaultsConverter';
+import dappConstants from '../constants'
 
 import { walletAddOffer } from './utils/wallet';
 import { mintAssetsOffer, mintNFTOffer, exchangeOffer, convertOffer, decomposeOffer } from './offers';
@@ -21,13 +23,13 @@ export const mintAssets = (type, purse, amount, dispatch) => {
   let instanceRegKey
   switch (purse) {
     case 'TypeA purse':
-      instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_A
+      instanceRegKey = defaultsCreator.INSTANCE_REG_KEY_FUNGIBLE_A
       break;
     case 'TypeB purse':
-      instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_B
+      instanceRegKey = defaultsCreator.INSTANCE_REG_KEY_FUNGIBLE_B
       break;
     case 'TypeC purse':
-      instanceRegKey = defaults.INSTANCE_REG_KEY_FUNGIBLE_C
+      instanceRegKey = defaultsCreator.INSTANCE_REG_KEY_FUNGIBLE_C
       break
     default:
       return alert('The Creator can only mint raw material tokens')
@@ -45,7 +47,8 @@ export const createPurchaseOrder = async (type, purse, amount, invoicePurse, dis
   if (!(purse === 'TypeA purse' || purse === 'TypeB purse' || purse === 'TypeC purse')) {
     return alert('The Converter can only create an invoice for raw material tokens')
   }
-  const mintOffer = mintNFTOffer(type, purse, invoicePurse, amount);
+  const instanceRegKey = defaultsConverter.INSTANCE_REG_KEY_INVOICE
+  const mintOffer = mintNFTOffer(type, purse, invoicePurse, instanceRegKey, amount);
   await walletAddOffer(mintOffer);
 
   return dispatch({

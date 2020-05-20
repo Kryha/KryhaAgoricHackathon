@@ -100,7 +100,7 @@ const Converter = props => {
             h='50%'
             alignItems='center'
           >
-            {/* <Select
+            <Select
               w='75%'
               value={selectedPurse}
               border='none'
@@ -110,22 +110,20 @@ const Converter = props => {
               onChange={(e) => setSelectedPurse(e.target.value)}
             >
               {state.purses.map((purse, index) => {
-                if (purse.issuerPetname === 'typeA' || purse.issuerPetname === 'typeB' || purse.issuerPetname === 'typeC') {
-                  return (
-                    <option key={index} value={index}>{purse.issuerPetname}</option>
-                  )
-                }
+                return (
+                  <option key={index} value={index}>{purse.issuerPetname}</option>
+                )
               })}
-            </Select> */}
+            </Select>
           </Flexdiv>
-          {/* <Flexdiv
+          <Flexdiv
             flex='row'
             w='35%'
             h='50%'
             alignItems='center'
           >
             <Text c='#000000' margin='0'>{state.purses[selectedPurse].issuerPetname}</Text>
-          </Flexdiv> */}
+          </Flexdiv>
           <Flexdiv
             flex='row'
             w='30%'

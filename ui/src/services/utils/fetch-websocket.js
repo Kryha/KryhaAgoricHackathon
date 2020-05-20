@@ -7,7 +7,7 @@ const { BRIDGE_URL } = dappConstants;
 
 const endpointToSocket = new Map();
 
-function getWebSocketEndpoint(endpoint) {
+function getWebSocketEndpoint (endpoint) {
   // TODO proxy socket.
   let url = new URL(endpoint, BRIDGE_URL || window.origin);
   url.protocol = url.protocol.replace(/^http/, 'ws');
@@ -18,7 +18,7 @@ const walletBridgeId = 'secretIframeId';
 let walletLoaded = false;
 const connectSubscriptions = new Set();
 const messageSubscriptions = new Set();
-function createSocket({ onConnect, onDisconnect, onMessage }, endpoint) {
+function createSocket ({ onConnect, onDisconnect, onMessage }, endpoint) {
   if (endpoint === '/private/wallet-bridge') {
     let ifr = document.getElementById(walletBridgeId);
     if (!ifr) {
@@ -50,11 +50,11 @@ function createSocket({ onConnect, onDisconnect, onMessage }, endpoint) {
     }
     const messageListeners = new Set();
     endpointToSocket.set(endpoint, {
-      send(msg) {
+      send (msg) {
         const obj = JSON.parse(msg);
         ifr.contentWindow.postMessage(obj, window.origin);
       },
-      close() {
+      close () {
         walletLoaded = false;
         if (onConnect) {
           connectSubscriptions.delete(onConnect);
@@ -69,12 +69,12 @@ function createSocket({ onConnect, onDisconnect, onMessage }, endpoint) {
         if (ifr) {
           ifr.src = '';
         }
-    
+
         if (onDisconnect) {
           onDisconnect();
         }
       },
-      addEventListener(kind, cb) {
+      addEventListener (kind, cb) {
         if (kind !== 'message') {
           throw Error(`Cannot bridge.addEventListener kind ${kind}`);
         }
@@ -82,7 +82,7 @@ function createSocket({ onConnect, onDisconnect, onMessage }, endpoint) {
         messageListeners.add(onmsg);
         messageSubscriptions.add(onmsg);
       },
-      removeEventListener(kind, cb) {
+      removeEventListener (kind, cb) {
         if (kind !== 'message') {
           throw Error(`Cannot bridge.removeEventListener kind ${kind}`);
         }
@@ -114,29 +114,29 @@ function createSocket({ onConnect, onDisconnect, onMessage }, endpoint) {
   }
 }
 
-function closeSocket(endpoint) {
+function closeSocket (endpoint) {
   const socket = endpointToSocket.get(endpoint);
   socket.close();
   endpointToSocket.delete(endpoint);
 }
 
-function getActiveSocket(endpoint) {
+function getActiveSocket (endpoint) {
   return endpointToSocket.get(endpoint);
 }
 
-export function activateWebSocket(socketListeners = {}, endpoint = '/private/wallet-bridge') {
+export function activateWebSocket (socketListeners = {}, endpoint = '/private/wallet-bridge') {
   if (getActiveSocket(endpoint)) return;
   createSocket(socketListeners, endpoint);
 }
 
-export function deactivateWebSocket(endpoint = '/private/wallet-bridge') {
+export function deactivateWebSocket (endpoint = '/private/wallet-bridge') {
   if (!getActiveSocket(endpoint)) return;
   closeSocket(endpoint);
 }
 
 // === FETCH
 
-export async function doFetch(req, endpoint = '/private/wallet-bridge') {
+export async function doFetch (req, endpoint = '/private/wallet-bridge') {
   // Use the socket directly.
   const socket = getActiveSocket(endpoint);
   if (!socket) {
@@ -149,7 +149,7 @@ export async function doFetch(req, endpoint = '/private/wallet-bridge') {
   });
   socket.send(JSON.stringify(req));
   const expectedResponse = req.type === 'walletAddOffer' ? 'walletUpdatePurses' : `${req.type}Response`;
-  function getResponse({ data: msg }) {
+  function getResponse ({ data: msg }) {
     const obj = JSON.parse(msg);
     if (obj.type === expectedResponse) {
       resolve(obj);

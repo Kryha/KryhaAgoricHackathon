@@ -7,7 +7,7 @@ import { useApplicationContext } from '../../store/storeContext'
 const Creator = props => {
   const { state, dispatch } = useApplicationContext()
   const [amount, setAmount] = useState(0)
-  const [selectedPurse, setSelectedPurse] = useState(2)
+  const [selectedPurse, setSelectedPurse] = useState(0)
 
   useEffect(() => {
     // TODO: do something with the purses

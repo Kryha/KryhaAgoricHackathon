@@ -9,7 +9,7 @@ const { API_URL } = dappConstants;
 
 // === WEB SOCKET
 
-function getWebSocketEndpoint(endpoint) {
+function getWebSocketEndpoint (endpoint) {
   // TODO proxy socket.
   const url = new URL(endpoint, API_URL || window.origin);
   url.protocol = url.protocol.replace(/^http/, 'ws');
@@ -31,21 +31,21 @@ const handlerToListener = new Map();
  * @param {SocketHandler} handler
  * @param {string} endpoint 
  */
-function createSocket({ onConnect, onDisconnect, onMessage }, endpoint) {
+function createSocket ({ onConnect, onDisconnect, onMessage }, endpoint) {
   const socket = new WebSocket(getWebSocketEndpoint(endpoint));
   registerSocket(endpoint, {
-    close() {
+    close () {
       socket.close();
     },
-    send(obj) {
+    send (obj) {
       socket.send(JSON.stringify(obj));
     },
-    addHandler(handler) {
+    addHandler (handler) {
       const listener = ({ data }) => handler(JSON.parse(data));
       handlerToListener.set(handler, listener);
       socket.addEventListener('message', listener);
     },
-    removeHandler(handler) {
+    removeHandler (handler) {
       const listener = handlerToListener.get(handler);
       socket.removeEventListener('message', listener);
       handlerToListener.delete(handler);
@@ -68,17 +68,17 @@ function createSocket({ onConnect, onDisconnect, onMessage }, endpoint) {
  * @param {SocketHandler} socketListeners 
  * @param {*} endpoint 
  */
-export function activateSocket(socketListeners = {}, endpoint = '/api') {
+export function activateSocket (socketListeners = {}, endpoint = '/api') {
   if (getActiveSocket(endpoint)) return;
   createSocket(socketListeners, endpoint);
 }
 
-export function deactivateSocket(endpoint = '/api') {
+export function deactivateSocket (endpoint = '/api') {
   if (!getActiveSocket(endpoint)) return;
   closeSocket(endpoint);
 }
 
-export async function rpc(req, endpoint = '/api') {
+export async function rpc (req, endpoint = '/api') {
   // Use the socket directly.
   const socket = getActiveSocket(endpoint);
   if (!socket) {
@@ -91,7 +91,7 @@ export async function rpc(req, endpoint = '/api') {
   });
   socket.send(req);
   const expectedResponse = `${req.type}Response`;
-  function getResponse(obj) {
+  function getResponse (obj) {
     if (obj.type === expectedResponse) {
       resolve(obj);
       socket.removeHandler(getResponse);

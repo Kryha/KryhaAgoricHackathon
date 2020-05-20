@@ -26,9 +26,9 @@ export default async function deployContract (
 
   const contracts = [
     {
-      name: 'tokenCreation',
-      path: `./src/tokenCreation.js`,
-    }
+      name: 'invoiceCreation',
+      path: './src/invoiceCreation.js',
+    },
   ];
 
   console.log('- Installing contract code installed on Zoe');
@@ -53,7 +53,7 @@ export default async function deployContract (
   const dappConstants = {
     contracts: installedContracts,
   };
-  const defaultsFile = pathResolve(`../ui/src/conf/installationConstantsCreator.js`);
+  const defaultsFile = pathResolve(`../ui/src/conf/installationConstantsConverter.js`);
   console.log('writing', defaultsFile);
   const defaultsContents = `\
   // GENERATED FROM ${pathResolve('./deploy.js')}

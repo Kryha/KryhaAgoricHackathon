@@ -25,9 +25,7 @@ export const mintAssetsOffer = (type, purse, amount, instanceRegKey) => {
   return offer;
 }
 
-export const mintNFTOffer = (type, purse, invoicePurse, amount) => {
-  const instanceRegKey = defaults.INSTANCE_REG_KEY_INVOICE
-
+export const mintNFTOffer = (type, purse, invoicePurse, instanceRegKey, amount) => {
   const offer = {
     id: Date.now(),
     instanceRegKey,

@@ -2,9 +2,9 @@
   export default {
   "contracts": [
     {
-      "name": "invoiceCreation",
-      "path": "./src/invoiceCreation.js",
-      "INSTALLATION_REG_KEY": "invoicecreationinstallation_8247"
+      "name": "tokenCreation",
+      "path": "./src/tokenCreation.js",
+      "INSTALLATION_REG_KEY": "tokencreationinstallation_9794"
     }
   ]
 };
