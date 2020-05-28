@@ -19,10 +19,10 @@ const Converter = props => {
 
   const createNewPurchaseOrder = () => {
     if (amountToBuy < 1) return alert('Specify a positive amount')
-    if (state.purses[selectedPurse].extent < amountToBuy) {
-      alert("The amount requested first must be minted from the Creator.")
-      return
-    }
+    // if (state.purses[selectedPurse].extent < amountToBuy) {
+    //   alert("The amount requested first must be minted from the Creator.")
+    //   return
+    // }
     explain(dispatch)
     const { brandRegKey, pursePetname } = state.purses[selectedPurse]
     const invoicePurse = 'Converter invoice purse'

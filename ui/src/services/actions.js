@@ -44,9 +44,9 @@ export const mintAssets = (type, purse, amount, dispatch) => {
 }
 
 export const createPurchaseOrder = async (type, purse, amount, invoicePurse, dispatch) => {
-  if (!(purse === 'TypeA purse' || purse === 'TypeB purse' || purse === 'TypeC purse')) {
-    return alert('The Converter can only create an invoice for raw material tokens')
-  }
+  // if (!(purse === 'TypeA purse' || purse === 'TypeB purse' || purse === 'TypeC purse')) {
+  //   return alert('The Converter can only create an invoice for raw material tokens')
+  // }
   const instanceRegKey = defaultsConverter.INSTANCE_REG_KEY_INVOICE
   const mintOffer = mintNFTOffer(type, purse, invoicePurse, instanceRegKey, amount);
   await walletAddOffer(mintOffer);

@@ -9,7 +9,7 @@ function App () {
   const [active, setActive] = useState('creator')
 
   return (
-    <ApplicationContextProvider>
+    <ApplicationContextProvider user={active}>
       <Page>
         <Flexdiv
           flex='row'
@@ -119,7 +119,7 @@ function App () {
           </Flexdiv>
         </Flexdiv>
       </Page>
-    </ApplicationContextProvider>
+    </ApplicationContextProvider >
   )
 }
 

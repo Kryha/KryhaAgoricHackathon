@@ -12,16 +12,18 @@ import { reducer, createDefaultState } from '.';
 
 export const ApplicationContext = createContext();
 
-export function useApplicationContext() {
+export function useApplicationContext () {
   return useContext(ApplicationContext);
 }
 
 /* eslint-disable complexity, react/prop-types */
-export default function Provider({ children }) {
+export default function Provider (props) {
   const [state, dispatch] = useReducer(reducer, createDefaultState());
+  const children = props.children
+  const user = props.user
 
   useEffect(() => {
-    function messageHandler(message) {
+    function messageHandler (message) {
       if (!message) return;
       const { type, data } = message;
       if (type === 'walletUpdatePurses') {
@@ -29,23 +31,23 @@ export default function Provider({ children }) {
       }
     }
 
-    function walletGetPurses() {
+    function walletGetPurses () {
       return doFetch({ type: 'walletGetPurses' }).then(messageHandler);
     }
 
     activateWebSocket({
-      onConnect() {
+      onConnect () {
         walletGetPurses();
       },
-      onDisconnect() {
+      onDisconnect () {
       },
-      onMessage(data) {
+      onMessage (data) {
         messageHandler(JSON.parse(data));
       },
-    });
+    }, user);
 
     return deactivateWebSocket;
-  }, []);
+  }, [props.user]);
 
   return (
     <ApplicationContext.Provider value={{ state, dispatch }}>

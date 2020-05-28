@@ -28,9 +28,6 @@ const Main = props => {
     wallet = CREATOR_WALLET
   }
 
-  // TODO: Decide whether to include or delete multiple wallet support. This is a temporary fix 
-  // wallet = CREATOR_WALLET
-
   return (
     <Flexdiv
       flex='column'

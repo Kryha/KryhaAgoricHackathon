@@ -1,6 +1,6 @@
 /* globals window, WebSocket */
 
-import dappConstants from './../../constants';
+import dappConstants from '../../constants';
 const { BRIDGE_URL } = dappConstants;
 
 // === WEB SOCKET
@@ -18,7 +18,7 @@ const walletBridgeId = 'secretIframeId';
 let walletLoaded = false;
 const connectSubscriptions = new Set();
 const messageSubscriptions = new Set();
-function createSocket ({ onConnect, onDisconnect, onMessage }, endpoint) {
+function createSocket ({ onConnect, onDisconnect, onMessage }, user, endpoint) {
   if (endpoint === '/private/wallet-bridge') {
     let ifr = document.getElementById(walletBridgeId);
     if (!ifr) {
@@ -44,7 +44,7 @@ function createSocket ({ onConnect, onDisconnect, onMessage }, endpoint) {
       });
     }
 
-    ifr.src = `${process.env.PUBLIC_URL}/lib/agoric-wallet.html`;
+    ifr.src = `${process.env.PUBLIC_URL}/lib/agoric-wallet-${user}.html`;
     if (onMessage) {
       messageSubscriptions.add(onMessage);
     }
@@ -114,6 +114,11 @@ function createSocket ({ onConnect, onDisconnect, onMessage }, endpoint) {
   }
 }
 
+export function updateSocket (user) {
+  let ifr = document.getElementById(walletBridgeId);
+  ifr.src = `${process.env.PUBLIC_URL}/lib/agoric-wallet-${user}.html`;
+}
+
 function closeSocket (endpoint) {
   const socket = endpointToSocket.get(endpoint);
   socket.close();
@@ -124,9 +129,12 @@ function getActiveSocket (endpoint) {
   return endpointToSocket.get(endpoint);
 }
 
-export function activateWebSocket (socketListeners = {}, endpoint = '/private/wallet-bridge') {
-  if (getActiveSocket(endpoint)) return;
-  createSocket(socketListeners, endpoint);
+export function activateWebSocket (socketListeners = {}, user, endpoint = '/private/wallet-bridge') {
+  if (getActiveSocket(endpoint)) {
+    updateSocket(user)
+    return
+  }
+  createSocket(socketListeners, user, endpoint);
 }
 
 export function deactivateWebSocket (endpoint = '/private/wallet-bridge') {
@@ -142,7 +150,6 @@ export async function doFetch (req, endpoint = '/private/wallet-bridge') {
   if (!socket) {
     throw Error(`Must activate socket before doFetch to ${endpoint}`);
   }
-
   let resolve;
   const p = new Promise(res => {
     resolve = res;
