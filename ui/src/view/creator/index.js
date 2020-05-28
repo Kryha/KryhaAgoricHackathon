@@ -11,7 +11,7 @@ const Creator = props => {
 
   useEffect(() => {
     // TODO: do something with the purses
-  }, [state.purses])
+  }, [state.creatorPurses])
 
   const mintNewAssets = () => {
     if (amount < 1) return alert('Specify a positive amount')
@@ -19,8 +19,7 @@ const Creator = props => {
     mintAssets(brandRegKey, pursePetname, amount, dispatch)
   }
 
-
-  if (state.purses.length === 0) {
+  if (state.creatorPurses.length === 0) {
     return (
       <Flexdiv
         flex='column'
@@ -73,7 +72,7 @@ const Creator = props => {
               c='#000000'
               onChange={(e) => setSelectedPurse(e.target.value)}
             >
-              {state.purses.map((purse, index) => {
+              {state.creatorPurses.map((purse, index) => {
                 return (
                   <option key={index} value={index}>{purse.issuerPetname}</option>
                 )
@@ -86,7 +85,7 @@ const Creator = props => {
             h='50%'
             alignItems='center'
           >
-            <Text c='#000000' margin='0'>{state.purses[selectedPurse].issuerPetname}</Text>
+            <Text c='#000000' margin='0'>{state.creatorPurses[selectedPurse].issuerPetname}</Text>
           </Flexdiv>
           <Flexdiv
             flex='row'

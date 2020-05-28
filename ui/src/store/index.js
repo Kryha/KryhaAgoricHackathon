@@ -9,6 +9,9 @@ export const createDefaultState = () => {
     conversions: [],
     decompositions: [],
     success: false,
+    creatorPurses: [],
+    converterPurses: [],
+    decomposerPurses: []
   }
 }
 
@@ -16,6 +19,12 @@ export function reducer (state, action) {
   switch (action.type) {
     case 'UPDATEPURSES':
       return { ...state, purses: action.payload }
+    case 'UPDATECREATORPURSES':
+      return { ...state, creatorPurses: action.payload }
+    case 'UPDATECONVERTERPURSES':
+      return { ...state, converterPurses: action.payload }
+    case 'UPDATEDECOMPOSERPURSES':
+      return { ...state, decomposerPurses: action.payload }
     case 'RETRIEVEASSETS':
       return { ...state, assets: action.payload }
     case 'MINTASSETS':

@@ -19,12 +19,12 @@ const Converter = props => {
 
   const createNewPurchaseOrder = () => {
     if (amountToBuy < 1) return alert('Specify a positive amount')
-    // if (state.purses[selectedPurse].extent < amountToBuy) {
-    //   alert("The amount requested first must be minted from the Creator.")
-    //   return
-    // }
+    if (state.creatorPurses[selectedPurse].extent < amountToBuy) {
+      alert("The amount requested first must be minted from the Creator.")
+      return
+    }
     explain(dispatch)
-    const { brandRegKey, pursePetname } = state.purses[selectedPurse]
+    const { brandRegKey, pursePetname } = state.creatorPurses[selectedPurse]
     const invoicePurse = 'Converter invoice purse'
     createPurchaseOrder(brandRegKey, pursePetname, amountToBuy, invoicePurse, dispatch)
   }
@@ -56,7 +56,7 @@ const Converter = props => {
     convert(conv.input, conv.output, amount, dispatch)
   }
 
-  if (state.purses.length === 0 || state.conversions.length === 0) {
+  if (state.converterPurses.length === 0 || state.conversions.length === 0) {
     return (
       <Flexdiv
         flex='column'
@@ -109,7 +109,7 @@ const Converter = props => {
               c='#000000'
               onChange={(e) => setSelectedPurse(e.target.value)}
             >
-              {state.purses.map((purse, index) => {
+              {state.creatorPurses.map((purse, index) => {
                 return (
                   <option key={index} value={index}>{purse.issuerPetname}</option>
                 )
@@ -122,7 +122,7 @@ const Converter = props => {
             h='50%'
             alignItems='center'
           >
-            <Text c='#000000' margin='0'>{state.purses[selectedPurse].issuerPetname}</Text>
+            <Text c='#000000' margin='0'>{state.creatorPurses[selectedPurse].issuerPetname}</Text>
           </Flexdiv>
           <Flexdiv
             flex='row'

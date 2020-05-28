@@ -5,6 +5,27 @@ import dappConstants from '../constants'
 import { walletAddOffer } from './utils/wallet';
 import { mintAssetsOffer, mintNFTOffer, exchangeOffer, convertOffer, decomposeOffer } from './offers';
 
+export const updateCreatorPurses = (creatorPurses, dispatch) => {
+  return dispatch({
+    type: 'UPDATECREATORPURSES',
+    payload: creatorPurses
+  })
+}
+
+export const updateConverterPurses = (converterPurses, dispatch) => {
+  return dispatch({
+    type: 'UPDATECONVERTERPURSES',
+    payload: converterPurses
+  })
+}
+
+export const updateDecomposerPurses = (decomposerPurses, dispatch) => {
+  return dispatch({
+    type: 'UPDATEDECOMPOSERPURSES',
+    payload: decomposerPurses
+  })
+}
+
 export const updatePurses = (purses, dispatch) => {
   return dispatch({
     type: 'UPDATEPURSES',

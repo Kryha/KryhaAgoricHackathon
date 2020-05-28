@@ -7,6 +7,9 @@ import {
 } from './../services/utils/fetch-websocket';
 import {
   updatePurses,
+  updateCreatorPurses,
+  updateConverterPurses,
+  updateDecomposerPurses
 } from '../services/actions';
 import { reducer, createDefaultState } from '.';
 
@@ -26,8 +29,20 @@ export default function Provider (props) {
     function messageHandler (message) {
       if (!message) return;
       const { type, data } = message;
+      // if (type === 'walletUpdatePurses') {
+      //   updatePurses(JSON.parse(data), dispatch)
+      // }
       if (type === 'walletUpdatePurses') {
-        updatePurses(JSON.parse(data), dispatch)
+        switch (user) {
+          case 'creator':
+            return updateCreatorPurses(JSON.parse(data), dispatch)
+          case 'converter':
+            return updateConverterPurses(JSON.parse(data), dispatch)
+          case 'decomposer':
+            return updateDecomposerPurses(JSON.parse(data), dispatch)
+          default:
+            return updatePurses(JSON.parse(data), dispatch)
+        }
       }
     }
 

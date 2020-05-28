@@ -42,7 +42,7 @@ const Decomposer = props => {
     }
   }
 
-  if (state.purses.length === 0 || state.decompositions.length === 0) {
+  if (state.decomposerPurses.length === 0 || state.decompositions.length === 0) {
     return (
       <Flexdiv
         flex='column'
@@ -81,7 +81,7 @@ const Decomposer = props => {
           alignItems='center'
           justify='center'
         >
-          {/* <Flexdiv
+          <Flexdiv
             flex='row'
             w='25%'
             h='50%'
@@ -96,7 +96,7 @@ const Decomposer = props => {
               c='#000000'
               onChange={(e) => setSelectedPurse(e.target.value)}
             >
-              {state.purses.map((purse, index) => {
+              {state.converterPurses.map((purse, index) => {
                 if (purse.issuerPetname === 'plastic bottle') {
                   return (
                     <option key={index} value={index}>{purse.issuerPetname}</option>
@@ -111,8 +111,8 @@ const Decomposer = props => {
             h='50%'
             alignItems='center'
           >
-            <Text c='#000000' margin='0'>{state.purses[selectedPurse].issuerPetname}</Text>
-          </Flexdiv> */}
+            {/* <Text c='#000000' margin='0'>{state.converterPurses[selectedPurse].issuerPetname}</Text> */}
+          </Flexdiv>
           <Flexdiv
             flex='row'
             w='30%'
