@@ -29,6 +29,14 @@ export default async function deployContract (
       name: 'invoiceCreation',
       path: './src/invoiceCreation.js',
     },
+    {
+      name: 'purchase',
+      path: './src/purchase.js'
+    },
+    {
+      name: 'tokenContract',
+      path: './src/tokenContract.js'
+    }
   ];
 
   console.log('- Installing contract code installed on Zoe');

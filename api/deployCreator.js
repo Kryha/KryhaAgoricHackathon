@@ -13,7 +13,6 @@ import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 // script ends, connections to any of its objects are severed.
 
 const TOKEN_CONTRACT = 'tokenCreation'
-
 const INVOICE_CONTRACT = 'invoiceContract'
 
 function capitalize (str) {
