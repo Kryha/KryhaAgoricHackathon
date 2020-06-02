@@ -28,6 +28,10 @@ export default async function deployContract (
     {
       name: 'tokenCreation',
       path: `./src/tokenCreation.js`,
+    },
+    {
+      name: 'invoiceContract',
+      path: `./src/invoiceContract.js`
     }
   ];
 

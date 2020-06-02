@@ -14,6 +14,8 @@ import { makeGetInstanceHandle } from '@agoric/zoe/src/clientSupport';
 
 const TOKEN_CONTRACT = 'tokenCreation'
 
+const INVOICE_CONTRACT = 'invoiceContract'
+
 function capitalize (str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -64,6 +66,52 @@ async function deployToken (references, tokenName) {
   return { issuer, regKey };
 }
 
+async function addInvoicePurse (references, tokenName) {
+  const {
+    wallet,
+    zoe,
+    registry,
+  } = references;
+
+  const {
+    contracts
+  } = installationConstants;
+
+  console.log(`-- deploying: ${tokenName}`)
+
+  const { INSTALLATION_REG_KEY: invoiceCreationRegKey } = contracts.find(({ name }) => name === INVOICE_CONTRACT);
+  const invoiceContractInstallationHandle = await E(registry).get(invoiceCreationRegKey);
+  const inviteIssuer = await E(zoe).getInviteIssuer();
+  const getInstanceHandle = makeGetInstanceHandle(inviteIssuer);
+
+  const terms = harden({
+    issuerName: capitalize(tokenName),
+  })
+  const adminInvite = await E(zoe).makeInstance(invoiceContractInstallationHandle, harden({}), terms);
+  console.log('--- instance is running on Zoe');
+
+  const instanceHandle = await getInstanceHandle(adminInvite);
+
+  const { publicAPI } = await E(zoe).getInstanceRecord(instanceHandle);
+  const issuer = await E(publicAPI).getTokenIssuer();
+
+  const brandRegKey = await E(registry).register(
+    tokenName,
+    await E(issuer).getBrand()
+  )
+
+  await E(wallet).addIssuer(tokenName, issuer, brandRegKey)
+
+  const pursePetName = `${capitalize(tokenName)} purse`;
+  await E(wallet).makeEmptyPurse(tokenName, pursePetName);
+  console.log(`--- empty ${pursePetName} is added to wallet`);
+
+  const regKey = await E(registry).register(`${TOKEN_CONTRACT}_${tokenName}_instance`, instanceHandle);
+  console.log(`--- contract is added to the registry under: ${regKey}`);
+
+  return { issuer, regKey };
+}
+
 /**
  * @typedef {Object} DeployPowers The special powers that `agoric deploy` gives us
  * @property {(path: string) => { moduleFormat: string, source: string }} bundleSource
@@ -78,6 +126,7 @@ async function deployToken (references, tokenName) {
 export default async function deployApi (referencesPromise, { bundleSource, pathResolve }) {
   const references = await referencesPromise;
 
+  const { issuer: invoiceIssuer, regKey: INSTALLATION_REG_KEY_INVOICE_CREATOR } = await addInvoicePurse(references, 'invoice');
   const { issuer: tokenAIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_A } = await deployToken(references, 'typeA');
   const { issuer: tokenBIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_B } = await deployToken(references, 'typeB');
   const { issuer: tokenCIssuer, regKey: INSTANCE_REG_KEY_FUNGIBLE_C } = await deployToken(references, 'typeC');
@@ -87,6 +136,7 @@ export default async function deployApi (referencesPromise, { bundleSource, path
     INSTANCE_REG_KEY_FUNGIBLE_A,
     INSTANCE_REG_KEY_FUNGIBLE_B,
     INSTANCE_REG_KEY_FUNGIBLE_C,
+    INSTALLATION_REG_KEY_INVOICE_CREATOR,
     BRIDGE_URL: 'http://127.0.0.1:8000',
     API_URL: 'http://127.0.0.1:8000',
   };
