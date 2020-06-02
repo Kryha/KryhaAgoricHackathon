@@ -15,7 +15,7 @@ const Creator = props => {
 
   const mintNewAssets = () => {
     if (amount < 1) return alert('Specify a positive amount')
-    const { brandRegKey, pursePetname } = state.purses[selectedPurse]
+    const { brandRegKey, pursePetname } = state.creatorPurses[selectedPurse]
     mintAssets(brandRegKey, pursePetname, amount, dispatch)
   }
 

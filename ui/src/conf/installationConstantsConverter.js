@@ -4,7 +4,7 @@
     {
       "name": "invoiceCreation",
       "path": "./src/invoiceCreation.js",
-      "INSTALLATION_REG_KEY": "invoicecreationinstallation_8247"
+      "INSTALLATION_REG_KEY": "invoicecreationinstallation_1808"
     }
   ]
 };
